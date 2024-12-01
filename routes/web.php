@@ -22,6 +22,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance_in','insertFichemaintenance');
         Route::get('maintenance/check-buses',  'checkBuses')->name('check_buses');
         Route::get('maintenance_show','maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
+        Route::post('maintenance/pdf', 'generatePDF')->name('pdf');
+        Route::post('maintenance/excel', 'generateEXCEL')->name('excel');
         Route::get('maintenance/refreshfichtable', 'refreshfichtable');
         Route::get('maintenance_fix','maintnenance_fix')->name('maintenance_fix')->middleware('rolesMiddleware:maintenance_fix');
         Route::get('maintenance/refreshfixtable', 'refreshfixtable');

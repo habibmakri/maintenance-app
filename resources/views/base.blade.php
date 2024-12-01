@@ -25,7 +25,8 @@
     <title>@yield('title')</title>
 
 </head>
-<body>
+{{-- <body class="toggle-sidebar"> --}}
+<body >
     @include('header')
     @include('side')
     <main id="main" class="main" >

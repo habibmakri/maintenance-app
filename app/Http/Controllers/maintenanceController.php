@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Mpdf\Mpdf;
 
 class maintenanceController extends Controller
 {
@@ -312,5 +313,74 @@ class maintenanceController extends Controller
                 )
             );
         }
+    }
+    public function generatePDF(Request $request)
+    {
+        $request->validate([
+            'datedupdf' => 'required|date',
+            'dateaupdf' => 'required|date|after_or_equal:datedupdf',
+            'brigadepdf' => 'required|string',
+        ]);
+        // dd($request->datedupdf);
+        $query = fichemaintenance::query();
+
+        // Apply filters based on user input
+        if ($request->datedupdf) {
+            $query->where('date_fiche', '>=', $request->datedupdf);
+        }
+
+        if ($request->dateaupdf) {
+            $query->where('date_fiche', '<=', $request->dateaupdf);
+        }
+
+        if ($request->brigadepdf) {
+            if ($request->brigadepdf == 'jour') {
+                $query->whereIn('brigade', ['soir', 'matin']);
+            } else {
+                $query->where('brigade', $request->brigadepdf);
+            }
+        }
+
+        $query->with(['bus', 'ligne'])->orderBy('date_fiche')->orderBy('id_bus');
+
+        $datedupdf =  \Carbon\Carbon::parse($request->datedupdf)->format('d-m-Y');
+        $dateaupdf =  \Carbon\Carbon::parse($request->dateaupdf)->format('d-m-Y');
+        $brigadepdf = $request->brigadepdf;
+        if($brigadepdf == 'jour'){
+            $brigadepdf = "Matin et Soir";
+        }else{
+            if($brigadepdf=="matin"){
+                $brigadepdf = "Matin";
+            }else{
+                $brigadepdf = "Soir";
+            }
+        }
+        $data = $query->get();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4-L',
+            // 'tempDir' => sys_get_temp_dir(),
+        ]);
+
+        $html = view('maintenance.pdf_fr', compact('data', 'datedupdf', 'dateaupdf', 'brigadepdf'))->render();
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 30, 12, 25, 25, 'png');
+        $mpdf->SetY(10);
+        // $mpdf->SetFooter('{PAGENO} / {nbpg}');
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+                    <div style='text-align: right; font-size: 12px;'>
+                        Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+                    </div>
+                    ";
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        $nomfichier = 'Liste_maintenance_du_' . $datedupdf . '_au_' . $dateaupdf  . '.pdf';
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
     }
 }
