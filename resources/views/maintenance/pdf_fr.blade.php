@@ -37,7 +37,7 @@
 </head>
 <body>
     <div style="text-align: center;">
-        <h1>Liste d'étaillé du Mainetenance des Bus</h1>
+        <h1>Liste d'étaillé du Maintenance des Bus</h1>
         @if ($datedupdf == $dateaupdf)
         <h2 >Le {{ $datedupdf }} | {{$brigadepdf}}</h2>
         @else
@@ -97,9 +97,7 @@
                 <td>{{ "/" }}</td>
                 <td>{{ "/" }}</td>
             </tr>
-
             @endif
-            
             @endforeach
         </tbody>
     </table>

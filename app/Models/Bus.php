@@ -12,7 +12,7 @@ class Bus extends Model
 
     protected $table = 'buses';
 
-    protected $fillable = ['name', 'type', 'status', 'imei', 'ligne_id'];
+    protected $fillable = ['name', 'type','kmactuelle','kmderniervidange','derniervidange' ,'derniervidangeboite','derniervidangepond','ligne_id'];
 
     public function ligne()
     {

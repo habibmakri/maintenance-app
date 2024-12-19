@@ -1,7 +1,7 @@
 @extends('base')
 
-@section('title',"Main page")
+@section('title',"Direction")
 
 @section('content')
-<h1>Hello world!</h1>
+<h1>!!!!</h1>
 @endsection

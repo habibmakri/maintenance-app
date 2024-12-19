@@ -30,7 +30,7 @@ class maintenanceEditRequest extends FormRequest
             'required',
             function ($attribute, $value, $fail) {
                 if ($this->harrive && strtotime($value) >= strtotime($this->harrive)) {
-                    $fail('The departure time (hdepart) must be before the arrival time (harrive).');
+                    $fail('L\'heure de départ  doit être antérieure à l`\'heure d\'arrivée .');
                 }
             },
         ],
@@ -40,7 +40,7 @@ class maintenanceEditRequest extends FormRequest
             'numeric',
             function ($attribute, $value, $fail) {
                 if ($this->kmarive && $this->kmdepart && $value >= ($this->kmarive - $this->kmdepart)) {
-                    $fail('The kmhlp must be less than the difference between kmarrive and kmdepart.');
+                    $fail(' Le kilométrage HLP doit être inférieur à la différence entre le  kilométrage d\'arrivée et le  kilométrage de départ.');
                 }
             },
         ],

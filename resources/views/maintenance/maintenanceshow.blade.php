@@ -8,12 +8,24 @@
         <h1>Extraction des données de maintenance</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('app.main') }}">App</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('app.main') }}">Direction</a></li>
                 <li class="breadcrumb-item">Maintenance</li>
                 <li class="breadcrumb-item active">Extraire</li>
             </ol>
         </nav>
     </div>
+    
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{ session('success') }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @elseif (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ session('error') }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -90,7 +102,7 @@
             </table>
         </div>
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h5 class="mt-2">Selectionner la date:</h5>
+            <h5 class="mt-2">Selectionner la date :</h5>
             <form class="row g-3" action="{{ route('app.maintenance.pdf') }}" method="post">
                 @csrf
                 <div class="col-md-3">
@@ -105,7 +117,7 @@
                         <label for="dateaupdf">Au</label>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-floating">
                         <select class="form-select" required name="brigadepdf" id="brigade"
                             aria-label="Floating label select example">
@@ -117,40 +129,103 @@
                         <label for="brigadepdf">Brigade</label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-outline-primary col-md-3">Télecharger</button>
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" required name="languepdf" id="brigade"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner la langue</option>
+                            <option value="fr">Francais</option>
+                            <option value="ar">Arabe</option>
+                        </select>
+                        <label for="launguepdf">Langue</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
             </form>
         </div>
         <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
             <h5 class="mt-2">Selectionner la date:</h5>
-            <form class="row g-3" action="{{ route('app.maintenance.pdf') }}" method="post">
+            <form class="row g-3" action="{{ route('app.maintenance.excel') }}" method="post">
                 @csrf
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input name="datedupdf" type="date" required class="form-control">
-                        <label for="datedupdf">Du</label>
+                        <input name="dateduexcel" type="date" required class="form-control">
+                        <label for="dateduexcel">Du</label>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input name="dateaupdf" type="date" required class="form-control">
-                        <label for="dateaupdf">Au</label>
+                        <input name="dateauexcel" type="date" required class="form-control">
+                        <label for="dateauexcel">Au</label>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-floating">
-                        <select class="form-select" required name="brigadepdf" id="brigade"
+                        <select class="form-select" required name="brigadeexcel" id="brigade"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>selectionner brigade</option>
                             <option value="jour">Jour</option>
                             <option value="matin">Matin</option>
                             <option value="soir">Soir</option>
                         </select>
-                        <label for="brigadepdf">Brigade</label>
+                        <label for="brigadeexcel">Brigade</label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-outline-success col-md-3">Télecharger</button>
+                <button type="submit" class="btn btn-outline-success col-md-2">Télecharger</button>
             </form>
+            <h5 class="mt-5">Sélectionner le mois et l'année pour l'extraction de l'état de Kilométrage :</h5>
+            <form class="row g-3" action="{{ route('app.maintenance.etatkilometrage') }}" method="post">
+                @csrf
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select class="form-select" required name="month" id="month" aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner le mois</option>
+                            <option value="01">Janvier</option>
+                            <option value="02">Février</option>
+                            <option value="03">Mars</option>
+                            <option value="04">Avril</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juin</option>
+                            <option value="07">Juillet</option>
+                            <option value="08">Août</option>
+                            <option value="09">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
+                            <option value="12">Décembre</option>
+                        </select>
+                        <label for="month">Mois</label>
+                    </div>
+                </div>
+            
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select class="form-select" required name="year" id="year" aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner l'année</option>
+                            @for ($i = date('Y'); $i >= 2000; $i--)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <label for="year">Année</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" required name="brigadeexceleta" id="brigade"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner brigade</option>
+                            <option value="jour">Jour</option>
+                            <option value="matin">Matin</option>
+                            <option value="soir">Soir</option>
+                        </select>
+                        <label for="brigadeexcel">Brigade</label>
+                    </div>
+                </div>
+            
+                <button type="submit" class="btn btn-outline-success col-md-2">Télécharger</button>
+            </form>
+            
         </div>
+        
     </div>
 
 
@@ -215,7 +290,6 @@
                     .catch(error => console.error('Error fetching data:', error));
             }
 
-            // Add event listeners to trigger fetch on change
             dateduInput.addEventListener('change', fetchData);
             dateauInput.addEventListener('change', fetchData);
             brigadeSelect.addEventListener('change', fetchData);

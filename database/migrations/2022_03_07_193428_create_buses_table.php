@@ -18,8 +18,8 @@ class CreateBusesTable extends Migration
 
             $table->string('name')->nullable();
             $table->string('type')->nullable();
-            $table->string('status')->nullable();
-            $table->string('imei')->nullable();
+            // $table->string('status')->nullable();
+            // $table->string('imei')->nullable();
             $table->foreignId('ligne_id')->references('id')->on('lignes');
             $table->softDeletes();
             $table->timestamps();

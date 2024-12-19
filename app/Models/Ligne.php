@@ -13,15 +13,19 @@ class Ligne extends Model
     protected $table = 'lignes'; // Specify the table name if it's not the default plural form
 
     // Add fillable fields
-    protected $fillable = ['name', 'Length', 'arrets', 'maps', 'color'];
+    protected $fillable = ['name','station_id','terminus',  'arrets'];
 
     // Define relationships if necessary
     public function buses()
     {
         return $this->hasMany(Bus::class, 'ligne_id');
     }
+    public function station()
+    {
+        return $this->belongsTo(Station::class, 'station_id');  // Link back to FicheMaintenance
+    }
     public function maintenanceRecords()
 {
-    return $this->hasMany(FicheMaintenance::class, 'id_bus');  // Link back to FicheMaintenance
+    return $this->hasMany(FicheMaintenance::class, 'id_bus');  
 }
 }

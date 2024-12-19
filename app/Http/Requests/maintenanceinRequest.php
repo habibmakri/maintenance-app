@@ -23,6 +23,9 @@ class maintenanceinRequest extends FormRequest
     public function rules(): array
     {
         $isPartitNon = $this->input('partit') === 'non';
+        $ispannemecanique = $this->input('pannemecaniquecheck') === 'on';
+        $ispannelectrique = $this->input('panneelectriquecheck') === 'on';
+        $ispannetolle = $this->input('pannetollecheck') === 'on';
         return [
             'date' => ['required', 'date'],
             'bus' => ['required', 'exists:buses,id'],
@@ -50,6 +53,9 @@ class maintenanceinRequest extends FormRequest
             ],
             'kmdepart' => $isPartitNon ? ['nullable'] : ['required', 'numeric'],
             'kmarive' => $isPartitNon ? ['nullable'] : ['required', 'numeric', 'gt:kmdepart'],
+            'pannemecanique' => $ispannemecanique ? ['nullable'] :  'required|array',
+            'panneelectrique' => $ispannelectrique ? ['nullable'] :  'required|array',
+            'pannetolle' => $ispannetolle ? ['nullable'] :  'required|array',
         ];
     }
 }

@@ -17,15 +17,20 @@ class CheckUser
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            abort(404); 
+            // abort(404);
+           return redirect()->route('login'); 
+        }else{
+            $user = Auth::user();
+            $name = $user ? $user->firstname . ' ' . $user->lastname : '???';
+            $permissions = explode(',', $user->autorisations); 
+            $service = $user->service;
+            $poste = $user->poste;
+            view()->share('name', $name);
+            view()->share('permissions', $permissions);
+            view()->share('service', $service);
+            view()->share('poste', $poste);
+    
+            return $next($request);
         }
-        $user = Auth::user();
-        $name = $user ? $user->firstname . ' ' . $user->lastname : '???';
-        $permissions = explode(',', $user->autorisations); 
-
-        view()->share('name', $name);
-        view()->share('permissions', $permissions);
-
-        return $next($request);
     }
 }

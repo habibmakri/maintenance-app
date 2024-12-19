@@ -14,13 +14,13 @@ class CreateLignesTable extends Migration
     public function up()
     {
         Schema::create('lignes', function (Blueprint $table) {
-                $table->id();
+            $table->id();
 
             $table->string('name');
-            $table->integer('Length')->nullable();
-            $table->json('arrets')->nullable();
-            $table->text('maps')->nullable();
-            $table->string('color')->nullable();
+            // $table->integer('Length')->nullable();
+            // $table->json('arrets')->nullable();
+            // $table->text('maps')->nullable();
+            // $table->string('color')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
