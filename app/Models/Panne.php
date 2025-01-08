@@ -12,6 +12,8 @@ class Panne extends Model
 
     protected $table = 'pannenames'; // Specify the table name if it's not the default plural form
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     // Add fillable fields
     protected $fillable = ['name','type'];
 

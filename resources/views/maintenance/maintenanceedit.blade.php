@@ -73,14 +73,26 @@
                     aria-label="Floating label select example">
                     {{-- value="@if (!$record->ligne)non @endif"> --}}
                     @if ($record->ligne)
-                        <option value="oui"  selected>Oui</option>
+                        <option value="oui" selected>Oui</option>
                         <option value="non">Non</option>
                     @else
-                    <option value="oui">Oui</option>
-                        <option value="non"  selected>Non</option>
+                        <option value="oui">Oui</option>
+                        <option value="non" selected>Non</option>
                     @endif
                 </select>
                 <label for="partit">Partit?</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating">
+                <select class="form-select" required name="id_chauffeur" id="id_chauffeur"
+                    aria-label="Floating label select example">
+                    <option value="" disabled selected>selectionner chauffeur</option>
+                    @foreach ($chauffeurs as $chauffeur)
+                        <option value="{{ $chauffeur->id }}" @if ($record->id_chauffeur == $chauffeur->id) selected @endif>{{ $chauffeur->fr_name }}</option>
+                    @endforeach
+                </select>
+                <label for="id_chauffeur">Chauffeur</label>
             </div>
         </div>
         <div class="col-md-4">
@@ -90,7 +102,7 @@
                     <option id="/" name="/" disabled selected> </option>
                     @foreach ($lines as $line)
                         <option value="{{ $line->id }}" data-station="{{ $line->station_id ?? '' }}"
-                            data-terminus="{{ $line->terminus }}">{{ $line->name }}
+                            data-terminus="{{ $line->terminus }}" @if ($record->id_ligne == $line->id) selected @endif>{{ $line->name }}
                         </option>
                     @endforeach
                 </select>
@@ -134,14 +146,14 @@
                 <label for="kmdepart">Kilométrage (Départ)</label>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-floating">
                 <input type="number" required class="form-control" name="kmarive" id="kmarive"
                     value ="{{ $record->kmarrive }}">
                 <label for="kmarive">Kilométrage (Arrivée)</label>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-floating">
                 <input display="none" class="d-none" name="kmhlp" id="kmhlp" value ="{{ $record->kmhlp }}">
                 <input type="number" disabled class="form-control" name="kmhlpdisp" id="kmhlpdisp"
@@ -149,14 +161,14 @@
                 <label for="kmhlpdisp">Kilométrage (HLP)</label>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-floating">
                 <input type="text" disabled class="form-control" name="kmglobale" id="kmglobale"
                     value ="{{ $record->kmgobale }}">
                 <label for="kmglobale">Kilométrage (Globale)</label>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-floating">
                 <input type="text" disabled class="form-control" name="kmcommerciale" id="kmcommerciale"
                     value ="{{ $record->kmcommerciale }}">
@@ -218,12 +230,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             const partitSelect = document.getElementById('partit');
             const inputsToControl = Array.from(document.querySelectorAll(
-                ' #ligne,#destination , #hdepart, #harrive, #gasoile, #kmhlp, #kmdepart, #kmarive'
+                ' #ligne,#destination,#id_chauffeur , #hdepart, #harrive, #gasoile, #kmhlp, #kmdepart, #kmarive'
             ));
 
             const defaultValues = {
                 ligne: '/',
                 destination: '/',
+                id_chauffeur: '/',
                 hdepart: '00:00',
                 harrive: '00:00',
                 gasoile: '0',

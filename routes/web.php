@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Authcontroller;
+use App\Http\Controllers\comptabiliteController;
+use App\Http\Controllers\exploatationController;
 use App\Http\Controllers\gestionController;
 use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
+use App\Http\Controllers\personelleController;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +29,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('maintenance/check-buses',  'checkBuses')->name('check_buses');
         Route::get('maintenance_show','maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
         Route::post('maintenance/pdf', 'generatePDF')->name('pdf');
+        Route::post('maintenance/gasoilepdf', 'generate_gasoile_PDF')->name('gasoilepdf');
+        Route::post('maintenance/gasoileexcel', 'generate_gasoile_EXCEL')->name('gasoileexcel');
+        Route::post('maintenance/km100pdf', 'generate_km100_PDF')->name('km100pdf');
+        Route::post('maintenance/etatnreparatiopdf', 'generate_etat_nreparatiopdf')->name('etatnreparatiopdf');
         Route::post('maintenance/excel', 'generateEXCEL')->name('excel');
         Route::post('maintenance/etatkilometrage', 'generateETATKilometrage')->name('etatkilometrage');
         Route::get('maintenance/refreshfichtable', 'refreshfichtable');
@@ -35,6 +42,12 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('editfiche:{id}', 'editfiche')->name('maintenance_edit')->middleware('rolesMiddleware:maintenance_fix');
         Route::post('editfiche:{id}', 'doeditfiche');
         Route::get('maintenance_export','login_form')->name('maintenance_export');
+        Route::get('maintenance_panne','maintenance_panne')->name('maintenance_panne')->middleware('rolesMiddleware:maintenance_panne');
+        Route::post('maintenance_panne','resoudre_maintenance_panne');
+        Route::post('maintenance/ajouter_ndpanne', 'ajouter_ndpanne')->name('ajouter_ndpanne');
+        Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
+        Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
+        Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');
@@ -57,7 +70,23 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('manage_panne/add_panne','add_panne')->name('add_panne')->middleware('rolesMiddleware:manage_panne');
         Route::post('manage_panne/add_panne','do_add_panne');
         Route::post('manage_panne/deletepanne:{id}', 'delete_panne');
+        Route::get('manage_piece','manage_piece')->name('manage_piece')->middleware('rolesMiddleware:manage_piece');
+        Route::get('manage_piece/add_piece','add_piece')->name('add_piece')->middleware('rolesMiddleware:manage_piece');
+        Route::post('manage_piece/add_piece','do_add_piece');
+        Route::post('manage_piece/deletepiece:{id}', 'delete_piece');
         // Route::post('user_in','insertUser');        
+    });
+    Route::prefix('/')->controller(personelleController::class)->name('personelle.')->group(function () {
+        Route::get('personelle_stat','personelle_stat')->name('statistiques')->middleware('rolesMiddleware:personelle_stat');
+        
+    });
+    Route::prefix('/')->controller(comptabiliteController::class)->name('comptabilite.')->group(function () {
+        Route::get('comptabilite_stat','comptabilite_stat')->name('statistiques')->middleware('rolesMiddleware:comptabilite_stat');
+        
+    });
+    Route::prefix('/')->controller(exploatationController::class)->name('exploatation.')->group(function () {
+        Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
+        
     });
 
 

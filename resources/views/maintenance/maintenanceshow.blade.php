@@ -14,7 +14,7 @@
             </ol>
         </nav>
     </div>
-    
+
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>{{ session('success') }}</strong>
@@ -75,6 +75,7 @@
                     <tr>
                         <th>N°</th>
                         <th>bus</th>
+                        <th>chauffeur</th>
                         <th>Ligne</th>
                         <th>H.depart</th>
                         <th>H.Arrivée</th>
@@ -97,51 +98,275 @@
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
+                        <td>-</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h5 class="mt-2">Selectionner la date :</h5>
-            <form class="row g-3" action="{{ route('app.maintenance.pdf') }}" method="post">
-                @csrf
-                <div class="col-md-3">
-                    <div class="form-floating">
-                        <input name="datedupdf" type="date" required class="form-control">
-                        <label for="datedupdf">Du</label>
+            <div>
+                <h5 class="mt-2">Selectionner la date statistique maintenance:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input name="datedupdf" type="date" required class="form-control">
+                            <label for="datedupdf">Du</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-floating">
-                        <input name="dateaupdf" type="date" required class="form-control">
-                        <label for="dateaupdf">Au</label>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input name="dateaupdf" type="date" required class="form-control">
+                            <label for="dateaupdf">Au</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" required name="brigadepdf" id="brigade"
-                            aria-label="Floating label select example">
-                            <option value="" disabled selected>selectionner brigade</option>
-                            <option value="jour">Jour</option>
-                            <option value="matin">Matin</option>
-                            <option value="soir">Soir</option>
-                        </select>
-                        <label for="brigadepdf">Brigade</label>
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <select class="form-select" required name="brigadepdf" id="brigade"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner brigade</option>
+                                <option value="jour">Jour</option>
+                                <option value="matin">Matin</option>
+                                <option value="soir">Soir</option>
+                            </select>
+                            <label for="brigadepdf">Brigade</label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" required name="languepdf" id="brigade"
-                            aria-label="Floating label select example">
-                            <option value="" disabled selected>selectionner la langue</option>
-                            <option value="fr">Francais</option>
-                            <option value="ar">Arabe</option>
-                        </select>
-                        <label for="launguepdf">Langue</label>
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <select class="form-select" required name="languepdf" id="brigade"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner la langue</option>
+                                <option value="fr">Francais</option>
+                                <option value="ar">Arabe</option>
+                            </select>
+                            <label for="launguepdf">Langue</label>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
-            </form>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
+                </form>
+            </div>
+            <div>
+                <h5 class="mt-5">Sélectionner le mois pour l'etat du gasoile mensuelle:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.gasoilepdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+
+            <div>
+                <h5 class="mt-5">Selectionner la date gasoile au 100 KM :</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.km100pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input name="datedupdf" type="date" required class="form-control">
+                            <label for="datedupdf">Du</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input name="dateaupdf" type="date" required class="form-control">
+                            <label for="dateaupdf">Au</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <select class="form-select" required name="languepdf" id="brigade"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner la langue</option>
+                                <option value="fr">Francais</option>
+                                <option value="ar">Arabe</option>
+                            </select>
+                            <label for="launguepdf">Langue</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
+                </form>
+            </div>
+            <div>
+                <h5 class="mt-5">Sélectionner le mois et l'année pour l'extraction de l'état nombre de reparation résolue
+                    mensuelle :</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etatnreparatiopdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <select class="form-select" required name="languepdf" id="brigade"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner la langue</option>
+                                <option value="fr">Francais</option>
+                                <option value="ar">Arabe</option>
+                            </select>
+                            <label for="launguepdf">Langue</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div>
+                <h5 class="mt-5">Sélectionner le mois pour l'extraction de l'état Fiche de suivi Journaliere des travaux
+                    reparés:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.suivijournaliere_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div>
+                <h5 class="mt-5">Sélectionner le bus et le mois pour l'extraction de l'état Fiche de suivi mensuelle des
+                    travaux reparés:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.suivibus_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-2">
+                        <div class="form-floating">
+                            <select class="form-select" required name="buspdf" id="brigade"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner le Bus</option>
+                                @foreach ($buses as $bus)
+                                    <option value="{{ $bus->id }}">{{ $bus->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="launguepdf">Bus</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
         </div>
         <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
             <h5 class="mt-2">Selectionner la date:</h5>
@@ -178,17 +403,18 @@
                 @csrf
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <select class="form-select" required name="month" id="month" aria-label="Floating label select example">
+                        <select class="form-select" required name="month" id="month"
+                            aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner le mois</option>
-                            <option value="01">Janvier</option>
-                            <option value="02">Février</option>
-                            <option value="03">Mars</option>
-                            <option value="04">Avril</option>
-                            <option value="05">Mai</option>
-                            <option value="06">Juin</option>
-                            <option value="07">Juillet</option>
-                            <option value="08">Août</option>
-                            <option value="09">Septembre</option>
+                            <option value="1">Janvier</option>
+                            <option value="2">Février</option>
+                            <option value="3">Mars</option>
+                            <option value="4">Avril</option>
+                            <option value="5">Mai</option>
+                            <option value="6">Juin</option>
+                            <option value="7">Juillet</option>
+                            <option value="8">Août</option>
+                            <option value="9">Septembre</option>
                             <option value="10">Octobre</option>
                             <option value="11">Novembre</option>
                             <option value="12">Décembre</option>
@@ -196,10 +422,11 @@
                         <label for="month">Mois</label>
                     </div>
                 </div>
-            
+
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <select class="form-select" required name="year" id="year" aria-label="Floating label select example">
+                        <select class="form-select" required name="year" id="year"
+                            aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner l'année</option>
                             @for ($i = date('Y'); $i >= 2000; $i--)
                                 <option value="{{ $i }}">{{ $i }}</option>
@@ -220,12 +447,50 @@
                         <label for="brigadeexcel">Brigade</label>
                     </div>
                 </div>
-            
+
                 <button type="submit" class="btn btn-outline-success col-md-2">Télécharger</button>
             </form>
-            
+            <h5 class="mt-5">Sélectionner le mois pour l'etat du gasoile mensuelle:</h5>
+            <form class="row g-3" action="{{ route('app.maintenance.gasoileexcel') }}" method="post">
+                @csrf
+                <div class="col-md-5">
+                    <div class="form-floating">
+                        <select class="form-select" required name="month" id="month"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner le mois</option>
+                            <option value="1">Janvier</option>
+                            <option value="2">Février</option>
+                            <option value="3">Mars</option>
+                            <option value="4">Avril</option>
+                            <option value="5">Mai</option>
+                            <option value="6">Juin</option>
+                            <option value="7">Juillet</option>
+                            <option value="8">Août</option>
+                            <option value="9">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
+                            <option value="12">Décembre</option>
+                        </select>
+                        <label for="month">Mois</label>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-floating">
+                        <select class="form-select" required name="year" id="year"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner l'année</option>
+                            @for ($i = date('Y'); $i >= 2000; $i--)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <label for="year">Année</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-success col-md-2">Télécharger</button>
+            </form>
         </div>
-        
+
     </div>
 
 
@@ -255,6 +520,7 @@
                                 <tr style="border-color: red;">
                                     <td>${i}</td>
                                     <td>${item.bus}</td>
+                                    <td>${item.chauffeur}</td>
                                     <td>${item.ligne}</td>
                                     <td>${item.heur_depart}</td>
                                     <td>${item.heur_arrive}</td>
@@ -271,6 +537,7 @@
                                     <tr style="border-color: green;">
                                         <td>${i}</td>
                                         <td>${item.bus}</td>
+                                        <td>${item.chauffeur}</td>
                                         <td>${item.ligne}</td>
                                         <td>${item.heur_depart}</td>
                                         <td>${item.heur_arrive}</td>

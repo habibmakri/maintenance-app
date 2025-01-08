@@ -40,13 +40,13 @@
     <form class="row g-3" action="" method="post">
         @csrf
         <h4>Kilométrage:</h4>
-        <div class="col-md-7">
+        <div class="col-md-3">
             <div class="form-floating">
                 <input name="date" type="date" required class="form-control">
                 <label for="date">Date</label>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-3">
             <div class="form-floating">
                 <select class="form-select" required name="brigade" id="brigade"
                     aria-label="Floating label select example">
@@ -62,8 +62,8 @@
                 <select class="form-select" name="bus" id="bus" required
                     aria-label="Floating label select example">
                     {{-- @foreach ($buses as $bus)
-                        <option value="{{ $bus->id }}">{{ $bus->name }}</option>
-                    @endforeach --}}
+                <option value="{{ $bus->id }}">{{ $bus->name }}</option>
+                @endforeach --}}
                 </select>
                 <label for="bus">BUS</label>
             </div>
@@ -78,7 +78,19 @@
                 <label for="partit">Partit?</label>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
+            <div class="form-floating">
+                <select class="form-select" required name="id_chauffeur" id="id_chauffeur"
+                    aria-label="Floating label select example">
+                    <option value="" disabled selected>selectionner chauffeur</option>
+                    @foreach ($chauffeurs as $chauffeur)
+                        <option value="{{ $chauffeur->id }}">{{ $chauffeur->fr_name }}</option>
+                    @endforeach
+                </select>
+                <label for="id_chauffeur">Chauffeur</label>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="form-floating">
                 <select class="form-select" required name="ligne" id="ligne"
                     aria-label="Floating label select example">
@@ -92,7 +104,7 @@
                 <label for="ligne">LIGNE</label>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-floating">
                 <select class="form-select" required name="destination" id="destination"
                     aria-label="Floating label select example">
@@ -116,7 +128,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-floating">
-                <input type="number" required class="form-control" name="gasoile" id="gasoile">
+                <input type="number" required step="any" class="form-control" name="gasoile" id="gasoile">
                 <label for="gasoile">Consomation Gasoile(L)</label>
             </div>
         </div>
@@ -157,7 +169,7 @@
                 <label class="form-check-label" for="togglePanneMecanique">Pannes mécanique:</label>
                 <input class="form-check-input" type="checkbox" name="pannemecaniquecheck" id="togglePanneMecanique"
                     style="float: none; margin-left: 0.5em" onchange="toggleSelect('panneMecanique')">
-                <select class="form-select" disabled name="pannemecanique[]" id="panneMecanique" multiple
+                <select class="select" disabled name="pannemecanique[]" id="panneMecanique" multiple
                     aria-label="autorisations" style="height: 100px;">
                     @foreach ($pannes->where('type', 'mecanique') as $panne)
                         <option value="{{ $panne->id }}">{{ $panne->name }}</option>
@@ -167,10 +179,10 @@
         </div>
         <div class="col-md-4">
             <div class="form-check form-switch" style="padding-left: 0em;">
-                <label class="form-check-label" for="togglePanneElectrique">Pannes électrique:</label>
+                <label class="form-check-label" for="togglePanneElectrique">Pannes éléctrique:</label>
                 <input class="form-check-input" type="checkbox" name="panneelectriquecheck" id="togglePanneElectrique"
                     style="float: none; margin-left: 0.5em" onchange="toggleSelect('panneElectrique')">
-                <select class="form-select" disabled name="panneelectrique[]" id="panneElectrique" multiple
+                <select class="select" disabled name="panneelectrique[]" id="panneElectrique" multiple
                     aria-label="autorisations" style="height: 100px;">
                     @foreach ($pannes->where('type', 'electrique') as $panne)
                         <option value="{{ $panne->id }}">{{ $panne->name }}</option>
@@ -183,7 +195,7 @@
                 <label class="form-check-label" for="togglePanneTolle">Pannes de Tolles:</label>
                 <input class="form-check-input" type="checkbox" name="pannetollecheck" id="togglePanneTolle"
                     style="float: none; margin-left: 0.5em" onchange="toggleSelect('panneTolle')">
-                <select class="form-select" disabled name="pannetolle[]" id="panneTolle" multiple
+                <select class="select" disabled name="pannetolle[]" id="panneTolle" multiple
                     aria-label="autorisations" style="height: 100px;">
                     @foreach ($pannes->where('type', 'tolle') as $panne)
                         <option value="{{ $panne->id }}">{{ $panne->name }}</option>
@@ -191,20 +203,20 @@
                 </select>
             </div>
         </div>
-        <h4>Vidanges:</h4>
 
+        <h4>Vidanges:</h4>
         <div class="col-md-3 me-5 ms-5 progress" style="padding-left: 0em;padding-right: 0em;height: 2em;">
-            <div class="progress-bar" role="progressbar" id="vidangemoteurbar" style="width: 0%;overflow: visible;" aria-valuenow="0" aria-valuemin="0"
-                aria-valuemax="100">Vidange Moteur
+            <div class="progress-bar" role="progressbar" id="vidangemoteurbar" style="width: 0%;overflow: visible;"
+                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Vidange Moteur
             </div>
         </div>
         <div class="col-md-3 me-5 ms-5 progress" style="padding-left: 0em;padding-right: 0em;height: 2em;">
-            <div class="progress-bar" role="progressbar" id="vidangeboitebar" style="width: 0%;overflow: visible;" aria-valuenow="0" aria-valuemin="0"
-                aria-valuemax="100">Vidange Boite</div>
+            <div class="progress-bar" role="progressbar" id="vidangeboitebar" style="width: 0%;overflow: visible;"
+                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Vidange Boite</div>
         </div>
         <div class="col-md-3 me-5 ms-5 progress" style="padding-left: 0em;padding-right: 0em;height: 2em;">
-            <div class="progress-bar" role="progressbar" id="vidangepondbar" style="width: 0%;overflow: visible;" aria-valuenow="0" aria-valuemin="0"
-                aria-valuemax="100">Vidange Pond</div>
+            <div class="progress-bar" role="progressbar" id="vidangepondbar" style="width: 0%;overflow: visible;"
+                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Vidange Pond</div>
         </div>
 
 
@@ -267,10 +279,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const partitSelect = document.getElementById('partit');
             const inputsToControl = Array.from(document.querySelectorAll(
-                ' #ligne,#destination , #hdepart, #harrive, #gasoile, #kmhlp, #kmdepart, #kmarive'
+                ' #ligne,#id_chauffeur,#destination , #hdepart, #harrive, #gasoile, #kmhlp, #kmdepart, #kmarive'
             ));
             const defaultValues = {
                 ligne: '/',
+                id_chauffeur: '/',
                 destination: '/',
                 hdepart: '00:00',
                 harrive: '00:00',
@@ -323,12 +336,18 @@
         document.getElementById('brigade').addEventListener('change', function() {
             const brigade_val = this.value;
             const dist_label = document.getElementById('distlabel');
+            const hdpart = document.getElementById('hdepart');
+            const hdarrive = document.getElementById('harrive');
             if (brigade_val === "soir") {
                 dist_label.innerHTML = ''
                 dist_label.innerHTML = 'Arrivée'
+                hdpart.value = '13:41'
+                hdarrive.value = '20:00'
             } else {
                 dist_label.innerHTML = ''
                 dist_label.innerHTML = "Destination"
+                hdpart.value = '07:00'
+                hdarrive.value = '13:40'
             }
         });
         document.getElementById('destination').addEventListener('change', function() {
@@ -372,22 +391,66 @@
             if (!selectedBusKmactuelle) return;
             kmdepart.value = selectedBusKmactuelle;
             // console.log([Math.min((selectedBusKmactuelle - selectedBuskmderniervidange/ 10000) * 100, 100)+'%',Math.min((selectedBusKmactuelle - selectedBuskmderniervidangeboite/ 10000) * 100, 100)+'%',Math.min((selectedBusKmactuelle - selectedBuskmderniervidangepond/ 10000) * 100, 100)+'%'])
-            console.log([Math.min(((selectedBusKmactuelle - selectedBuskmderniervidange)/10000)*100, 100),Math.min(((selectedBusKmactuelle - selectedBuskmderniervidangeboite)/10000)*100, 100),Math.min(((selectedBusKmactuelle - selectedBuskmderniervidangepond)/10000)*100, 100)])
-            vidangemoteurbar.style.width= Math.min(((parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidange))/10000)*100, 100)+'%';
-            vidangeboitebar.style.width= Math.min(((parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidangeboite))/10000)*100, 100)+'%';
-            vidangepondbar.style.width= Math.min(((parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidangepond))/10000)*100, 100)+'%';
-            vidangemoteurbar.innerHTML= '';
-            vidangeboitebar.innerHTML= '';
-            vidangepondbar.innerHTML= '';
-            vidangemoteurbar.innerHTML = 'Moteur: ' + (10000-(parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidange)));
-            vidangeboitebar.innerHTML= 'Boite:'+ (10000-(parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidangeboite)));
-            vidangepondbar.innerHTML= 'Pond:'+ (10000-(parseInt(selectedBusKmactuelle) - parseInt(selectedBuskmderniervidangepond)));
+            console.log([Math.min(((selectedBusKmactuelle - selectedBuskmderniervidange) / 10000) * 100, 100), Math
+                .min(((selectedBusKmactuelle - selectedBuskmderniervidangeboite) / 10000) * 100, 100), Math
+                .min(((selectedBusKmactuelle - selectedBuskmderniervidangepond) / 10000) * 100, 100)
+            ])
+            vidangemoteurbar.style.width = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidange)) / 10000) * 100, 100) + '%';
+            vidangeboitebar.style.width = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidangeboite)) / 10000) * 100, 100) + '%';
+            vidangepondbar.style.width = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidangepond)) / 10000) * 100, 100) + '%';
+            vidangemoteurbar.innerHTML = '';
+            vidangeboitebar.innerHTML = '';
+            vidangepondbar.innerHTML = '';
+            vidangemoteurbar.innerHTML = 'Moteur: ' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidange)));
+            vidangeboitebar.innerHTML = 'Boite:' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidangeboite)));
+            vidangepondbar.innerHTML = 'Pond:' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                selectedBuskmderniervidangepond)));
         });
 
+        // function toggleSelect(selectId) {
+        //     const selectElement = document.getElementById(selectId);
+        //     selectElement.disabled = !selectElement.disabled;
+        //     selectElement.required = !selectElement.required;
+        // }
         function toggleSelect(selectId) {
-            const selectElement = document.getElementById(selectId);
-            selectElement.disabled = !selectElement.disabled;
-            selectElement.required = !selectElement.required;
+            const selectElement = document.getElementById(selectId); // Corrected to use `getElementById`
+            const partitSelect = document.getElementById('partit');
+            const id_chauffer = document.getElementById('id_chauffeur');
+            if (selectElement.tomselect) {
+                if (selectElement.disabled) {
+                    selectElement.tomselect.enable(); // Enable Tom Select
+                } else {
+                    selectElement.tomselect.disable(); // Disable Tom Select
+                }
+                // if(partitSelect.value === 'non'){
+                //     console.log(id_chauffeur.readOnly);
+                //     id_chauffeur.readOnly = !id_chauffeur.readOnly;
+                //     if(id_chauffeur.readOnly === true){
+                //         id_chauffeur.disabled = '/' || '';
+                //     }else{
+                //         id_chauffeur.disabled =  '';
+                //     }
+                // }
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Tom Select for each <select> element
+            const selectIds = ['panneMecanique', 'panneElectrique', 'panneTolle'];
+            selectIds.forEach((id) => {
+                new TomSelect(`#${id}`, {
+                    plugins: ['remove_button'], // Enables the remove button for selected items
+                    create: false, // Prevents users from adding custom options
+                    maxItems: null, // Allows multiple selection
+                    placeholder: 'Selectionner', // Placeholder text
+                    searchField: ['text'], // Enables searching in the options
+                });
+            });
+        });
     </script>
 @endsection

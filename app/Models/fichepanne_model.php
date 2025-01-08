@@ -12,8 +12,8 @@ class fichepanne_model extends Model
     protected $table = 'fichepanne'; // Specify the table name if it's not the default plural form
 
     // Add fillable fields
-    protected $fillable = ['fichemaintenance_id','pannnename_id','solved'];
-
+    protected $fillable = ['fichemaintenance_id','pannnename_id','solved','date_resoudre','lieu_resoudre','brigade','equipe','description'];
+    protected $hidden = ['created_at', 'updated_at'];
     public function fichemaintenance()
     {
         return $this->belongsTo(FicheMaintenance::class, 'fichemaintenance_id');
@@ -21,5 +21,8 @@ class fichepanne_model extends Model
     public function pannename()
     {
         return $this->belongsTo(Panne::class, 'pannnename_id');
+    }
+    public function used_pieces(){
+        return $this->hasMany(used_pieces::class,'fichepanne_id');
     }
 }

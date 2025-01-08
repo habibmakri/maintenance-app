@@ -26,9 +26,12 @@ class maintenanceinRequest extends FormRequest
         $ispannemecanique = $this->input('pannemecaniquecheck') === 'on';
         $ispannelectrique = $this->input('panneelectriquecheck') === 'on';
         $ispannetolle = $this->input('pannetollecheck') === 'on';
+
+        // dd($this->input('pannemecaniquecheck'),$this->input('panneelectriquecheck'),$this->input('pannetollecheck'),$ispannemecanique,$ispannelectrique,$ispannetolle);
         return [
             'date' => ['required', 'date'],
             'bus' => ['required', 'exists:buses,id'],
+            'id_chauffeur' => $isPartitNon ? ['nullable'] : ['required', 'exists:chauffeurs,id'],
             'brigade' => ['required'],
             'partit'=> ['required'],
             'ligne' => $isPartitNon ? ['nullable'] : ['required', 'exists:lignes,id'],
@@ -53,9 +56,9 @@ class maintenanceinRequest extends FormRequest
             ],
             'kmdepart' => $isPartitNon ? ['nullable'] : ['required', 'numeric'],
             'kmarive' => $isPartitNon ? ['nullable'] : ['required', 'numeric', 'gt:kmdepart'],
-            'pannemecanique' => $ispannemecanique ? ['nullable'] :  'required|array',
-            'panneelectrique' => $ispannelectrique ? ['nullable'] :  'required|array',
-            'pannetolle' => $ispannetolle ? ['nullable'] :  'required|array',
+            'pannemecanique' => !$ispannemecanique ? ['nullable'] :  'required|array',
+            'panneelectrique' => !$ispannelectrique ? ['nullable'] :  'required|array',
+            'pannetolle' => !$ispannetolle ? ['nullable'] :  'required|array',
         ];
     }
 }

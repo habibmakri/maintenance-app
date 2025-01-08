@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\add_bus_request;
 use App\Http\Requests\add_ligne_request;
 use App\Http\Requests\add_panne_request;
+use App\Http\Requests\add_piece_request;
 use App\Http\Requests\add_user_request;
 use App\Http\Requests\edit_bus_request;
 use App\Http\Requests\edit_ligne_request;
@@ -12,6 +13,7 @@ use App\Http\Requests\edit_user_request;
 use App\Models\Bus;
 use App\Models\Ligne;
 use App\Models\Panne;
+use App\Models\pieces_maintanance;
 use App\Models\Station;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -178,6 +180,31 @@ class gestionController extends Controller
     public function delete_panne($id)
     {
         $record = Panne::find($id);
+        if ($record) {
+            $record->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
+    public function manage_piece()
+    {
+        $pieces = pieces_maintanance::all();
+        // dd($pieces);
+        return view("gestion.manage_piece", compact("pieces"));
+    }
+    public function add_piece()
+    {
+        return view("gestion.add_piece");
+    }
+    public function do_add_piece(add_piece_request $request)
+    {
+        $data = $request->all();
+        pieces_maintanance::create($data);
+        return to_route('app.gestion.manage_piece')->with('success', 'piece créé avec succès!');
+    }
+    public function delete_piece($id)
+    {
+        $record = pieces_maintanance::find($id);
         if ($record) {
             $record->delete();
             return response()->json(['success' => true]);

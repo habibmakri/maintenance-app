@@ -25,6 +25,7 @@ class maintenanceEditRequest extends FormRequest
     return [
         'partit'=> ['required'],
         'ligne' => $isPartitNon ? ['nullable'] : ['required', 'exists:lignes,id'],
+        'id_chauffeur' => $isPartitNon ? ['nullable'] : ['required', 'exists:chauffeurs,id'],
         'gasoile' => $isPartitNon ? ['nullable'] : ['required', 'numeric'],
         'hdepart' => $isPartitNon ? ['nullable'] : [
             'required',

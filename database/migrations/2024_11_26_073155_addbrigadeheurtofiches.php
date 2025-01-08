@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('fiches_maintenance', function (Blueprint $table) {
-            $table->string('brigade')->after('id_ligne'); 
+            $table->string('brigade')->nullable()->after('id_ligne'); 
             $table->time('heur_depart')->after('brigade'); 
             $table->time('heur_arrive')->after('heur_depart'); 
         });

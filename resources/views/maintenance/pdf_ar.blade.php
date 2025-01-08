@@ -60,6 +60,7 @@
             <th>اليوم</th>
             <th>الحافلة</th>
             <th>الفترة</th>
+            <th>السائق</th>
             <th>الخط</th>
             <th>الإقلاع</th>
             <th>الوصول</th>
@@ -85,6 +86,7 @@
                                 مساءا
                             @endif
                         </td>
+                        <td>{{ $item->chauffeur->name }}</td>
                         <td>{{ $item->ligne->name }}</td>
                         <td>{{ $item->heur_depart }}</td>
                         <td>{{ $item->heur_arrive }}</td>
@@ -107,6 +109,7 @@
                                 مساءا
                             @endif
                         </td>
+                        <td>{{ '/' }}</td>
                         <td>{{ '/' }}</td>
                         <td>{{ '/' }}</td>
                         <td>{{ '/' }}</td>

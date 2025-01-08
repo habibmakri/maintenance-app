@@ -15,26 +15,26 @@
     <style>
       @font-face {
           font-family: 'Tajwal';
-          src: url('{{ asset('NiceAdmin/fonts/tajwal/Tajawal-Light.ttf') }}') format('truetype');
+          src: url('{{ asset('theme/fonts/tajwal/Tajawal-Light.ttf') }}') format('truetype');
           font-weight: normal;
           font-style: normal;
       }
       @font-face {
           font-family: 'Scheherazad';
-          src: url('{{ asset('NiceAdmin/fonts/Scheherazade_New/ScheherazadeNew-Regular.ttf') }}') format('truetype');
+          src: url('{{ asset('theme/fonts/Scheherazade_New/ScheherazadeNew-Regular.ttf') }}') format('truetype');
           font-weight: normal;
           font-style: normal;
       }
  
   </style>
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/css/style.css') }}">
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/quill/quill.snow.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/quill/quill.bubble.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/remixicon/remixicon.css') }}" >
-  <link rel="stylesheet" href="{{ asset('/NiceAdmin/assets/vendor/simple-datatables/style.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/bootstrap/css/bootstrap.min.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/boxicons/css/boxicons.min.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/quill/quill.snow.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/quill/quill.bubble.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/remixicon/remixicon.css') }}" >
+  <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/simple-datatables/style.css') }}" >
 
 </head>
 <body>
@@ -109,15 +109,15 @@
 
     </div>
   </main><!-- End #main -->
-  <script src="/NiceAdmin/assets/vendor/apexcharts/apexcharts.min.js"></script> 
-  <script src="/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/NiceAdmin/assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="/NiceAdmin/assets/vendor/echarts/echarts.min.js"></script>
-  <script src="/NiceAdmin/assets/vendor/quill/quill.js"></script>
-  <script src="/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="/NiceAdmin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="/NiceAdmin/assets/vendor/php-email-form/validate.js"></script>
-  <script src="/NiceAdmin/assets/js/main.js"></script>
+  <script src="/theme/assets/vendor/apexcharts/apexcharts.min.js"></script> 
+  <script src="/theme/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/theme/assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="/theme/assets/vendor/echarts/echarts.min.js"></script>
+  <script src="/theme/assets/vendor/quill/quill.js"></script>
+  <script src="/theme/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="/theme/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="/theme/assets/vendor/php-email-form/validate.js"></script>
+  <script src="/theme/assets/js/main.js"></script>
 
 </body>
 </html>

@@ -15,10 +15,15 @@ class fichemaintenance extends Model
     // Indicates if the model should be timestamped (created_at and updated_at).
     public $timestamps = true;
 
+    protected $hidden = ['created_at', 'updated_at'];
+
+
     // The attributes that are mass assignable.
     protected $fillable = [
         'user_id',
         'date_fiche',
+        'declaré',
+        'id_chauffeur',
         'id_bus',
         'id_ligne',
         'brigade',
@@ -42,6 +47,14 @@ class fichemaintenance extends Model
     public function ligne()
     {
         return $this->belongsTo(Ligne::class, 'id_ligne', 'id');
+    }
+    public function chauffeur()
+    {
+        return $this->belongsTo(chauffeurs::class, 'id_chauffeur', 'id');
+    }
+    public function fichepanne()
+    {
+        return $this->hasmany(fichepanne_model::class, 'fichemaintenance_id', 'id');
     }
 
     

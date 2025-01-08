@@ -52,6 +52,7 @@
                 <th>Date</th>
                 <th>Bus</th>
                 <th>Brigade</th>
+                <th>chauffeur</th>
                 <th>Ligne</th>
                 <th>Départ</th>
                 <th>Arrivée</th>
@@ -71,6 +72,7 @@
                 <td>{{ $item->date_fiche }}</td>
                 <td>{{ $item->bus->name }}</td>
                 <td>{{ $item->brigade }}</td>
+                <td>{{ $item->chauffeur->fr_name }}</td>
                 <td>{{ $item->ligne->name }}</td>
                 <td>{{ $item->heur_depart }}</td>
                 <td>{{ $item->heur_arrive }}</td>
@@ -87,6 +89,7 @@
                 <td>{{ $item->date_fiche }}</td>
                 <td>{{ $item->bus->name  }}</td>
                 <td>{{ $item->brigade }}</td>
+                <td>{{ "/" }}</td>
                 <td>{{ "/" }}</td>
                 <td>{{ "/" }}</td>
                 <td>{{ "/" }}</td>
