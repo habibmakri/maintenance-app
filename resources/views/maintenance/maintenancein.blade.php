@@ -37,7 +37,7 @@
         </div>
     @endif
 
-    <form class="row g-3" action="" method="post">
+    <form class="row g-3" action="" method="post" id="form">
         @csrf
         <h4>Kilométrage:</h4>
         <div class="col-md-3">
@@ -195,8 +195,8 @@
                 <label class="form-check-label" for="togglePanneTolle">Pannes de Tolles:</label>
                 <input class="form-check-input" type="checkbox" name="pannetollecheck" id="togglePanneTolle"
                     style="float: none; margin-left: 0.5em" onchange="toggleSelect('panneTolle')">
-                <select class="select" disabled name="pannetolle[]" id="panneTolle" multiple
-                    aria-label="autorisations" style="height: 100px;">
+                <select class="select" disabled name="pannetolle[]" id="panneTolle" multiple aria-label="autorisations"
+                    style="height: 100px;">
                     @foreach ($pannes->where('type', 'tolle') as $panne)
                         <option value="{{ $panne->id }}">{{ $panne->name }}</option>
                     @endforeach
@@ -227,6 +227,47 @@
         <div id="bus-form-container" class="row"></div>
     </form>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form');
+            form.querySelectorAll('input, select, textarea').forEach((element) => {
+                element.addEventListener('input', (event) => {
+                    saveFormState();
+                });
+
+                if (element.tagName === 'SELECT') {
+                    element.addEventListener('change', (event) => {
+                        saveFormState();
+                    });
+                }
+            });
+        });
+        document.getElementById('form').addEventListener('submit', () => {
+            localStorage.removeItem('form_data');
+        });
+
+        function saveFormState() {
+            const formData = {};
+            document.querySelectorAll('input, select, textarea').forEach((element) => {
+                formData[element.name] = element.value;
+            });
+
+            localStorage.setItem('form_data', JSON.stringify(formData));
+
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedData = JSON.parse(localStorage.getItem('form_data') || '{}');
+            Object.keys(savedData).forEach((name) => {
+                const element = document.querySelector(`[name="${name}"]`);
+                if (element) {
+                    element.value = savedData[name];
+                }
+            });
+            const hlp = document.getElementById('kmhlp');
+            const kmhlpdisp = document.getElementById('kmhlpdisp');
+            kmhlpdisp.value = 0;
+            hlp.value = 0;
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const dateInput = document.querySelector('input[name="date"]');
             const brigadeSelect = document.getElementById('brigade');
@@ -265,6 +306,7 @@
                     })
                     .catch(error => console.error('Error fetching bus data:', error));
             }
+            clearAndFetchBuses();
             brigadeSelect.addEventListener('change', clearAndFetchBuses);
             dateInput.addEventListener('change', function() {
                 kmdepart.value = '';
@@ -332,7 +374,27 @@
             const option = new Option("Terminus", selected_terminus);
             destinationDropdown.add(option);
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            const ligne = document.getElementById('ligne');
+            const selectedOption = ligne.options[ligne.selectedIndex];
+            const selected_terminus = selectedOption.getAttribute('data-terminus');
+            const selected_station = selectedOption.getAttribute('data-station');
+            const destinationDropdown = document.getElementById('destination');
+            destinationDropdown.innerHTML = '';
 
+            const defaultOption = new Option('Séléctionner', '', true, true);
+            defaultOption.disabled = true;
+            destinationDropdown.add(defaultOption);
+
+            stations.forEach(station => {
+                if (station.id == selected_station) {
+                    const option = new Option(station.name, station.distance);
+                    destinationDropdown.add(option);
+                }
+            });
+            const option = new Option("Terminus", selected_terminus);
+            destinationDropdown.add(option);
+        });
         document.getElementById('brigade').addEventListener('change', function() {
             const brigade_val = this.value;
             const dist_label = document.getElementById('distlabel');
@@ -361,6 +423,7 @@
             const kmdepart = document.getElementById('kmdepart');
             const kmarive = document.getElementById('kmarive');
             const kmhlp = document.getElementById('kmhlp');
+            const bus = document.getElementById('bus');
             const destination = document.getElementById('destination');
             const kmglobale = document.getElementById('kmglobale');
             const kmcommerciale = document.getElementById('kmcommerciale');
@@ -370,6 +433,7 @@
                 kmglobale.value = kmarive.value - kmdepart.value;
                 kmcommerciale.value = kmglobale.value - kmhlp.value;
             }
+            bus.addEventListener('change', fetchData);
             kmdepart.addEventListener('change', fetchData);
             kmarive.addEventListener('change', fetchData);
             destination.addEventListener('change', fetchData);
