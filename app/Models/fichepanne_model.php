@@ -16,7 +16,7 @@ class fichepanne_model extends Model
     protected $hidden = ['created_at', 'updated_at'];
     public function fichemaintenance()
     {
-        return $this->belongsTo(FicheMaintenance::class, 'fichemaintenance_id');
+        return $this->belongsTo(fichemaintenance::class, 'fichemaintenance_id');
     }
     public function pannename()
     {
