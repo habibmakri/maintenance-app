@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  {{-- <link href="assets/img/favicon.png" rel="icon"> --}}
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
