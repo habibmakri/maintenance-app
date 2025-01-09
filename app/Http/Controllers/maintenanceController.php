@@ -1021,38 +1021,38 @@ class maintenanceController extends Controller
             'dateauexcel' => 'required|date|after_or_equal:dateduexcel',
             'brigadeexcel' => 'required|string',
         ]);
-        // dd($request->dateauexcel);
+        // dd($request);
         $query = fichemaintenance::query();
         $query->where('declaré', '=', true);
 
-        if ($request->datedupexcel) {
-            $query->where('date_fiche', '>=', $request->datedupexcel);
+        if ($request->dateduexcel) {
+            $query->where('date_fiche', '>=', $request->dateduexcel);
         }
 
-        if ($request->dateaupexcel) {
-            $query->where('date_fiche', '<=', $request->dateaupexcel);
+        if ($request->dateauexcel) {
+            $query->where('date_fiche', '<=', $request->dateauexcel);
         }
 
-        if ($request->brigadepexcel) {
-            if ($request->brigadepexcel == 'jour') {
+        if ($request->brigadeexcel) {
+            if ($request->brigadeexcel == 'jour') {
                 $query->whereIn('brigade', ['soir', 'matin']);
             } else {
-                $query->where('brigade', $request->brigadepexcel);
+                $query->where('brigade', $request->brigadeexcel);
             }
         }
 
         $query->with(['bus', 'ligne'])->orderBy('date_fiche')->orderBy('id_bus');
 
-        $datedupexcel =  \Carbon\Carbon::parse($request->datedupexcel)->format('d-m-Y');
-        $dateaupexcel =  \Carbon\Carbon::parse($request->dateaupexcel)->format('d-m-Y');
-        $brigadepexcel = $request->brigadepexcel;
-        if ($brigadepexcel == 'jour') {
-            $brigadepexcel = "Matin et Soir";
+        $dateduexcel =  \Carbon\Carbon::parse($request->dateduexcel)->format('d-m-Y');
+        $dateauexcel =  \Carbon\Carbon::parse($request->dateauexcel)->format('d-m-Y');
+        $brigadeexcel = $request->brigadeexcel;
+        if ($brigadeexcel == 'jour') {
+            $brigadeexcel = "Matin et Soir";
         } else {
-            if ($brigadepexcel == "matin") {
-                $brigadepexcel = "Matin";
+            if ($brigadeexcel == "matin") {
+                $brigadeexcel = "Matin";
             } else {
-                $brigadepexcel = "Soir";
+                $brigadeexcel = "Soir";
             }
         }
         $data = $query->get();
