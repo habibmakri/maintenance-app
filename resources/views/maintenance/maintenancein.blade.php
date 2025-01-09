@@ -248,7 +248,7 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(response); 
+                        // console.log(response); 
 
                         data.forEach(bus => {
                             if (!bus.filled) {

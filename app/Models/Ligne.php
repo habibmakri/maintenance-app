@@ -26,6 +26,6 @@ class Ligne extends Model
     }
     public function maintenanceRecords()
 {
-    return $this->hasMany(FicheMaintenance::class, 'id_bus');  
+    return $this->hasMany(fichemaintenance::class, 'id_bus');  
 }
 }
