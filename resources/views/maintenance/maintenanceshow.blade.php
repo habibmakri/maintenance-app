@@ -273,7 +273,7 @@
             </div>
             <div>
                 <h5 class="mt-5">Sélectionner le type pour l'extraction des travaux non résolue:</h5>
-                <form class="row g-3" action="{{ route('app.maintenance.panneencour_pdf') }}" method="post">
+                <form class="row g-3" action="{{ route('app.maintenance.panneencours_pdf') }}" method="post">
                     @csrf
                     <div class="col-md-10">
                         <div class="form-floating">
