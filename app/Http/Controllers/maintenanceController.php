@@ -473,7 +473,7 @@ class maintenanceController extends Controller
             'year' => 'required',
         ]);
 
-        
+
         $month = $request->month;
         $year = $request->year;
 
@@ -547,6 +547,58 @@ class maintenanceController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
     }
+
+    public function generate_panneencour_pdf(Request $request)
+    {
+        $request->validate([
+            'typepanne' => 'required',
+        ]);
+
+
+        $typepanne = $request->typepanne;
+
+        $fichepannes = fichepanne_model::query()
+            ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+            ->where('fichepanne.solved', false)
+            ->orderBy('fiches_maintenance.date_fiche')
+            ->get();
+        if ($typepanne == "tous") {
+            $data = $fichepannes;
+        } else {
+            $data = $fichepannes->filter(function ($fichepanne) use ($typepanne) {
+                return $fichepanne->pannename->type == $typepanne;
+            });
+        }
+
+        // dd($data);
+        $html = view('maintenance.pannecour_pdf', compact('data'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            // 'tempDir' => sys_get_temp_dir(),
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: right; font-size: 12px;'>
+            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+        </div>
+        ";
+        $nomfichier = 'Panne non résolue.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+
+
     public function generate_suivibus_pdf(Request $request)
     {
         $request->validate([

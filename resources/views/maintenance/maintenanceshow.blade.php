@@ -272,6 +272,26 @@
                 </form>
             </div>
             <div>
+                <h5 class="mt-5">Sélectionner le type pour l'extraction des travaux non résolue:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.panneencour_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-10">
+                        <div class="form-floating">
+                            <select class="form-select" required name="typepanne" id="typepanne"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>selectionner type</option>
+                                <option value="tous">Tous types</option>
+                                <option value="mecanique">Panne mecanique</option>
+                                <option value="electrique">Panne éléctrique</option>
+                                <option value="tolle">Panne tolle</option>
+                            </select>
+                            <label for="typepanne">Type</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div>
                 <h5 class="mt-5">Sélectionner le mois pour l'extraction de l'état Fiche de suivi Journaliere des travaux
                     reparés:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.suivijournaliere_pdf') }}" method="post">

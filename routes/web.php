@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Authcontroller;
 use App\Http\Controllers\comptabiliteController;
+use App\Http\Controllers\ctechniqueController;
 use App\Http\Controllers\exploatationController;
 use App\Http\Controllers\gestionController;
 use App\Http\Controllers\mainController;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [Authcontroller::class, 'login'])->name('login');
 Route::post('/login', [Authcontroller::class, 'dologin']);
 Route::delete('/logout', [Authcontroller::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/rate_ctechnique', [ctechniqueController::class, 'rate_ctechnique'])->name('rate_ctechnique');
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -47,6 +49,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/ajouter_ndpanne', 'ajouter_ndpanne')->name('ajouter_ndpanne');
         Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
+        Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencour_pdf');
         Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
@@ -88,7 +91,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
         
     });
-
-
+    
+    
 });
 
