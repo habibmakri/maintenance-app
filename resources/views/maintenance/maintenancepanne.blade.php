@@ -54,13 +54,13 @@
                         <div class="modal-body">
                             <form class="row g-3" action="{{ route('app.maintenance.ajouter_ndpanne') }}" method="post">
                                 @csrf
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-floating">
                                         <input name="date" type="date" required class="form-control">
                                         <label for="date">Date</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-floating">
                                         <select class="form-select" name="bus" id="bus" required
                                             aria-label="Floating label select example">
@@ -69,20 +69,6 @@
                                             @endforeach
                                         </select>
                                         <label for="bus">BUS</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-floating">
-                                        <select class="form-select" required name="id_chauffeur" id="id_chauffeur"
-                                            aria-label="Floating label select example">
-                                            <option value="" disabled selected>selectionner chauffeur</option>
-                                            @foreach ($agents as $agent)
-                                                <option value="{{ $agent->firstname }} {{ $agent->lastname }}">
-                                                    {{ $agent->firstname }}
-                                                    {{ $agent->lastname }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="id_chauffeur">Chauffeur</label>
                                     </div>
                                 </div>
                                 <h4>Pannes:</h4>
