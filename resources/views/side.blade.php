@@ -37,7 +37,7 @@
           @endif
           @if(in_array('maintenance_vidange', $permissions))
             <li>
-              <a href="{{ route('app.maintenance.maintenance_show') }}">
+              <a href="{{ route('app.maintenance.maintenance_vidange') }}">
                 <i class="bi bi-circle"></i><span>Vidange</span>
               </a>
             </li>

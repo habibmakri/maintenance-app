@@ -372,6 +372,92 @@ class maintenanceController extends Controller
         }
     }
 
+    public function maintenance_vidange()
+    {
+        $vidanges = fichepanne_model::query()
+            ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+            ->join('pannenames', 'fichepanne.pannnename_id', '=', 'pannenames.id')
+            ->where('pannenames.type', '=', "vidange")
+            ->orderBy('fiches_maintenance.date_fiche')
+            ->get();
+        // dd($vidanges[0]);
+        $buses = Bus::all();
+        $agents = maintenance_agent::all();
+        $pieces = pieces_maintanance::all();
+        $typevidanges = Panne::where('type', '=', 'vidange')->get();
+        return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
+    }
+    public function ajouter_vidange(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'date'],
+            'bus' => ['required', 'exists:buses,id'],
+            'brigade' => ['required'],
+            'nomvidange' => ['required'],
+            'equipe' => 'nullable|array',
+            'kilometrage' => 'required',
+        ]);
+        $pieces = $request->input('pieces', []);
+        $quantities = $request->input('piece_quantities', []);
+        $mergedPieces = [];
+        foreach ($pieces as $index => $pieceId) {
+            if (isset($quantities[$index])) {
+                $mergedPieces[$pieceId] = $quantities[$index];
+            }
+        }
+        // dd($request->date);
+        $ficheData = [
+            'user_id' => Auth::user()->id,
+            'date_fiche' => $request['date'],
+            'declaré' => false,
+            'id_bus' => $request['bus'],
+            'id_ligne' => null,
+            'brigade' => $request->brigade,
+            'id_chauffeur' => null,
+            'heur_depart' => "00:00",
+            'heur_arrive' => "00:00",
+            'gasoile' => "0",
+            'kmdepart' => "0",
+            'kmarrive' => "0",
+            'kmhlp' => "0",
+            'kmgobale' => "0",
+            'kmcommerciale' => "0",
+        ];
+
+        $fiche = fichemaintenance::create($ficheData);
+        $fichepanne_data = [
+            'fichemaintenance_id' => $fiche->id,
+            'pannnename_id' => $request->nomvidange,
+            'solved' => true,
+            'date_resoudre' => $request->date,
+            'lieu_resoudre' => 'Depot',
+            'brigade' => $request->brigade,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+            'description' => "(Kilométrage:".$request->kilometrage.") ".$request->description,
+        ];
+        $fichepanne = fichepanne_model::create($fichepanne_data);
+        if ($mergedPieces) {
+            foreach ($mergedPieces as $pieceId => $quantity) {
+                used_pieces::create(
+                    [
+                        'fichepanne_id' => $fichepanne->id,
+                        'piece_id' => $pieceId,
+                        'quantité' => $quantity,
+                    ]
+                );
+            }
+        }
+        $bus = Bus::find($request->bus);
+        $typevidange = Panne::find($request->nomvidange);
+        if($typevidange->name == 'Vidange moteur'){
+            $bus->update(['derniervidange' => $request->kilometrage]);
+        }elseif($typevidange->name == 'Vidange boite vitesse'){
+            $bus->update(['derniervidangeboite' => $request->kilometrage]);
+        }elseif($typevidange->name == 'Vidange pond'){
+            $bus->update(['derniervidangepond' => $request->kilometrage]);
+        }
+        return redirect()->back()->with('success', 'Vidange ajouter avec succès.');
+    }
     public function maintenance_panne()
     {
         $pannes = fichepanne_model::where('solved', 0)->get();

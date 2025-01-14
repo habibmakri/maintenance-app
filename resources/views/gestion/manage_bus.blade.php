@@ -52,7 +52,9 @@
                     name
                 </th>
                 <th>KM-actuelle</th>
-                <th>Dernier vidange</th>
+                <th>Dernier vidange moteur</th>
+                <th>Dernier vidange boite</th>
+                <th>Dernier vidange pond</th>
                 <th data-type="date" data-format="YYYY/DD/MM">Dernier modification</th>
                 <th>actions</th>
             </tr>
@@ -64,6 +66,8 @@
                     <td>{{ $bus->name }}</td>
                     <td>{{ $bus->kmactuelle }}</td>
                     <td>{{ $bus->derniervidange }}</td>
+                    <td>{{ $bus->derniervidangeboite }}</td>
+                    <td>{{ $bus->derniervidangepond }}</td>
                     <td>{{ $bus->updated_at }}</td>
                     <td>
                         <i class="bi bi-pencil edit-icon" data-id="{{ $bus->id }}"
