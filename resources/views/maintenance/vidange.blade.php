@@ -50,10 +50,10 @@
                             <div class="form-floating">
                                 <select class="form-select" required name="brigade" id="brigade"
                                     aria-label="Floating label select example">
-                                    <option value="" disabled selected>selectionner brigade</option>
+                                    <option value="" disabled >selectionner brigade</option>
+                                    <option value="nuit" selected>Nuit</option>
                                     <option value="matin">Matin</option>
                                     <option value="soir">Soir</option>
-                                    <option value="nuit">Nuit</option>
                                 </select>
                                 <label for="brigade">Brigade</label>
                             </div>
