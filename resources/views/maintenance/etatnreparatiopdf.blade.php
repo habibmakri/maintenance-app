@@ -46,6 +46,7 @@
                 <th>Mécanique</th>
                 <th>Eléctrique</th>
                 <th>Tole</th>
+                <th>Vidange</th>
                 <th>Total</th>
             </tr>
         <tbody>
@@ -56,7 +57,8 @@
                 <td>{{ $item['mecanique'] }}</td>
                 <td>{{ $item['electrique'] }}</td>
                 <td>{{ $item['tole'] }}</td>
-                <td>{{ $item['mecanique']+$item['electrique']+$item['tole'] }}</td>
+                <td>{{ $item['vidange'] }}</td>
+                <td>{{ $item['mecanique']+$item['electrique']+$item['tole']+$item['vidange'] }}</td>
             </tr>
             @endforeach
         </tbody>

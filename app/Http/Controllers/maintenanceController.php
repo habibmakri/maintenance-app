@@ -977,6 +977,7 @@ class maintenanceController extends Controller
                 $toleCount = 0;
                 $mecaniqueCount = 0;
                 $electriqueCount = 0;
+                $vidangeCount = 0;
 
                 foreach ($bus->maintenanceRecords as $maintenanceRecords) {
                     foreach ($maintenanceRecords->fichepanne as $fichepanne) {
@@ -992,6 +993,9 @@ class maintenanceController extends Controller
                                 case 'electrique':
                                     $electriqueCount++;
                                     break;
+                                case 'vidange':
+                                    $vidangeCount++;
+                                    break;
                             }
                         }
                     }
@@ -1002,6 +1006,7 @@ class maintenanceController extends Controller
                     'tole' => $toleCount,
                     'mecanique' => $mecaniqueCount,
                     'electrique' => $electriqueCount,
+                    'vidange' => $vidangeCount,
                 ];
             });
         // dd($data);
