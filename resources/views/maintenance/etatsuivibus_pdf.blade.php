@@ -69,7 +69,7 @@
         </thead>
         <tbody>
             @php
-                $totals = ['E' => 0, 'M' => 0, 'T' => 0];
+                $totals = ['E' => 0, 'M' => 0, 'T' => 0,'V'=> 0];
             @endphp
             @foreach ($pannes as $panne)
                 <tr>
@@ -78,7 +78,7 @@
                     <td style="text-align: left; text-align:justify;padding:5px;"><span
                             style="text-decoration: underline;"><strong>{{ $panne->pannename->name }}</strong></span><br>{{ $panne->description }}<br>
                         @foreach ($panne->used_pieces as $piece)
-                            {{ $piece->piece->name }} => {{ $piece->quantité }} || 
+                            {{ $piece->piece->name }} => {{ $piece->quantité }} ||
                         @endforeach
                     </td>
                     <td>
@@ -91,7 +91,9 @@
                             @endif
                         @endforeach
                     </td>
-                    <td><span style="font-weight: bold">{{ ucfirst($panne->brigade) }}</span><br>{{ $panne->lieu_resoudre }}</td>
+                    <td><span
+                            style="font-weight: bold">{{ ucfirst($panne->brigade) }}</span><br>{{ $panne->lieu_resoudre }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -99,17 +101,18 @@
     <table style="font-size:10px;">
         <thead>
             <tr>
-                <th colspan="3">Nombre Totale des pannes</th>
+                <th colspan="4">Nombre Totale des pannes</th>
             </tr>
             <tr>
                 <th style="text-align: center;width:33%;">Mecanique</th>
                 <th style="text-align: center;width:33%;">Electrique</th>
                 <th style="text-align: center;width:33%;">Tolle</th>
+                <th style="text-align: center;width:33%;">Vidange</th>
             </tr>
         </thead>
         <tbody>
             @php
-                $totals = ['E' => 0, 'M' => 0, 'T' => 0];
+                $totals = ['E' => 0, 'M' => 0, 'T' => 0,'V'=> 0];
             @endphp
             @foreach ($pannes as $panne)
                 @if ($panne->pannename->type === 'mecanique')
@@ -121,11 +124,15 @@
                 @if ($panne->pannename->type === 'tolle')
                     @php $totals['T']++; @endphp
                 @endif
+                @if ($panne->pannename->type === 'vidange')
+                    @php $totals['V']++; @endphp
+                @endif
             @endforeach
             <tr>
                 <td style="text-align: center;width:33%;">{{ $totals['M'] }}</td>
                 <td style="text-align: center;width:33%;">{{ $totals['E'] }}</td>
                 <td style="text-align: center;width:33%;">{{ $totals['T'] }}</td>
+                <td style="text-align: center;width:33%;">{{ $totals['V'] }}</td>
             </tr>
         </tbody>
     </table>
