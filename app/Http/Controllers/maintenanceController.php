@@ -610,6 +610,137 @@ class maintenanceController extends Controller
     }
 
 
+    // public function generate_suivijournaliere_pdf(Request $request)
+    // {
+    //     $request->validate([
+    //         'month' => 'required',
+    //         'year' => 'required',
+    //     ]);
+
+
+    //     $month = $request->month;
+    //     $year = $request->year;
+
+
+    //     $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+    //     $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+    //     $months_fr_array = [
+    //         1 => 'Janvier',
+    //         2 => 'Février',
+    //         3 => 'Mars',
+    //         4 => 'Avril',
+    //         5 => 'Mai',
+    //         6 => 'Juin',
+    //         7 => 'Juillet',
+    //         8 => 'Août',
+    //         9 => 'Septembre',
+    //         10 => 'Octobre',
+    //         11 => 'Novembre',
+    //         12 => 'Décembre'
+    //     ];
+    //     $monthName = $months_fr_array[$month] . $year;
+
+    //     $buses = Bus::all();
+    //     $pannes = [];
+
+    //     foreach ($buses as $bus) {
+    //         $fiches = $bus->maintenanceRecords()
+    //             ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
+    //                 $query->whereBetween('fichepanne.date_resoudre', [$firstDay, $lastDay]);
+    //             })
+    //             ->with(['fichepanne' => function ($query) use ($firstDay, $lastDay) {
+    //                 $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+    //             }])
+    //             ->get();
+
+    //         if ($fiches->isNotEmpty()) {
+    //             $pannes[] = $fiches->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+    //         }
+    //     }
+
+    //     // Flatten and sort the combined pannes list
+    //     $pannes = collect($pannes)->flatten()->sortBy('date_resoudre');
+
+    //     $groupedpannes = $pannes->groupBy(function ($panne) {
+    //         return \Carbon\Carbon::parse($panne->date_resoudre)->toDateString();
+    //     });
+    //     // dd($groupedpannes);
+    //     $html = view('maintenance.etatsuivijournaliere_pdf', compact('groupedpannes', 'monthName'))->render();
+
+    //     $mpdf = new Mpdf([
+    //         'format' => 'A4',
+    //         // 'tempDir' => sys_get_temp_dir(),
+    //     ]);
+    //     $imagePath = public_path('/LOGO ETUS.png');
+    //     $mpdf->AddPage();
+    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+    //     $mpdf->SetY(10);
+    //     date_default_timezone_set('Africa/Algiers');
+    //     $currentdate = date('H:i:s d-m-Y');
+    //     $htmlFooter = "
+    //     <div style='text-align: right; font-size: 12px;'>
+    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+    //     </div>
+    //     ";
+    //     $nomfichier = 'Fiche suivi Journalière- ' . $monthName  . '.pdf';
+
+    //     $mpdf->SetHTMLFooter($htmlFooter);
+    //     $mpdf->WriteHTML($html);
+    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+    //     ]);
+    // }
+
+    // public function generate_panneencour_pdf(Request $request)
+    // {
+    //     $request->validate([
+    //         'typepanne' => 'required',
+    //     ]);
+
+
+    //     $typepanne = $request->typepanne;
+
+    //     $fichepannes = fichepanne_model::query()
+    //         ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+    //         ->where('fichepanne.solved', false)
+    //         ->orderBy('fiches_maintenance.date_fiche')
+    //         ->get();
+    //     if ($typepanne == "tous") {
+    //         $data = $fichepannes;
+    //     } else {
+    //         $data = $fichepannes->filter(function ($fichepanne) use ($typepanne) {
+    //             return $fichepanne->pannename->type == $typepanne;
+    //         });
+    //     }
+
+    //     // dd($data);
+    //     $html = view('maintenance.pannecour_pdf', compact('data'))->render();
+
+    //     $mpdf = new Mpdf([
+    //         'format' => 'A4',
+    //         // 'tempDir' => sys_get_temp_dir(),
+    //     ]);
+    //     $imagePath = public_path('/LOGO ETUS.png');
+    //     $mpdf->AddPage();
+    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+    //     $mpdf->SetY(10);
+    //     date_default_timezone_set('Africa/Algiers');
+    //     $currentdate = date('H:i:s d-m-Y');
+    //     $htmlFooter = "
+    //     <div style='text-align: right; font-size: 12px;'>
+    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+    //     </div>
+    //     ";
+    //     $nomfichier = 'Panne non résolue.pdf';
+
+    //     $mpdf->SetHTMLFooter($htmlFooter);
+    //     $mpdf->WriteHTML($html);
+    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+    //     ]);
+    // }
     public function generate_suivijournaliere_pdf(Request $request)
     {
         $request->validate([
@@ -640,32 +771,68 @@ class maintenanceController extends Controller
         ];
         $monthName = $months_fr_array[$month] . $year;
 
-        $buses = Bus::all();
+        $buses = Bus::with([
+            'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            },
+            'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            }
+        ])->get();
+
         $pannes = [];
+        $traveaux = [];
+        $total = [];
 
         foreach ($buses as $bus) {
-            $fiches = $bus->maintenanceRecords()
-                ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
-                    $query->whereBetween('fichepanne.date_resoudre', [$firstDay, $lastDay]);
-                })
-                ->with(['fichepanne' => function ($query) use ($firstDay, $lastDay) {
-                    $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
-                }])
-                ->get();
-
+            $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
             if ($fiches->isNotEmpty()) {
-                $pannes[] = $fiches->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+                $pannes[] = $fiches;
             }
+
+            $trav = $bus->traveauxlibre->sortBy('date_resoudre');
+            if ($trav->isNotEmpty()) {
+                $traveaux[] = $trav;
+            }
+
+            $total = array_merge($total, $fiches->map(function ($panne) use ($bus) {
+                return [
+                    'name' => $panne->pannename->name,
+                    'bus' => $bus->name,
+                    'date' => $panne->date_resoudre,
+                    'description' => $panne->description,
+                    'used_pieces' => $panne->used_pieces,
+                    'type' => $panne->pannename->type,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'lieu' => $panne->lieu_resoudre,
+                    'item' => 'Panne',
+                ];
+            })->toArray());
+
+            $total = array_merge($total, $trav->map(function ($panne) use ($bus) {
+                return [
+                    'name' => $panne->name,
+                    'bus' => $bus->name,
+                    'date' => $panne->date_resoudre,
+                    'description' => $panne->description,
+                    'used_pieces' => $panne->used_pieces,
+                    'type' => $panne->nature,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'lieu' => $panne->lieu_resoudre,
+                    'item' => 'T E',
+                ];
+            })->toArray());
         }
 
-        // Flatten and sort the combined pannes list
-        $pannes = collect($pannes)->flatten()->sortBy('date_resoudre');
+        $total = collect($total)->sortBy('date');
+        $groupedtotal = $total->groupBy(fn($panne) => \Carbon\Carbon::parse($panne['date'])->toDateString());
 
-        $groupedpannes = $pannes->groupBy(function ($panne) {
-            return \Carbon\Carbon::parse($panne->date_resoudre)->toDateString();
-        });
+        // dd($pannes, $traveaux, $total);
+
         // dd($groupedpannes);
-        $html = view('maintenance.etatsuivijournaliere_pdf', compact('groupedpannes', 'monthName'))->render();
+        $html = view('maintenance.etatsuivijournaliere_pdf', compact('groupedtotal', 'monthName'))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',
@@ -743,6 +910,77 @@ class maintenanceController extends Controller
     }
 
 
+    // public function generate_suivibus_pdf(Request $request)
+    // {
+    //     $request->validate([
+    //         'buspdf' => 'required|exists:buses,id',
+    //         'month' => 'required',
+    //         'year' => 'required',
+    //     ]);
+
+    //     $month = $request->month;
+    //     $year = $request->year;
+    //     $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+    //     $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+    //     $months_fr_array = [
+    //         1 => 'Janvier',
+    //         2 => 'Février',
+    //         3 => 'Mars',
+    //         4 => 'Avril',
+    //         5 => 'Mai',
+    //         6 => 'Juin',
+    //         7 => 'Juillet',
+    //         8 => 'Août',
+    //         9 => 'Septembre',
+    //         10 => 'Octobre',
+    //         11 => 'Novembre',
+    //         12 => 'Décembre'
+    //     ];
+    //     $monthName = $months_fr_array[$month] . $year;
+
+    //     $bus = Bus::find($request->buspdf);
+
+    //     $fiches = $bus->maintenanceRecords()
+    //         ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
+    //             $query->whereBetween('fichepanne.date_resoudre', [$firstDay, $lastDay]);
+    //         })
+    //         ->with(['fichepanne' => function ($query) use ($firstDay, $lastDay) {
+    //             $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+    //         }])
+    //         ->get();
+    //     if (count($fiches) > 0) {
+    //         $pannes = $fiches->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+    //     } else {
+    //         $pannes = [];
+    //     }
+
+    //     // dd($pannes);
+    //     $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
+
+    //     $mpdf = new Mpdf([
+    //         'format' => 'A4',
+    //         // 'tempDir' => sys_get_temp_dir(),
+    //     ]);
+    //     $imagePath = public_path('/LOGO ETUS.png');
+    //     $mpdf->AddPage();
+    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+    //     $mpdf->SetY(10);
+    //     date_default_timezone_set('Africa/Algiers');
+    //     $currentdate = date('H:i:s d-m-Y');
+    //     $htmlFooter = "
+    //     <div style='text-align: right; font-size: 12px;'>
+    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+    //     </div>
+    //     ";
+    //     $nomfichier = 'Fiche suivi ' . $bus->name . ' - ' . $monthName  . '.pdf';
+
+    //     $mpdf->SetHTMLFooter($htmlFooter);
+    //     $mpdf->WriteHTML($html);
+    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+    //     ]);
+    // }
     public function generate_suivibus_pdf(Request $request)
     {
         $request->validate([
@@ -771,23 +1009,58 @@ class maintenanceController extends Controller
         ];
         $monthName = $months_fr_array[$month] . $year;
 
-        $bus = Bus::find($request->buspdf);
-
-        $fiches = $bus->maintenanceRecords()
-            ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
-                $query->whereBetween('fichepanne.date_resoudre', [$firstDay, $lastDay]);
-            })
-            ->with(['fichepanne' => function ($query) use ($firstDay, $lastDay) {
+        $bus = Bus::with([
+            'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
                 $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
-            }])
-            ->get();
-        if (count($fiches) > 0) {
-            $pannes = $fiches->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
-        } else {
-            $pannes = [];
+            },
+            'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            }
+        ])->find($request->buspdf);
+
+        if (!$bus) {
+            abort(404, 'Bus not found.');
         }
 
-        // dd($pannes);
+    
+        $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+
+        $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
+
+        $pannes = $fiches->map(function ($panne) use ($bus) {
+            return [
+                'name' => $panne->pannename->name,
+                'bus' => $bus->name,
+                'date' => $panne->date_resoudre,
+                'description' => $panne->description,
+                'used_pieces' => $panne->used_pieces,
+                'type' => $panne->pannename->type,
+                'equipe' => $panne->equipe,
+                'brigade' => $panne->brigade,
+                'lieu' => $panne->lieu_resoudre,
+                'item' => 'Panne',
+            ];
+        });
+
+        $traveauxTransformed = $traveaux->map(function ($panne) use ($bus) {
+            return [
+                'name' => $panne->name,
+                'bus' => $bus->name,
+                'date' => $panne->date_resoudre,
+                'description' => $panne->description,
+                'used_pieces' => $panne->used_pieces,
+                'type' => $panne->nature,
+                'equipe' => $panne->equipe,
+                'brigade' => $panne->brigade,
+                'lieu' => $panne->lieu_resoudre,
+                'item' => 'T E',
+            ];
+        });
+
+        $pannes = $pannes->merge($traveauxTransformed)->sortBy('date');
+
+        // dd($total);
+
         $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
 
         $mpdf = new Mpdf([
@@ -1058,6 +1331,24 @@ class maintenanceController extends Controller
                         }
                     }
                 }
+                foreach ($bus->traveauxlibre as $traveaux) {
+                    if ($traveaux->date_resoudre >= $firstDay && $traveaux->date_resoudre <= $lastDay) {
+                            switch ($traveaux->nature) {
+                                case 'tolle':
+                                    $toleCount++;
+                                    break;
+                                case 'mecanique':
+                                    $mecaniqueCount++;
+                                    break;
+                                case 'electrique':
+                                    $electriqueCount++;
+                                    break;
+                                case 'vidange':
+                                    $vidangeCount++;
+                                    break;
+                            }
+                        }
+                }
 
                 return [
                     'bus' => $bus->name,
@@ -1067,7 +1358,6 @@ class maintenanceController extends Controller
                     'vidange' => $vidangeCount,
                 ];
             });
-        // dd($data);
 
         $mpdf = new Mpdf([
             'format' => 'A4',

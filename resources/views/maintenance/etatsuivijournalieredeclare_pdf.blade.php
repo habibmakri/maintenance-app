@@ -51,19 +51,14 @@
 </head>
 
 <body>
-    <div style="margin-bottom: 7%;margin-left: 20%;"class="header">
-        <p style="margin: 0px; font-size:12px;">REPUBLIQUE  ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
-        <p style="margin: 0px;font-size:12px;">MINISTERE DES TRANSPORTS</p>
-        <p style="margin: 0px;font-size:12px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
-        <p style="margin: 0px;font-size:12px;">ETUS- SIDI BEL ABBES</p>
-        <p style="margin: 0px;font-size:12px;">SERVICE DE LA MAINTENANCE</p>
+    <div style="margin-bottom: 13%;margin-left: 20%;"class="header">
         <h3>FICHE DE SUIVI JOURNALIERE DES TRAVAUX REPARÉS</h3>
         <h2>{{ $monthName }}</h2>
     </div>
     @php
         $totals = ['E' => 0, 'M' => 0, 'T' => 0,'V' => 0];
     @endphp
-    @foreach ($groupedtotal as $date => $pannes)
+    @foreach ($groupedpannes as $date => $pannes)
         <h5 style="margin: 5px;">DATE: {{ $date }}</h5>
         <table style="font-size:10px;">
             <thead>
@@ -79,42 +74,42 @@
             <tbody>
                 @foreach ($pannes as $panne)
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($panne['date'])->format('d/m/Y') }}</td>
-                        <td>{{ $panne['bus'] }}</td>
+                        <td>{{ \Carbon\Carbon::parse($panne->date_resoudre)->format('d/m/Y') }}</td>
+                        <td>{{ $panne->fichemaintenance->bus->name }}</td>
                         <td style="text-align: left; text-align:justify;padding:5px;"><span
-                                style="text-decoration: underline;"><strong>{{$panne['item'].": ". $panne['name'] }}</strong></span><br>{{ $panne['description'] }}<br>
-                            @foreach ($panne['used_pieces'] as $piece)
+                                style="text-decoration: underline;"><strong>{{ $panne->pannename->name }}</strong></span><br>{{ $panne->description }}<br>
+                            @foreach ($panne->used_pieces as $piece)
                                 {{ $piece->piece->name }} => {{ $piece->quantité }} ||
                             @endforeach
                         </td>
                         <td>
-                            {{ ucfirst($panne['type']) }}
+                            {{ ucfirst($panne->pannename->type) }}
                         </td>
                         <td style="text-align: left;">
-                            @foreach (json_decode($panne['equipe'], true) as $equipe)
+                            @foreach (json_decode($panne->equipe, true) as $equipe)
                                 {{ $equipe }}@if (!$loop->last)
                                     ,<br>
                                 @endif
                             @endforeach
                         </td>
                         <td><span
-                                style="font-weight: bold">{{ ucfirst($panne['brigade']) }}</span><br>{{ $panne['lieu'] }}
+                                style="font-weight: bold">{{ ucfirst($panne->brigade) }}</span><br>{{ $panne->lieu_resoudre }}
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         @foreach ($pannes as $panne)
-            @if ($panne['type'] === 'mecanique')
+            @if ($panne->pannename->type === 'mecanique')
                 @php $totals['M']++; @endphp
             @endif
-            @if ($panne['type'] === 'electrique')
+            @if ($panne->pannename->type === 'electrique')
                 @php $totals['E']++; @endphp
             @endif
-            @if ($panne['type'] === 'tolle')
+            @if ($panne->pannename->type === 'tolle')
                 @php $totals['T']++; @endphp
             @endif
-            @if ($panne['type'] === 'vidange')
+            @if ($panne->pannename->type === 'vidange')
                 @php $totals['V']++; @endphp
             @endif
         @endforeach

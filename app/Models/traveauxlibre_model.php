@@ -17,4 +17,7 @@ class traveauxlibre_model extends Model
     {
         return $this->belongsTo(bus::class, 'id_bus');
     }
+    public function used_pieces(){
+        return $this->hasMany(traveauxlibreusedpieces::class,'traveauxlibre_id');
+    }
 }

@@ -25,4 +25,8 @@ class Bus extends Model
     {
         return $this->hasMany(fichemaintenance::class, 'id_bus');
     }
+    public function traveauxlibre()
+    {
+        return $this->hasMany(traveauxlibre_model::class, 'id_bus');
+    }
 }
