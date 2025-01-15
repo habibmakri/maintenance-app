@@ -28,17 +28,24 @@
               </a>
             </li>
           @endif
-          @if(in_array('maintenance_panne', $permissions))
-            <li>
-              <a href="{{ route('app.maintenance.maintenance_panne') }}">
-                <i class="bi bi-circle"></i><span>Liste des pannes</span>
-              </a>
-            </li>
-          @endif
           @if(in_array('maintenance_vidange', $permissions))
             <li>
               <a href="{{ route('app.maintenance.maintenance_vidange') }}">
                 <i class="bi bi-circle"></i><span>Vidange</span>
+              </a>
+            </li>
+          @endif
+          @if(in_array('maintenance_panne', $permissions))
+          <li>
+            <a href="{{ route('app.maintenance.maintenance_panne') }}">
+              <i class="bi bi-circle"></i><span>Liste des pannes</span>
+            </a>
+          </li>
+          @endif
+          @if(in_array('maintenance_in', $permissions))
+            <li>
+              <a href="{{ route('app.maintenance.traveaux_libre') }}">
+                <i class="bi bi-circle"></i><span>Traveaux libre</span>
               </a>
             </li>
           @endif

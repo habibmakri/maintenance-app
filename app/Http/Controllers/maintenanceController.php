@@ -15,6 +15,8 @@ use App\Models\nd_fichepanne_model;
 use App\Models\Panne;
 use App\Models\pieces_maintanance;
 use App\Models\Station;
+use App\Models\traveauxlibre_model;
+use App\Models\traveauxlibreusedpieces;
 use App\Models\used_pieces;
 use App\Models\User;
 use Carbon\Carbon;
@@ -372,6 +374,62 @@ class maintenanceController extends Controller
         }
     }
 
+    public function traveaux_libre()
+    {
+        $traveaux = traveauxlibre_model::all();
+        // dd($vidanges[0]);
+        $buses = Bus::all();
+        $agents = maintenance_agent::all();
+        $stations = Station::all();
+        $pieces = pieces_maintanance::all();
+        $typevidanges = Panne::where('type', '=', 'vidange')->get();
+        return view('maintenance.traveauxlibre', compact(['traveaux', 'stations', 'buses', 'agents', 'pieces', 'typevidanges']));
+    }
+    public function ajouter_traveaux_libre(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'date'],
+            'bus' => ['required', 'exists:buses,id'],
+            'travaille' => 'required',
+            'brigade' => ['required'],
+            'lieuresolu' => 'required',
+            'typetravaille' => ['required'],
+            'equipe' => 'required|array',
+            'description' => 'required',
+        ]);
+        $pieces = $request->input('pieces', []);
+        $quantities = $request->input('piece_quantities', []);
+        $mergedPieces = [];
+        foreach ($pieces as $index => $pieceId) {
+            if (isset($quantities[$index])) {
+                $mergedPieces[$pieceId] = $quantities[$index];
+            }
+        }
+        $travaille_data = [
+            'user_id' => Auth::user()->id,
+            'name' => $request->travaille,
+            'id_bus' => $request->bus,
+            'nature' => $request->typetravaille,
+            'date_resoudre' => $request->date,
+            'lieu_resoudre' => $request->lieuresolu,
+            'brigade' => $request->brigade,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+            'description' => $request->description,
+        ];
+        $travaille_item = traveauxlibre_model::create($travaille_data);
+        if ($mergedPieces) {
+            foreach ($mergedPieces as $pieceId => $quantity) {
+                traveauxlibreusedpieces::create(
+                    [
+                        'traveauxlibre_id' => $travaille_item->id,
+                        'piece_id' => $pieceId,
+                        'quantité' => $quantity,
+                    ]
+                );
+            }
+        }
+        return redirect()->back()->with('success', 'Travaille ajouter avec succès.');
+    }
     public function maintenance_vidange()
     {
         $vidanges = fichepanne_model::query()
@@ -433,7 +491,7 @@ class maintenanceController extends Controller
             'lieu_resoudre' => 'Depot',
             'brigade' => $request->brigade,
             'equipe' => $request->equipe ? json_encode($request->equipe) : null,
-            'description' => "(Kilométrage:".$request->kilometrage.") ".$request->description,
+            'description' => "(Kilométrage:" . $request->kilometrage . ") " . $request->description,
         ];
         $fichepanne = fichepanne_model::create($fichepanne_data);
         if ($mergedPieces) {
@@ -449,11 +507,11 @@ class maintenanceController extends Controller
         }
         $bus = Bus::find($request->bus);
         $typevidange = Panne::find($request->nomvidange);
-        if($typevidange->name == 'Vidange moteur'){
+        if ($typevidange->name == 'Vidange moteur') {
             $bus->update(['derniervidange' => $request->kilometrage]);
-        }elseif($typevidange->name == 'Vidange boite vitesse'){
+        } elseif ($typevidange->name == 'Vidange boite vitesse') {
             $bus->update(['derniervidangeboite' => $request->kilometrage]);
-        }elseif($typevidange->name == 'Vidange pond'){
+        } elseif ($typevidange->name == 'Vidange pond') {
             $bus->update(['derniervidangepond' => $request->kilometrage]);
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');

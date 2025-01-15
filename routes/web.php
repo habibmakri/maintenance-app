@@ -53,6 +53,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
         Route::get('maintenance_vidange','maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_in');
         Route::post('maintenance_vidange','ajouter_vidange');
+        Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_in');
+        Route::post('traveaux_libre','ajouter_traveaux_libre');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');

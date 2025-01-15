@@ -3,29 +3,29 @@
 @section('content')
 
     <div class="pagetitle">
-        <h1>Vidanges</h1>
+        <h1>Traveaux libre</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('app.main') }}">App</a></li>
                 <li class="breadcrumb-item">Maintenance</li>
-                <li class="breadcrumb-item active">vidanges</li>
+                <li class="breadcrumb-item active">Traveaux</li>
             </ol>
         </nav>
     </div>
     <div class="text-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal3">Nouveau
-            Vidange
+            Travaille
         </button>
     </div>
     <div class="modal fade" id="ExtralargeModal3" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal_title3">Déclarer un nouveau vidange:</h5>
+                    <h5 class="modal-title" id="modal_title3">Déclarer un nouveau travaille:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="row g-3" action="{{ route('app.maintenance.maintenance_vidange') }}" method="post">
+                    <form class="row g-3" action="{{ route('app.maintenance.traveaux_libre') }}" method="post">
                         @csrf
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -50,7 +50,7 @@
                             <div class="form-floating">
                                 <select class="form-select" required name="brigade" id="brigade"
                                     aria-label="Floating label select example">
-                                    <option value="" disabled >selectionner brigade</option>
+                                    <option value="" disabled>selectionner brigade</option>
                                     <option value="nuit" selected>Nuit</option>
                                     <option value="matin">Matin</option>
                                     <option value="soir">Soir</option>
@@ -58,28 +58,39 @@
                                 <label for="brigade">Brigade</label>
                             </div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="form-floating">
-                                <select class="form-select" required name="nomvidange" id="nomvidange"
-                                    aria-label="Floating label select example">
-                                    <option value="" disabled selected>selectionner vidange</option>
-                                    @foreach ($typevidanges as $type)
-                                        <option value="{{ $type->id }}">
-                                            {{ $type->name }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="nomvidange">Type</label>
-                            </div>
-                        </div>
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="number" required class="form-control" name="kilometrage" id="kilometrage">
-                                <label for="kilometrage">Kilométrage</label>
+                                <select class="form-select" required name="lieuresolu" id="lieuresolu"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled selected>selectionner Lieu</option>
+                                    @foreach ($stations as $station)
+                                        <option value="{{ $station->name }}">{{ $station->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="lieuresolu">Lieu</label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-floating">
+                                <select class="form-select" required name="typetravaille" id="typetravaille"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled selected>selectionner type</option>
+                                    <option value="mecanique" selected>Mecanique</option>
+                                    <option value="electrique">Electrique</option>
+                                    <option value="tolle">Tolle</option>
+                                </select>
+                                <label for="typetravaille">Type</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <select class="select" name="equipe[]" id="equipe" required multiple aria-label="equipe"
+                                <input type="text" required class="form-control" name="travaille" id="nomtravaille">
+                                <label for="nomtravaille">Travaille</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <select class="select" name="equipe[]" id="equipe" multiple required aria-label="equipe"
                                     style="height: 120px;">
                                     @foreach ($agents as $agent)
                                         <option value="{{ $agent->firstname }} {{ $agent->lastname }}">
@@ -142,27 +153,25 @@
         <thead>
             <tr>
                 <th>N°</th>
-                <th>
-                    BUS
-                </th>
                 <th>Date</th>
+                <th>Travaille</th>
+                <th>BUS</th>
                 <th>Brigade</th>
-                <th>type</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($vidanges as $vidange)
+            @foreach ($traveaux as $travaille)
                 <tr>
-                    <td>{{ $vidange->id }}</td>
-                    <td>{{ $vidange->date_resoudre }}</td>
-                    <td>{{ $vidange->fichemaintenance->bus->name }}</td>
-                    <td>{{ $vidange->brigade }}</td>
-                    <td>{{ $vidange->pannename->name }}</td>
+                    <td>{{ $travaille->id }}</td>
+                    <td>{{ $travaille->date_resoudre }}</td>
+                    <td>{{ $travaille->name }}</td>
+                    <td>{{ $travaille->bus->name }}</td>
+                    <td>{{ $travaille->brigade }}</td>
                     <td>
-                        <i class="bi bi-trash edit-icon" data-id="{{ $vidange->id }}"
+                        <i class="bi bi-trash edit-icon" data-id="{{ $travaille->id }}"
                             style="margin-right:15%;cursor: pointer;"
-                            onclick="handleDeleteClick('{{ $vidange->id }}')"></i>
+                            onclick="handleDeleteClick('{{ $travaille->id }}')"></i>
                     </td>
                 </tr>
             @endforeach
@@ -241,12 +250,6 @@
             deleteDiv.querySelector('.remove-piece').addEventListener('click', function() {
                 toolDiv.remove();
             });
-        });
-        const busSelect = document.getElementById('bus');
-        busSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            kilometrage = document.getElementById('kilometrage');
-            kilometrage.value = selectedOption.dataset.kmactuelle;
         });
     </script>
 @endsection
