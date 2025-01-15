@@ -1315,7 +1315,7 @@ class maintenanceController extends Controller
                         if ($fichepanne->date_resoudre >= $firstDay && $fichepanne->date_resoudre <= $lastDay) {
                             // echo($fichepanne->pannename->type);
                             switch ($fichepanne->pannename->type) {
-                                case 'tole':
+                                case 'tolle':
                                     $toleCount++;
                                     break;
                                 case 'mecanique':
