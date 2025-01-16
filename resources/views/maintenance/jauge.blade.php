@@ -1,27 +1,27 @@
 @extends('base')
-@section('title', 'Vidanges')
+@section('title', 'Jauge')
 @section('content')
 
     <div class="pagetitle">
-        <h1>Vidanges</h1>
+        <h1>Jauges</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('app.main') }}">App</a></li>
                 <li class="breadcrumb-item">Maintenance</li>
-                <li class="breadcrumb-item active">vidanges</li>
+                <li class="breadcrumb-item active">Jauges</li>
             </ol>
         </nav>
     </div>
     <div class="text-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal3">Nouveau
-            Vidange
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal3">Nouvelle
+            Jauge
         </button>
     </div>
     <div class="modal fade" id="ExtralargeModal3" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal_title3">Déclarer un nouveau vidange:</h5>
+                    <h5 class="modal-title" id="modal_title3">Déclarer une nouvelle Jauge:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -58,23 +58,17 @@
                                 <label for="brigade">Brigade</label>
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-floating">
                                 <select class="form-select" required name="nomvidange" id="nomvidange"
                                     aria-label="Floating label select example">
-                                    <option value="" disabled selected>selectionner vidange</option>
-                                    @foreach ($typevidanges as $type)
+                                    <option value="" disabled selected>selectionner type</option>
+                                    @foreach ($typejauges as $type)
                                         <option value="{{ $type->id }}">
                                             {{ $type->name }}</option>
                                     @endforeach
                                 </select>
                                 <label for="nomvidange">Type</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="number" required class="form-control" name="kilometrage" id="kilometrage">
-                                <label for="kilometrage">Kilométrage</label>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -91,18 +85,27 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <textarea class="form-control" name="description" style="height: 100px"></textarea>
+                                <textarea class="form-control" name="description" style="height: 100px" >Remplissage</textarea>
                                 <label for="description">Déscription</label>
                             </div>
                         </div>
                         <p class="mt-4">Pieces</p>
-                        <div id="pieces-section">
-
+                        <div class="col-md-8" id="pieces-section">
+                            <div class="form-floating">
+                                <select class="form-select" name="pieces[]" required>
+                                    <option value="" disabled selected>Séléctionner la piece</option>
+                                    @foreach ($pieces as $piece)
+                                    <option value="{{ $piece->id }}">{{ $piece->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="pieces">Piece</label>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-sm" id="add-piece">
-                                Ajouter pieces
-                            </button>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" name="piece_quantities[]" min="1" required>
+                                <label for="piece_quantities">Quantité</label>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -152,17 +155,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($vidanges as $vidange)
+            @foreach ($jauges as $jauge)
                 <tr>
-                    <td>{{ $vidange->id }}</td>
-                    <td>{{ $vidange->date_resoudre }}</td>
-                    <td>{{ $vidange->fichemaintenance->bus->name }}</td>
-                    <td>{{ $vidange->brigade }}</td>
-                    <td>{{ $vidange->pannename->name }}</td>
+                    <td>{{ $jauge->id }}</td>
+                    <td>{{ $jauge->date_resoudre }}</td>
+                    <td>{{ $jauge->fichemaintenance->bus->name }}</td>
+                    <td>{{ $jauge->brigade }}</td>
+                    <td>{{ $jauge->pannename->name }}</td>
                     <td>
-                        <i class="bi bi-trash edit-icon" data-id="{{ $vidange->id }}"
+                        <i class="bi bi-trash edit-icon" data-id="{{ $jauge->id }}"
                             style="margin-right:15%;cursor: pointer;"
-                            onclick="handleDeleteClick('{{ $vidange->id }}')"></i>
+                            onclick="handleDeleteClick('{{ $jauge->id }}')"></i>
                     </td>
                 </tr>
             @endforeach
@@ -204,44 +207,6 @@
             });
         });
 
-        document.getElementById('add-piece').addEventListener('click', function() {
-            const toolsSection = document.getElementById('pieces-section');
-            const toolDiv = document.createElement('div');
-            toolDiv.classList.add('row', 'g-3', 'mb-3', 'align-items-center');
-            const selectDiv = document.createElement('div');
-            selectDiv.classList.add('col-md-6');
-            selectDiv.innerHTML = `
-            <div class="form-floating">
-                <select class="form-select" name="pieces[]" required>
-                    <option value="" disabled selected>Séléctionner la piece</option>
-                    @foreach ($pieces as $piece)
-                        <option value="{{ $piece->id }}">{{ $piece->name }}</option>
-                    @endforeach
-                </select>
-                <label for="pieces">Piece</label>
-            </div>
-        `;
-            const numberDiv = document.createElement('div');
-            numberDiv.classList.add('col-md-5');
-            numberDiv.innerHTML = `
-            <div class="form-floating">
-                <input type="number" class="form-control" name="piece_quantities[]" min="1" required>
-                <label for="piece_quantities">Quantité</label>
-            </div>
-        `;
-            const deleteDiv = document.createElement('div');
-            deleteDiv.classList.add('col-md-1', 'text-center');
-            deleteDiv.innerHTML = `
-            <button type="button" class="btn btn-danger btn-sm remove-piece">Annuler</button>
-        `;
-            toolDiv.appendChild(selectDiv);
-            toolDiv.appendChild(numberDiv);
-            toolDiv.appendChild(deleteDiv);
-            toolsSection.appendChild(toolDiv);
-            deleteDiv.querySelector('.remove-piece').addEventListener('click', function() {
-                toolDiv.remove();
-            });
-        });
         const busSelect = document.getElementById('bus');
         busSelect.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];

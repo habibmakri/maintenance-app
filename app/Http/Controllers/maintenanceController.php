@@ -445,6 +445,7 @@ class maintenanceController extends Controller
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
+    
     public function ajouter_vidange(Request $request)
     {
         $request->validate([
@@ -515,6 +516,21 @@ class maintenanceController extends Controller
             $bus->update(['derniervidangepond' => $request->kilometrage]);
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');
+    }
+    public function maintenance_jauge()
+    {
+        $jauges = fichepanne_model::query()
+            ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+            ->join('pannenames', 'fichepanne.pannnename_id', '=', 'pannenames.id')
+            ->where('pannenames.type', '=', "jauge")
+            ->orderBy('fiches_maintenance.date_fiche')
+            ->get();
+        // dd($jauges[0]);
+        $buses = Bus::all();
+        $agents = maintenance_agent::all();
+        $pieces = pieces_maintanance::all();
+        $typejauges = Panne::where('type', '=', 'jauge')->get();
+        return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges']));
     }
     public function maintenance_panne()
     {

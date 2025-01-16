@@ -180,7 +180,7 @@
     <script>
         function handleDeleteClick(id) {
             if (confirm('Vous êtes sur?')) {
-                fetch(`manage_panne/deletepanne:${id}`, {
+                fetch(`manage_panne/deletepannesd:${id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
