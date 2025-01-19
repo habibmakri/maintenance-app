@@ -111,7 +111,7 @@
             </tbody>
         </table>
         @foreach ($pannes as $panne)
-            @if ($panne['type'] === 'mecanique')
+            @if ($panne['type'] === 'mecanique'||$panne['type'] === 'jauge')
                 @php $totals['M']++; @endphp
             @endif
             @if ($panne['type'] === 'electrique')

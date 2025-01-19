@@ -120,7 +120,7 @@
                 $totals = ['E' => 0, 'M' => 0, 'T' => 0,'V'=> 0];
             @endphp
             @foreach ($pannes as $panne)
-                @if ($panne['type'] === 'mecanique')
+                @if ($panne['type'] === 'mecanique'||$panne['type'] === 'jauge')
                     @php $totals['M']++; @endphp
                 @endif
                 @if ($panne['type'] === 'electrique')

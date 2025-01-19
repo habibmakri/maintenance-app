@@ -445,7 +445,7 @@ class maintenanceController extends Controller
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
-    
+
     public function ajouter_vidange(Request $request)
     {
         $request->validate([
@@ -1097,7 +1097,7 @@ class maintenanceController extends Controller
             abort(404, 'Bus not found.');
         }
 
-    
+
         $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
 
         $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
@@ -1393,6 +1393,9 @@ class maintenanceController extends Controller
                                 case 'tolle':
                                     $toleCount++;
                                     break;
+                                case 'jauge':
+                                    $mecaniqueCount++;
+                                    break;
                                 case 'mecanique':
                                     $mecaniqueCount++;
                                     break;
@@ -1408,21 +1411,24 @@ class maintenanceController extends Controller
                 }
                 foreach ($bus->traveauxlibre as $traveaux) {
                     if ($traveaux->date_resoudre >= $firstDay && $traveaux->date_resoudre <= $lastDay) {
-                            switch ($traveaux->nature) {
-                                case 'tolle':
-                                    $toleCount++;
-                                    break;
-                                case 'mecanique':
-                                    $mecaniqueCount++;
-                                    break;
-                                case 'electrique':
-                                    $electriqueCount++;
-                                    break;
-                                case 'vidange':
-                                    $vidangeCount++;
-                                    break;
-                            }
+                        switch ($traveaux->nature) {
+                            case 'tolle':
+                                $toleCount++;
+                                break;
+                            case 'jauge':
+                                $mecaniqueCount++;
+                                break;
+                            case 'mecanique':
+                                $mecaniqueCount++;
+                                break;
+                            case 'electrique':
+                                $electriqueCount++;
+                                break;
+                            case 'vidange':
+                                $vidangeCount++;
+                                break;
                         }
+                    }
                 }
 
                 return [
