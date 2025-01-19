@@ -22,7 +22,7 @@ class add_piece_request extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:pannenames,name',
+            'name' => 'required|string|unique:pieces_maintenance,name',
         ];
     }
 }
