@@ -25,7 +25,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="row g-3" action="{{ route('app.maintenance.maintenance_vidange') }}" method="post">
+                    <form class="row g-3" action="{{ route('app.maintenance.maintenance_jauge') }}" method="post">
                         @csrf
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -103,7 +103,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="number" class="form-control" name="piece_quantities[]" min="1" required>
+                                <input type="number" class="form-control" step="any" name="piece_quantities[]" min="1" required>
                                 <label for="piece_quantities">Quantité</label>
                             </div>
                         </div>

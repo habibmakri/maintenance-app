@@ -54,7 +54,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('maintenance_vidange','maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_vidange');
         Route::post('maintenance_vidange','ajouter_vidange');
         Route::get('maintenance_jauge','maintenance_jauge')->name('maintenance_jauge')->middleware('rolesMiddleware:maintenance_jauge');
-        // Route::post('maintenance_jauge','ajouter_jauge');
+        Route::post('maintenance_jauge','ajouter_jauge');
         Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_in');
         Route::post('traveaux_libre','ajouter_traveaux_libre');
     });
