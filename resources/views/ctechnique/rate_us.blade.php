@@ -29,6 +29,126 @@
             font-weight: normal;
             font-style: normal;
         }
+
+        @font-face {
+            font-family: 'Urdu';
+            src: url('{{ asset('theme/fonts/Noto_Nastaliq_Urdu/Noto_Nastaliq_Urdu/static/NotoNastaliqUrdu-Medium.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajwal', sans-serif;
+            background-color: #f8f9fa;
+            color: #012970;
+        }
+
+        main {
+            width: 100%;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            text-align: center;
+            color: #212529;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 16px 0 8px;
+            text-align: center;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .stars i {
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #98a6bf;
+            /* Couleur par défaut des icônes */
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .stars i:hover {
+            transform: scale(1.1);
+            /* Zoom au survol */
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            resize: none;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+        }
+
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+
+            color: #fff;
+            font-size: 18px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, #3399ff, #0069d9);
+            transform: translateY(-2px);
+        }
+
+        input[type="submit"]:active {
+            background: linear-gradient(135deg, #0056b3, #003f7f);
+            transform: translateY(0);
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .stars i {
+                font-size: 2rem;
+            }
+
+            input[type="submit"] {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            textarea,
+            input[type="text"] {
+                font-size: 14px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('/theme/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -41,54 +161,104 @@
 
 </head>
 
-<body>
-    <div class="d-flex" style="align-items: center;justify-content: center;">
-        <h1 class="mb-2 pt-5" style="font-family: 'Tajwal', sans-serif;font-size:30px;">المؤسسة العمومية للنقل
+<body class="vh-100">
+    <div class="d-flex" style="align-items: center;justify-content: center;flex-direction:column;">
+        <h1 class="mb-1 pt-1" style="font-family: 'Tajwal', sans-serif;font-size:18px;text-align: center;">المؤسسة
+            العمومية للنقل
             الحضري<br> والشبه الحضري سيدي بلعباس</span>
-            <h1 class="mb-2 pt-5" style="font-family: 'Tajwal', sans-serif;font-size:30px;">وكالة المراقبة
+            <h1 class="mb-1 pt-1" style="font-family: 'Tajwal', sans-serif;font-size:18px;text-align: center;">وكالة
+                المراقبة
                 التقنية<br>سيدي بلعباس</span>
-                <h1 class="mb-2 pt-5" style="font-family: 'Scheherazad', sans-serif;cursor:default; font-size:50px;">
+                <h1 class="mb-4 pt-4"
+                    style="font-family: 'Urdu', sans-serif;cursor:default; font-size:30px;text-align: center;">
                     قيمني</span>
     </div>
-    <main class="d-flex justify-content-center align-items-center vh-100" style="color: #012970;">
-        <div class="container text-center px-4">
-            <h1 class="mb-2 pt-5">قيمني</h1>
+    <main class="d-flex justify-content-center align-items-center" style="color: #012970;">
+        <form action="{{ route('rate_ctechnique') }}" method="post">
+            @csrf
+            <div class="container text-center px-4">
+                <p>كيف تقيم الخدمة بشكل عام</p>
+                <div class="stars my-3">
+                    <label>
+                        <input type="radio" name="service_rating" value="bien" style="display: none;">
+                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="service_rating" value="moyen" style="display: none;">
+                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="service_rating" value="mauvais" style="display: none;">
+                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                </div>
+                <p>مدى رضاك عن تعامل المراقب</p>
+                <div class="stars my-3">
+                    <label>
+                        <input type="radio" name="controler_rating" value="bien" style="display: none;">
+                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="controler_rating" value="moyen" style="display: none;">
+                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="controler_rating" value="mauvais" style="display: none;">
+                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                </div>
+                <p>مدى رضاك عن نظافة الوكالة</p>
+                <div class="stars my-3">
+                    <label>
+                        <input type="radio" name="clean_rating" value="bien" style="display: none;">
+                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="clean_rating" value="moyen" style="display: none;">
+                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="clean_rating" value="mauvais" style="display: none;">
+                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                </div>
+                <p>مدى رضاك عن التنظيم</p>
+                <div class="stars my-3">
+                    <label>
+                        <input type="radio" name="order_rating" value="bien" style="display: none;">
+                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="order_rating" value="moyen" style="display: none;">
+                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="order_rating" value="mauvais" style="display: none;">
+                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                    </label>
+                </div>
+                <p class="mt-4">هل تريد إخبارنا بأي شيء؟</p>
+                <textarea class="form-control my-3" rows="3" name="message" placeholder="اكتب رسالتك هنا - إختياري"></textarea>
 
-            <p>كيف تقيم الخدمة بشكل عام</p>
-            <div class="stars my-3">
-                <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem;"></i>
-            </div>
+                <p class="mt-4">رقم الهاتف</p>
+                <input type="text" class="form-control my-3" name="phone"
+                    placeholder=" أدخل رقم الهاتف - إختياري">
 
-            <p>مدى رضاك عن تعامل المراقب</p>
-            <div class="stars my-3">
-                <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem;"></i>
-            </div>
-
-            <p>مدى رضاك عن نظافة الوكالة</p>
-            <div class="stars my-3">
-                <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem;"></i>
-            </div>
-
-            <p>مدى رضاك عن التنظيم</p>
-            <div class="stars my-3">
-                <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem;"></i>
-                <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem;"></i>
-            </div>
-
-            <p class="mt-4">هل تريد إخبارنا بأي شيء؟</p>
-            <textarea class="form-control my-3" rows="3" placeholder="اكتب رسالتك هنا"></textarea>
-
-            <p class="mt-4">رقم الهاتف</p>
-            <input type="text" class="form-control my-3" placeholder="أدخل رقم الهاتف">
+                <input type="submit" value="تأكيد">
+        </form>
         </div>
     </main>
+    <script>
+        document.querySelectorAll('.stars input[type="radio"]').forEach((radio) => {
+            radio.addEventListener('change', (e) => {
+                const parent = e.target.closest('.stars');
+                // Réinitialiser le style des icônes
+                parent.querySelectorAll('i').forEach(icon => icon.style.color = '#98a6bf');
+                // Appliquer un style à l'icône sélectionnée
+                e.target.nextElementSibling.style.color = '#007bff'; // Couleur bleue par exemple
+            });
+        });
+    </script>
 
     <script src="/theme/assets/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="/theme/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

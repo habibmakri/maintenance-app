@@ -17,6 +17,7 @@ Route::get('/login', [Authcontroller::class, 'login'])->name('login');
 Route::post('/login', [Authcontroller::class, 'dologin']);
 Route::delete('/logout', [Authcontroller::class, 'logout'])->name('logout')->middleware('auth');
 Route::get('/rate_ctechnique', [ctechniqueController::class, 'rate_ctechnique'])->name('rate_ctechnique');
+Route::post('/rate_ctechnique', [ctechniqueController::class, 'add_rate_ctechnique']);
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -95,6 +96,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     });
     Route::prefix('/')->controller(exploatationController::class)->name('exploatation.')->group(function () {
         Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
+        
+    });
+    Route::prefix('/')->controller(exploatationController::class)->name('ctechnique.')->group(function () {
+        // Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
         
     });
     

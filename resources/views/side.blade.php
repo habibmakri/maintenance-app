@@ -171,6 +171,23 @@
         </ul>
       </li>
       @endif
+      {{-- Technique tabs --}}
+      @if(in_array('ctechnique_rendezvous', $permissions))
+      <li class="nav-item ">
+        <a class="nav-link collapsed" data-bs-target="#Ctechnique-nav" data-bs-toggle="collapse" href="#">
+          <i class="  ri-car-line"></i><span>Controle Technique</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="Ctechnique-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          @if(in_array('ctechnique_rendezvous', $permissions))
+            <li>
+              <a href="{{ route('app.exploatation.statistiques') }}">
+                <i class="bi bi-circle"></i><span>Liste Client</span>
+              </a>
+            </li>
+          @endif
+        </ul>
+      </li>
+      @endif
       {{-- Judiciaire tabs --}}
       @if(in_array('judiciaire_in', $permissions))
       <li class="nav-item ">
