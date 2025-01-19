@@ -98,6 +98,10 @@
                                     @endif
                                 @endforeach
                             </td>
+                            @else
+                            <td style="text-align: left;">
+
+                            </td>
                         @endif
                         <td><span
                                 style="font-weight: bold">{{ ucfirst($panne['brigade']) }}</span><br>{{ $panne['lieu'] }}
