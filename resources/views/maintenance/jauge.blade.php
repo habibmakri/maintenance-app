@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <textarea class="form-control" name="description" style="height: 100px" >Remplissage</textarea>
+                                <textarea class="form-control" name="description" style="height: 100px" ></textarea>
                                 <label for="description">Déscription</label>
                             </div>
                         </div>
