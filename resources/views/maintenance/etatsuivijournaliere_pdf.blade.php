@@ -52,7 +52,7 @@
 
 <body>
     <div style="margin-bottom: 7%;margin-left: 20%;"class="header">
-        <p style="margin: 0px; font-size:12px;">REPUBLIQUE  ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
+        <p style="margin: 0px; font-size:12px;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
         <p style="margin: 0px;font-size:12px;">MINISTERE DES TRANSPORTS</p>
         <p style="margin: 0px;font-size:12px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
         <p style="margin: 0px;font-size:12px;">ETUS- SIDI BEL ABBES</p>
@@ -61,7 +61,7 @@
         <h2>{{ $monthName }}</h2>
     </div>
     @php
-        $totals = ['E' => 0, 'M' => 0, 'T' => 0,'V' => 0];
+        $totals = ['E' => 0, 'M' => 0, 'T' => 0, 'V' => 0];
     @endphp
     @foreach ($groupedtotal as $date => $pannes)
         <h5 style="margin: 5px;">DATE: {{ $date }}</h5>
@@ -82,7 +82,7 @@
                         <td>{{ \Carbon\Carbon::parse($panne['date'])->format('d/m/Y') }}</td>
                         <td>{{ $panne['bus'] }}</td>
                         <td style="text-align: left; text-align:justify;padding:5px;"><span
-                                style="text-decoration: underline;"><strong>{{$panne['item'].": ". $panne['name'] }}</strong></span><br>{{ $panne['description'] }}<br>
+                                style="text-decoration: underline;"><strong>{{ $panne['item'] . ': ' . $panne['name'] }}</strong></span><br>{{ $panne['description'] }}<br>
                             @foreach ($panne['used_pieces'] as $piece)
                                 {{ $piece->piece->name }} => {{ $piece->quantité }} ||
                             @endforeach
@@ -90,13 +90,15 @@
                         <td>
                             {{ ucfirst($panne['type']) }}
                         </td>
-                        <td style="text-align: left;">
-                            @foreach (json_decode($panne['equipe'], true) as $equipe)
-                                {{ $equipe }}@if (!$loop->last)
-                                    ,<br>
-                                @endif
-                            @endforeach
-                        </td>
+                        @if (!is_null($panne['equipe']))
+                            <td style="text-align: left;">
+                                @foreach (json_decode($panne['equipe'], true) as $equipe)
+                                    {{ $equipe }}@if (!$loop->last)
+                                        ,<br>
+                                    @endif
+                                @endforeach
+                            </td>
+                        @endif
                         <td><span
                                 style="font-weight: bold">{{ ucfirst($panne['brigade']) }}</span><br>{{ $panne['lieu'] }}
                         </td>
