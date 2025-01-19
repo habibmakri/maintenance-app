@@ -92,7 +92,7 @@
                         <p class="mt-4">Pieces</p>
                         <div class="col-md-8" id="pieces-section">
                             <div class="form-floating">
-                                <select class="form-select" name="pieces[]" required>
+                                <select class="form-select" name="pieces[]" >
                                     <option value="" disabled selected>Séléctionner la piece</option>
                                     @foreach ($pieces as $piece)
                                     <option value="{{ $piece->id }}">{{ $piece->name }}</option>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="number" class="form-control" step="any" name="piece_quantities[]" min="1" required>
+                                <input type="number" class="form-control" step="any" name="piece_quantities[]" min="1" >
                                 <label for="piece_quantities">Quantité</label>
                             </div>
                         </div>
