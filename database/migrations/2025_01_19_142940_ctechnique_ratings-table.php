@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('ctechnique_ratings', function (Blueprint $table) {
             $table->id();
-            $table->string('service');
-            $table->string('controler');
-            $table->string('clean');
-            $table->string('order');
-            $table->string('message');
-            $table->string('phone');
+            $table->string('service')->nullable();
+            $table->string('controler')->nullable();
+            $table->string('clean')->nullable();
+            $table->string('order')->nullable();
+            $table->string('message')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

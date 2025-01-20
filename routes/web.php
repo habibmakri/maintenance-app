@@ -98,8 +98,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
         
     });
-    Route::prefix('/')->controller(exploatationController::class)->name('ctechnique.')->group(function () {
-        // Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
+    Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
+        Route::get('evaluations','evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
+        Route::post('evaluations/marquercommelue','marquercommelue')->name('marquercommelue');
+        Route::post('evaluations/print_evaluation','print_evaluation')->name('print_evaluation');
         
     });
     

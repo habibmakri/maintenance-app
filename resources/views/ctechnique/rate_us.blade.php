@@ -69,9 +69,15 @@
             justify-content: center;
             gap: 16px;
         }
-
+        
         .stars i {
             font-size: 2.5rem;
+            cursor: pointer;
+            color: #98a6bf;
+            /* Couleur par défaut des icônes */
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .stars p {
             cursor: pointer;
             color: #98a6bf;
             /* Couleur par défaut des icônes */
@@ -181,60 +187,72 @@
                 <div class="stars my-3">
                     <label>
                         <input type="radio" name="service_rating" value="bien" style="display: none;">
-                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>جيدة</p>
                     </label>
                     <label>
                         <input type="radio" name="service_rating" value="moyen" style="display: none;">
-                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>متوسطة</p>
                     </label>
                     <label>
                         <input type="radio" name="service_rating" value="mauvais" style="display: none;">
-                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>سيئة</p>
                     </label>
                 </div>
                 <p>مدى رضاك عن تعامل المراقب</p>
                 <div class="stars my-3">
                     <label>
                         <input type="radio" name="controler_rating" value="bien" style="display: none;">
-                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>جيدة</p>
                     </label>
                     <label>
                         <input type="radio" name="controler_rating" value="moyen" style="display: none;">
-                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>متوسطة</p>
                     </label>
                     <label>
                         <input type="radio" name="controler_rating" value="mauvais" style="display: none;">
-                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>سيئة</p>
                     </label>
                 </div>
                 <p>مدى رضاك عن نظافة الوكالة</p>
                 <div class="stars my-3">
                     <label>
                         <input type="radio" name="clean_rating" value="bien" style="display: none;">
-                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>جيدة</p>
                     </label>
                     <label>
                         <input type="radio" name="clean_rating" value="moyen" style="display: none;">
-                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>متوسطة</p>
                     </label>
                     <label>
                         <input type="radio" name="clean_rating" value="mauvais" style="display: none;">
-                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>سيئة</p>
                     </label>
                 </div>
                 <p>مدى رضاك عن التنظيم</p>
                 <div class="stars my-3">
                     <label>
                         <input type="radio" name="order_rating" value="bien" style="display: none;">
-                        <i class="ri-emotion-happy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>جيدة</p>
                     </label>
                     <label>
                         <input type="radio" name="order_rating" value="moyen" style="display: none;">
-                        <i class="ri-emotion-normal-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>متوسطة</p>
                     </label>
                     <label>
                         <input type="radio" name="order_rating" value="mauvais" style="display: none;">
-                        <i class="ri-emotion-unhappy-line mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
+                        <p>سيئة</p>
                     </label>
                 </div>
                 <p class="mt-4">هل تريد إخبارنا بأي شيء؟</p>
@@ -252,10 +270,10 @@
         document.querySelectorAll('.stars input[type="radio"]').forEach((radio) => {
             radio.addEventListener('change', (e) => {
                 const parent = e.target.closest('.stars');
-                // Réinitialiser le style des icônes
                 parent.querySelectorAll('i').forEach(icon => icon.style.color = '#98a6bf');
-                // Appliquer un style à l'icône sélectionnée
-                e.target.nextElementSibling.style.color = '#007bff'; // Couleur bleue par exemple
+                parent.querySelectorAll('p').forEach(icon => icon.style.color = '#98a6bf');
+                e.target.nextElementSibling.style.color = '#007bff'; 
+                e.target.nextElementSibling.nextElementSibling.style.color = '#007bff'; 
             });
         });
     </script>

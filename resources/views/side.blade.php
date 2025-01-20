@@ -172,7 +172,7 @@
       </li>
       @endif
       {{-- Technique tabs --}}
-      @if(in_array('ctechnique_rendezvous', $permissions))
+      @if(in_array('ctechnique_rendezvous', $permissions)||in_array('ctechnique_evaluations', $permissions))
       <li class="nav-item ">
         <a class="nav-link collapsed" data-bs-target="#Ctechnique-nav" data-bs-toggle="collapse" href="#">
           <i class="  ri-car-line"></i><span>Controle Technique</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -182,6 +182,13 @@
             <li>
               <a href="{{ route('app.exploatation.statistiques') }}">
                 <i class="bi bi-circle"></i><span>Liste Client</span>
+              </a>
+            </li>
+          @endif
+          @if(in_array('ctechnique_evaluations', $permissions))
+            <li>
+              <a href="{{ route('app.ctechnique.evaluations') }}">
+                <i class="bi bi-circle"></i><span>Evaluations</span>
               </a>
             </li>
           @endif
