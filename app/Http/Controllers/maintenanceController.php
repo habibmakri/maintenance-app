@@ -819,32 +819,37 @@ class maintenanceController extends Controller
     public function generate_suivijournaliere_pdf(Request $request)
     {
         $request->validate([
-            'month' => 'required',
-            'year' => 'required',
+            
+            
         ]);
 
+        if($request->month&&$year = $request->year){
+            $month = $request->month;
+            $year = $request->year;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            $months_fr_array = [
+                1 => 'Janvier',
+                2 => 'Février',
+                3 => 'Mars',
+                4 => 'Avril',
+                5 => 'Mai',
+                6 => 'Juin',
+                7 => 'Juillet',
+                8 => 'Août',
+                9 => 'Septembre',
+                10 => 'Octobre',
+                11 => 'Novembre',
+                12 => 'Décembre'
+            ];
+            $monthName = $months_fr_array[$month] . $year;
+        }else{
+            $firstDay = $request->datedu;
+            $lastDay = $request->dateau;
+            $monthName = 'Du '.$firstDay.' Au '.$lastDay;
+        }
 
-        $month = $request->month;
-        $year = $request->year;
 
-
-        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
-        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
-        $months_fr_array = [
-            1 => 'Janvier',
-            2 => 'Février',
-            3 => 'Mars',
-            4 => 'Avril',
-            5 => 'Mai',
-            6 => 'Juin',
-            7 => 'Juillet',
-            8 => 'Août',
-            9 => 'Septembre',
-            10 => 'Octobre',
-            11 => 'Novembre',
-            12 => 'Décembre'
-        ];
-        $monthName = $months_fr_array[$month] . $year;
 
         $buses = Bus::with([
             'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {

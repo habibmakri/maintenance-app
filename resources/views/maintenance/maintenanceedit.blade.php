@@ -80,7 +80,7 @@
                         <option value="non" selected>Non</option>
                     @endif
                 </select>
-                <label for="partit">Partit?</label>
+                <label for="partit">Depart?</label>
             </div>
         </div>
         <div class="col-md-4">

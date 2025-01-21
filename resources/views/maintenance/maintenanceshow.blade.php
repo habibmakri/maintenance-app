@@ -104,7 +104,7 @@
             </table>
         </div>
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-2">Selectionner la date statistique maintenance:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.pdf') }}" method="post">
                     @csrf
@@ -146,7 +146,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
                 </form>
             </div>
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le mois pour l'etat du gasoile mensuelle:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.gasoilepdf') }}" method="post">
                     @csrf
@@ -188,7 +188,7 @@
                 </form>
             </div>
 
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Selectionner la date gasoile au 100 KM :</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.km100pdf') }}" method="post">
                     @csrf
@@ -218,7 +218,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télecharger</button>
                 </form>
             </div>
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le mois et l'année pour l'extraction de l'état nombre de reparation résolue
                     mensuelle :</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etatnreparatiopdf') }}" method="post">
@@ -271,7 +271,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le type pour l'extraction des travaux non résolue:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.panneencours_pdf') }}" method="post">
                     @csrf
@@ -291,7 +291,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le mois pour l'extraction de l'état Fiche de suivi Journaliere des travaux
                     reparés:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.suivijournaliere_pdf') }}" method="post">
@@ -333,7 +333,28 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
-            <div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner la date pour l'extraction de l'état Fiche de suivi Journaliere des travaux
+                    reparés:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.suivijournaliere_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="datedu" type="date" required class="form-control">
+                            <label for="datedu">Du</label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="dateau" type="date" required class="form-control">
+                            <label for="dateau">Au</label>
+                        </div>
+                    </div>
+                  
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le bus et le mois pour l'extraction de l'état Fiche de suivi mensuelle des
                     travaux reparés:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.suivibus_pdf') }}" method="post">
