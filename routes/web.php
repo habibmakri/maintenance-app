@@ -99,6 +99,11 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
+        Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');
+        Route::post('ctechnique_in','add_ctechnique_in');
+        Route::get('ctechnique_clients','ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_in');
+        Route::post('ctechnique/deleteclient:{id}', 'deleteclient');
+        // Route::post('ctechnique_in','add_ctechnique_in');
         Route::get('evaluations','evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
         Route::post('evaluations/marquercommelue','marquercommelue')->name('marquercommelue');
         Route::post('evaluations/print_evaluation','print_evaluation')->name('print_evaluation');

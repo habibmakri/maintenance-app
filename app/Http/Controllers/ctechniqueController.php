@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ctechnique_clients;
 use App\Models\ctechnique_rating;
+use App\Models\ctechniqueclienttypes;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 
@@ -26,6 +28,61 @@ class ctechniqueController extends Controller
             $rating->save();
         }
         return redirect()->away('https://etus22.dz');
+    }
+    public function ctechnique_in(Request $request)
+    {
+        $clienttypes = ctechniqueclienttypes::all();
+        return view('ctechnique.ctechnique_in',compact(['clienttypes']));
+    }
+    public function add_ctechnique_in(Request $request)
+    {
+        $request->validate([
+            'date' => 'required',
+        ]);
+        $combined = array_map(function($type, $name, $immatriculation, $phone) {
+            return [
+                'type' => $type,
+                'name' => $name,
+                'immatriculation' => $immatriculation,
+                'phone' => $phone,
+            ];
+        }, $request['type'], $request['name'], $request['immatriculation'], $request['phone']);
+        $cnt = 0;
+        foreach($combined as $item){
+            $phoneExists = ctechnique_clients::where('phone', $item['phone'])->exists();
+            if (!$phoneExists) {
+                if($item['type']&& $item['name']&& $item['immatriculation']&& $item['phone']){
+                    ctechnique_clients::create([
+                        'date_controle' => $request['date'],
+                        'name' => $item['name'],
+                        'type_id' => $item['type'],
+                        'immatriculation' => $item['immatriculation'],
+                        'phone' => $item['phone'],
+                        'last_remind' => $request['date'],
+                    ]);
+                    $cnt++;
+                }
+            }
+        }
+        if ($cnt > 0) {
+            return redirect()->back()->with('success', $cnt . ' Clients ajoutés avec succès.');
+        } else {
+            return redirect()->back()->with('error', 'Aucun client n\'a été ajouté.');
+        }
+    }
+    public function deleteclient($id)
+    {
+        $record = ctechnique_clients::find($id);
+        if ($record) {
+            $record->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
+    public function ctechnique_clients(Request $request)
+    {
+        $clients = ctechnique_clients::all();
+        return view('ctechnique.ctechnique_clients',compact(['clients']));
     }
     public function evaluations(Request $request)
     {

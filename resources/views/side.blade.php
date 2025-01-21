@@ -45,7 +45,7 @@
           @if(in_array('maintenance_panne', $permissions))
           <li>
             <a href="{{ route('app.maintenance.maintenance_panne') }}">
-              <i class="bi bi-circle"></i><span>Liste des pannes</span>
+              <i class="bi bi-circle"></i><span>Pannes déclarer</span>
             </a>
           </li>
           @endif
@@ -172,15 +172,22 @@
       </li>
       @endif
       {{-- Technique tabs --}}
-      @if(in_array('ctechnique_rendezvous', $permissions)||in_array('ctechnique_evaluations', $permissions))
+      @if(in_array('ctechnique_in', $permissions)||in_array('ctechnique_rendezvous', $permissions)||in_array('ctechnique_evaluations', $permissions))
       <li class="nav-item ">
         <a class="nav-link collapsed" data-bs-target="#Ctechnique-nav" data-bs-toggle="collapse" href="#">
           <i class="  ri-car-line"></i><span>Controle Technique</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="Ctechnique-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          @if(in_array('ctechnique_in', $permissions))
+            <li>
+              <a href="{{ route('app.ctechnique.ctechnique_in') }}">
+                <i class="bi bi-circle"></i><span>Saisir</span>
+              </a>
+            </li>
+          @endif
           @if(in_array('ctechnique_rendezvous', $permissions))
             <li>
-              <a href="{{ route('app.exploatation.statistiques') }}">
+              <a href="{{ route('app.ctechnique.ctechnique_clients') }}">
                 <i class="bi bi-circle"></i><span>Liste Client</span>
               </a>
             </li>
