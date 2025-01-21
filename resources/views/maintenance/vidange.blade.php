@@ -89,20 +89,20 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-floating">
-                                <textarea class="form-control" name="description" style="height: 100px"></textarea>
-                                <label for="description">Déscription</label>
-                            </div>
-                        </div>
                         <p class="mt-4">Pieces</p>
                         <div id="pieces-section">
-
+                            
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-secondary btn-sm" id="add-piece">
                                 Ajouter pieces
                             </button>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" name="description" style="height: 100px"></textarea>
+                                <label for="description">Déscription</label>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

@@ -83,12 +83,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-floating">
-                                <textarea class="form-control" name="description" style="height: 100px" ></textarea>
-                                <label for="description">Déscription</label>
-                            </div>
-                        </div>
                         <p class="mt-4">Pieces</p>
                         <div class="col-md-8" id="pieces-section">
                             <div class="form-floating">
@@ -105,6 +99,12 @@
                             <div class="form-floating">
                                 <input type="number" class="form-control" step="any" name="piece_quantities[]" min="1" >
                                 <label for="piece_quantities">Quantité</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" name="description" style="height: 100px" ></textarea>
+                                <label for="description">Déscription</label>
                             </div>
                         </div>
                         <div class="modal-footer">
