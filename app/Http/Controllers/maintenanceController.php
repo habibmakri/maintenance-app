@@ -600,6 +600,7 @@ class maintenanceController extends Controller
         $pieces = pieces_maintanance::all();
         $buses = Bus::all();
         $pannenames = Panne::all();
+        // dd($pannesresolue[3]->fichemaintenance->chauffeur);
         return view('maintenance.maintenancepanne', compact(['pannes', 'pannesresolue', 'agents', 'stations', 'pieces', 'buses', 'pannenames']));
     }
     public function ajouter_ndpanne(Request $request)

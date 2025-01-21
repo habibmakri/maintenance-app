@@ -70,15 +70,18 @@
             </td>
             <td colspan="2"><strong>Déclaré le:</strong> {{ $fichepanne->fichemaintenance->date_fiche }} -
                 {{ $fichepanne->fichemaintenance->brigade }}</td>
-            <td><strong>Résolue le:</strong> {{ $fichepanne->date_resoudre }} - {{ $fichepanne->brigade }}</td>
+            <td colspan="2"><strong>Déclaré par:</strong> @if ($fichepanne->fichemaintenance->chauffeur) {{ $fichepanne->fichemaintenance->chauffeur->fr_name }} @else Equipe Maintenance @endif  </td>
         </tr>
         <tr>
-            <td colspan="3"><strong>Equipe:</strong>
+            <td><strong>Résolue le:</strong> {{ $fichepanne->date_resoudre }} - {{ $fichepanne->brigade }}</td>
+            <td colspan="2"><strong>Equipe:</strong>
+                @if($fichepanne->equipe)
                 @foreach (json_decode($fichepanne->equipe, true) as $equipe)
-                    {{ $equipe }}@if (!$loop->last)
-                        ,
-                    @endif
+                {{ $equipe }}@if (!$loop->last)
+                ,
+                @endif
                 @endforeach
+                @endif
             </td>
             <td colspan="3"><strong>Lieu:</strong>{{$fichepanne->lieu_resoudre}}</td>
         </tr>

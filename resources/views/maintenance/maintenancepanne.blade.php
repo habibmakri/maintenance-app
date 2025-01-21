@@ -78,8 +78,8 @@
                                         <input class="form-check-input" type="checkbox" name="pannemecaniquecheck"
                                             id="togglePanneMecanique" style="float: none; margin-left: 0.5em"
                                             onchange="toggleSelect('panneMecanique')">
-                                        <select class="select" disabled name="pannemecanique[]" id="panneMecanique"
-                                            multiple aria-label="autorisations" style="height: 100px;">
+                                        <select class="select" disabled name="pannemecanique[]" id="panneMecanique" multiple
+                                            aria-label="autorisations" style="height: 100px;">
                                             @foreach ($pannenames->where('type', 'mecanique') as $panne)
                                                 <option value="{{ $panne->id }}">{{ $panne->name }}</option>
                                             @endforeach
@@ -152,7 +152,8 @@
                 </thead>
                 <tbody>
                     @foreach ($pannes as $panne)
-                        <tr @if($panne->fichemaintenance->brigade) style="border-color: green;" @else style="border-color: red;" @endif>
+                        <tr
+                            @if ($panne->fichemaintenance->brigade) style="border-color: green;" @else style="border-color: red;" @endif>
                             <td>{{ $panne->id }}</td>
                             <td>{{ $panne->fichemaintenance->bus->name }}</td>
                             <td>{{ $panne->fichemaintenance->date_fiche }}</td>
@@ -225,7 +226,7 @@
 
                                 <p class="mt-4">Pieces</p>
                                 <div id="pieces-section">
-                                    
+
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-sm" id="add-piece">
@@ -279,7 +280,7 @@
                                 onclick="handlerapportclick({{ $panne}},{{$panne->used_pieces[0]->piece }})"> Rapport</button> --}}
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal2"
-                                    onclick="handlerapportclick({{ json_encode($panne) }}, {{ json_encode($panne->used_pieces->map(function ($piece) {return ['name' => $piece->piece->name, 'quantity' => $piece->quantité];})->toArray()) }})">Rapport</button>
+                                    onclick="handlerapportclick({{ json_encode($panne) }}, {{ json_encode($panne->used_pieces->map(function ($piece) {return ['name' => $piece->piece->name, 'quantity' => $piece->quantité];})->toArray()) }},{{ json_encode($panne->fichemaintenance->chauffeur) }})">Rapport</button>
 
                             </td>
                         </tr>
@@ -307,6 +308,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <p>Etat: Résolue</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p id="raport_declarepar"> </p>
                                 </div>
                                 <div class="col-md-4">
                                     <p id="raport_datedeclaration"> </p>
@@ -360,10 +364,11 @@
         }
 
 
-        function handlerapportclick(panne, used_pieces) {
+        function handlerapportclick(panne, used_pieces, chauffeur) {
             const modal_title = document.getElementById('modal_title2');
             const raport_bus = document.getElementById('raport_bus');
             const raport_panne = document.getElementById('raport_panne');
+            const raport_declarepar = document.getElementById('raport_declarepar');
             const raport_datedeclaration = document.getElementById('raport_datedeclaration');
             const raport_dateresolution = document.getElementById('raport_dateresolution');
             const raport_brigadedeclaration = document.getElementById('raport_brigadedeclaration');
@@ -377,6 +382,7 @@
             raport_bus.innerHTML = '';
             raport_panne.innerHTML = '';
             raport_panne_type.innerHTML = '';
+            raport_declarepar.innerHTML = '';
             raport_datedeclaration.innerHTML = '';
             raport_dateresolution.innerHTML = '';
             raport_equipe.innerHTML = '';
@@ -389,6 +395,11 @@
             raport_bus.innerHTML = 'Bus: ' + panne.fichemaintenance.bus.name;
             raport_panne.innerHTML = 'Panne: ' + panne.pannename.name;
             raport_panne_type.innerHTML = 'Type: ' + panne.pannename.type;
+            if (chauffeur && chauffeur.fr_name) {
+                raport_declarepar.innerHTML = 'Déclaré par: ' + chauffeur.fr_name;
+            } else {
+                raport_declarepar.innerHTML = 'Déclaré par: Équipe Maintenance';
+            }
             raport_datedeclaration.innerHTML = 'Déclaré le: ' + panne.fichemaintenance.date_fiche + '-' + panne
                 .fichemaintenance.brigade;
             raport_dateresolution.innerHTML = 'Résolue le: ' + panne.date_resoudre + '-' + panne.brigade;
