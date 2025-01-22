@@ -13,6 +13,9 @@ use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/email', function(){
+    return redirect()->away('https://uranus-shared.dzsecurity.net:2096/cpsess3948636662/3rdparty/roundcube');
+})->name('email');
 Route::get('/login', [Authcontroller::class, 'login'])->name('login');
 Route::post('/login', [Authcontroller::class, 'dologin']);
 Route::delete('/logout', [Authcontroller::class, 'logout'])->name('logout')->middleware('auth');
@@ -106,6 +109,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         // Route::post('ctechnique_in','add_ctechnique_in');
         Route::get('evaluations','evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
         Route::post('evaluations/marquercommelue','marquercommelue')->name('marquercommelue');
+        Route::post('evaluations/evaluations_pdf','evaluations_pdf')->name('evaluations_pdf');
+        Route::post('evaluations/etatevaluations_pdf','etatevaluations_pdf')->name('etatevaluations_pdf');
         Route::post('evaluations/print_evaluation','print_evaluation')->name('print_evaluation');
         
     });

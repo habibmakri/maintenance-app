@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ctechnique_clients;
 use App\Models\ctechnique_rating;
 use App\Models\ctechniqueclienttypes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 
@@ -123,6 +124,100 @@ class ctechniqueController extends Controller
             </div>
             ";
         $nomfichier = 'Evaluation' . $rating->id   . '.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function evaluations_pdf(Request $request)
+    {
+        $request->validate([
+            'datedu' => 'required|date',
+            'dateau' => 'required|date|after_or_equal:dateduexcel',
+        ]);
+        $du = $request->datedu;  
+        $au =  $request->dateau;
+        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();  
+        $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
+        $ratings = ctechnique_rating::whereBetween('created_at',[$datedu, $dateau])->get();
+        // dd([$datedu, $dateau],$ratings);
+        $html = view('ctechnique.evaluations_pdf', compact('ratings','du','au'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+        ]);
+
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 30, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+            <div style='text-align: right; font-size: 12px;'>
+                Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+            </div>
+            ";
+        $nomfichier = 'Evaluation du ' . $du .' au '. $au . '.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function etatevaluations_pdf(Request $request)
+    {
+        $request->validate([
+            'datedu' => 'required|date',
+            'dateau' => 'required|date|after_or_equal:dateduexcel',
+        ]);
+        $du = $request->datedu;  
+        $au =  $request->dateau;
+        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();  
+        $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
+        $ratings = ctechnique_rating::whereBetween('created_at',[$datedu, $dateau])->get();
+        $sgood = 0;
+        $smoyen = 0;
+        $sbad = 0;
+        $cgood = 0;
+        $cmoyen = 0;
+        $cbad = 0;
+        $clgood = 0;
+        $clmoyen = 0;
+        $clbad = 0;
+        $ogood = 0;
+        $omoyen = 0;
+        $obad = 0;
+        foreach($ratings as $rating){
+            if($rating->){
+
+            }
+        }
+        dd($ratings);
+        // dd([$datedu, $dateau],$ratings);
+        $html = view('ctechnique.evaluations_pdf', compact('ratings','du','au'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+        ]);
+
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 30, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+            <div style='text-align: right; font-size: 12px;'>
+                Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+            </div>
+            ";
+        $nomfichier = 'Evaluation du ' . $du .' au '. $au . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);

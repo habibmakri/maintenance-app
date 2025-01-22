@@ -23,6 +23,11 @@
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button"
                 role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Lue</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="extraire-tab" data-bs-toggle="tab" data-bs-target="#bordered-extraire"
+                type="button" role="tab" aria-controls="extraire" aria-selected="false"
+                tabindex="-1">Extraire</button>
+        </li>
     </ul>
     <div class="tab-content pt-2" id="borderedTabContent">
         <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
@@ -159,6 +164,49 @@
                 </tbody>
             </table>
 
+        </div>
+        <div class="tab-pane fade" id="bordered-extraire" role="tabpanel" aria-labelledby="extraire-tab">
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner la date pour l'extraction des Evaluations:</h5>
+                <form class="row g-3" action="{{ route('app.ctechnique.evaluations_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="datedu" type="date" required class="form-control">
+                            <label for="datedu">Du</label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="dateau" type="date" required class="form-control">
+                            <label for="dateau">Au</label>
+                        </div>
+                    </div>
+                  
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner la date pour l'extraction de l'état des Evaluations:</h5>
+                <form class="row g-3" action="{{ route('app.ctechnique.etatevaluations_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="datedu" type="date" required class="form-control">
+                            <label for="datedu">Du</label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="dateau" type="date" required class="form-control">
+                            <label for="dateau">Au</label>
+                        </div>
+                    </div>
+                  
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
         </div>
 
 
