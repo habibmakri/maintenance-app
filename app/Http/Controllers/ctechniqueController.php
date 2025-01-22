@@ -181,29 +181,61 @@ class ctechniqueController extends Controller
         $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();  
         $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
         $ratings = ctechnique_rating::whereBetween('created_at',[$datedu, $dateau])->get();
-        $sgood = 0;
+        $sbien = 0;
         $smoyen = 0;
-        $sbad = 0;
-        $cgood = 0;
+        $smauvais = 0;
+        $cbien = 0;
         $cmoyen = 0;
-        $cbad = 0;
-        $clgood = 0;
+        $cmauvais = 0;
+        $clbien = 0;
         $clmoyen = 0;
-        $clbad = 0;
-        $ogood = 0;
+        $clmauvais = 0;
+        $obien = 0;
         $omoyen = 0;
-        $obad = 0;
+        $omauvais = 0;
         foreach($ratings as $rating){
-            if($rating->){
-
+            if($rating->service == 'bien'){
+                $sbien++;
+            }
+            if($rating->controler == 'bien'){
+                $cbien++;
+            }
+            if($rating->clean == 'bien'){
+                $clbien++;
+            }
+            if($rating->order == 'bien'){
+                $obien++;
+            }
+            if($rating->service == 'moyen'){
+                $smoyen++;
+            }
+            if($rating->controler == 'moyen'){
+                $cmoyen++;
+            }
+            if($rating->clean == 'moyen'){
+                $clmoyen++;
+            }
+            if($rating->order == 'moyen'){
+                $omoyen++;
+            }
+            if($rating->service == 'mauvais'){
+                $smauvais++;
+            }
+            if($rating->controler == 'mauvais'){
+                $cmauvais++;
+            }
+            if($rating->clean == 'mauvais'){
+                $clmauvais++;
+            }
+            if($rating->order == 'mauvais'){
+                $omauvais++;
             }
         }
-        dd($ratings);
         // dd([$datedu, $dateau],$ratings);
-        $html = view('ctechnique.evaluations_pdf', compact('ratings','du','au'))->render();
+        $html = view('ctechnique.etat_evaluation_pdf', compact(['ratings','du','au','sbien','smoyen','smauvais','cbien','cmoyen','cmauvais','clbien','clmoyen','clmauvais','obien','omoyen','omauvais']))->render();
 
         $mpdf = new Mpdf([
-            'format' => 'A4',
+            'format' => 'A4-L',
         ]);
 
         $imagePath = public_path('/LOGO ETUS.png');

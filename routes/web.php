@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/email', function(){
-    return redirect()->away('https://uranus-shared.dzsecurity.net:2096/cpsess3948636662/3rdparty/roundcube');
+    return redirect()->away('https://webmail.etus22.dz/');
 })->name('email');
 Route::get('/login', [Authcontroller::class, 'login'])->name('login');
 Route::post('/login', [Authcontroller::class, 'dologin']);
