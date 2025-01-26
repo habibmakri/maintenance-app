@@ -59,6 +59,9 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance_vidange','ajouter_vidange');
         Route::get('maintenance_jauge','maintenance_jauge')->name('maintenance_jauge')->middleware('rolesMiddleware:maintenance_jauge');
         Route::post('maintenance_jauge','ajouter_jauge');
+        Route::post('maintenance/check_jauge_date','check_jauge_date')->name('check_jauge_date');
+        Route::post('maintenance/ajouter_jauge_huilemoteur','ajouter_jauge_huilemoteur')->name('ajouter_jauge_huilemoteur');
+        Route::post('maintenance/ajouter_jauge_glaciole','ajouter_jauge_glaciole')->name('ajouter_jauge_glaciole');
         Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_in');
         Route::post('traveaux_libre','ajouter_traveaux_libre');
     });

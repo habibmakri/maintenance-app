@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ctechniqueclients', function (Blueprint $table) {
+        Schema::create('jaugesdates', function (Blueprint $table) {
             $table->id();
-            $table->date('date_controle');
-            $table->string('name');
+            $table->date('date');
             $table->unsignedBigInteger('type_id');
-            $table->string('immatriculation');
-            $table->string('phone')->nullable();
-            $table->date('last_remind');
+            $table->json(column: 'equipe')->nullable();
             $table->timestamps();
-            $table->foreign('type_id')->references('id')->on('ctechniqueclienttypes')->onDelete('cascade');
+            $table->foreign('type_id')->references('id')->on('pannenames')->onDelete('cascade');
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ctechniqueclients');
+        Schema::dropIfExists('jaugesdates');
     }
 };

@@ -33,14 +33,14 @@ class ctechniqueController extends Controller
     public function ctechnique_in(Request $request)
     {
         $clienttypes = ctechniqueclienttypes::all();
-        return view('ctechnique.ctechnique_in',compact(['clienttypes']));
+        return view('ctechnique.ctechnique_in', compact(['clienttypes']));
     }
     public function add_ctechnique_in(Request $request)
     {
         $request->validate([
             'date' => 'required',
         ]);
-        $combined = array_map(function($type, $name, $immatriculation, $phone) {
+        $combined = array_map(function ($type, $name, $immatriculation, $phone) {
             return [
                 'type' => $type,
                 'name' => $name,
@@ -49,16 +49,16 @@ class ctechniqueController extends Controller
             ];
         }, $request['type'], $request['name'], $request['immatriculation'], $request['phone']);
         $cnt = 0;
-        foreach($combined as $item){
+        foreach ($combined as $item) {
             $phoneExists = ctechnique_clients::where('phone', $item['phone'])->exists();
             if (!$phoneExists) {
-                if($item['type']&& $item['name']&& $item['immatriculation']&& $item['phone']){
+                if ($item['type'] && $item['name'] && $item['immatriculation']) { //&& $item['phone']){
                     ctechnique_clients::create([
                         'date_controle' => $request['date'],
                         'name' => $item['name'],
                         'type_id' => $item['type'],
                         'immatriculation' => $item['immatriculation'],
-                        'phone' => $item['phone'],
+                        'phone' => !empty($item['phone']) ? $item['phone'] : null,
                         'last_remind' => $request['date'],
                     ]);
                     $cnt++;
@@ -83,7 +83,7 @@ class ctechniqueController extends Controller
     public function ctechnique_clients(Request $request)
     {
         $clients = ctechnique_clients::all();
-        return view('ctechnique.ctechnique_clients',compact(['clients']));
+        return view('ctechnique.ctechnique_clients', compact(['clients']));
     }
     public function evaluations(Request $request)
     {
@@ -138,13 +138,13 @@ class ctechniqueController extends Controller
             'datedu' => 'required|date',
             'dateau' => 'required|date|after_or_equal:dateduexcel',
         ]);
-        $du = $request->datedu;  
+        $du = $request->datedu;
         $au =  $request->dateau;
-        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();  
+        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();
         $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
-        $ratings = ctechnique_rating::whereBetween('created_at',[$datedu, $dateau])->get();
+        $ratings = ctechnique_rating::whereBetween('created_at', [$datedu, $dateau])->get();
         // dd([$datedu, $dateau],$ratings);
-        $html = view('ctechnique.evaluations_pdf', compact('ratings','du','au'))->render();
+        $html = view('ctechnique.evaluations_pdf', compact('ratings', 'du', 'au'))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',
@@ -161,7 +161,7 @@ class ctechniqueController extends Controller
                 Généré le: $currentdate | Page {PAGENO} sur {nbpg}
             </div>
             ";
-        $nomfichier = 'Evaluation du ' . $du .' au '. $au . '.pdf';
+        $nomfichier = 'Evaluation du ' . $du . ' au ' . $au . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
@@ -176,11 +176,11 @@ class ctechniqueController extends Controller
             'datedu' => 'required|date',
             'dateau' => 'required|date|after_or_equal:dateduexcel',
         ]);
-        $du = $request->datedu;  
+        $du = $request->datedu;
         $au =  $request->dateau;
-        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();  
+        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();
         $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
-        $ratings = ctechnique_rating::whereBetween('created_at',[$datedu, $dateau])->get();
+        $ratings = ctechnique_rating::whereBetween('created_at', [$datedu, $dateau])->get();
         $sbien = 0;
         $smoyen = 0;
         $smauvais = 0;
@@ -193,46 +193,46 @@ class ctechniqueController extends Controller
         $obien = 0;
         $omoyen = 0;
         $omauvais = 0;
-        foreach($ratings as $rating){
-            if($rating->service == 'bien'){
+        foreach ($ratings as $rating) {
+            if ($rating->service == 'bien') {
                 $sbien++;
             }
-            if($rating->controler == 'bien'){
+            if ($rating->controler == 'bien') {
                 $cbien++;
             }
-            if($rating->clean == 'bien'){
+            if ($rating->clean == 'bien') {
                 $clbien++;
             }
-            if($rating->order == 'bien'){
+            if ($rating->order == 'bien') {
                 $obien++;
             }
-            if($rating->service == 'moyen'){
+            if ($rating->service == 'moyen') {
                 $smoyen++;
             }
-            if($rating->controler == 'moyen'){
+            if ($rating->controler == 'moyen') {
                 $cmoyen++;
             }
-            if($rating->clean == 'moyen'){
+            if ($rating->clean == 'moyen') {
                 $clmoyen++;
             }
-            if($rating->order == 'moyen'){
+            if ($rating->order == 'moyen') {
                 $omoyen++;
             }
-            if($rating->service == 'mauvais'){
+            if ($rating->service == 'mauvais') {
                 $smauvais++;
             }
-            if($rating->controler == 'mauvais'){
+            if ($rating->controler == 'mauvais') {
                 $cmauvais++;
             }
-            if($rating->clean == 'mauvais'){
+            if ($rating->clean == 'mauvais') {
                 $clmauvais++;
             }
-            if($rating->order == 'mauvais'){
+            if ($rating->order == 'mauvais') {
                 $omauvais++;
             }
         }
         // dd([$datedu, $dateau],$ratings);
-        $html = view('ctechnique.etat_evaluation_pdf', compact(['ratings','du','au','sbien','smoyen','smauvais','cbien','cmoyen','cmauvais','clbien','clmoyen','clmauvais','obien','omoyen','omauvais']))->render();
+        $html = view('ctechnique.etat_evaluation_pdf', compact(['ratings', 'du', 'au', 'sbien', 'smoyen', 'smauvais', 'cbien', 'cmoyen', 'cmauvais', 'clbien', 'clmoyen', 'clmauvais', 'obien', 'omoyen', 'omauvais']))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4-L',
@@ -249,7 +249,7 @@ class ctechniqueController extends Controller
                 Généré le: $currentdate | Page {PAGENO} sur {nbpg}
             </div>
             ";
-        $nomfichier = 'Evaluation du ' . $du .' au '. $au . '.pdf';
+        $nomfichier = 'Evaluation du ' . $du . ' au ' . $au . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);

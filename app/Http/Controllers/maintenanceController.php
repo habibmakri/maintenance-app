@@ -9,6 +9,7 @@ use App\Models\Bus;
 use App\Models\chauffeurs;
 use App\Models\fichemaintenance;
 use App\Models\fichepanne_model;
+use App\Models\jaugesmodel;
 use App\Models\Ligne;
 use App\Models\maintenance_agent;
 use App\Models\nd_fichepanne_model;
@@ -23,6 +24,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Mpdf\Mpdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -526,11 +528,152 @@ class maintenanceController extends Controller
             ->orderBy('fiches_maintenance.date_fiche')
             ->get();
         // dd($jauges[0]);
-        $buses = Bus::all();
+        $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
         $agents = maintenance_agent::all();
         $pieces = pieces_maintanance::all();
-        $typejauges = Panne::where('type', '=', 'jauge')->get();
+        $typejauges = Panne::where('type', '=', 'jauge')
+        ->whereNotIn('name', ['Jauge huile moteur', 'GLACIOL'])
+        ->get();
         return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges']));
+    }
+    public function check_jauge_date(Request $request)
+    {
+        $date = $request->date;
+        if ($request->type == 'huilemoteur') {
+            $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 157)->exists();
+        } elseif ($request->type == 'glaciole') {
+            $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 161)->exists();
+        }
+        return response()->json(['exists' => $jauge]);
+    }
+    public function ajouter_jauge_huilemoteur(Request $request)
+    {
+        $request->validate([
+            'date' => [
+                'required',
+                'date',     
+                Rule::unique('jaugesdates', 'date')->where(function ($query) {
+                    return $query->where('type_id', 157);  
+                }),
+            ],
+            'equipe' => ['required', 'array'],
+            'brigade' => ['required'],
+        ]);
+        
+        $inputs = $request->except('_token', 'date', 'equipe','brigade');
+        jaugesmodel::create([
+            'date' => $request->date,
+            'type_id' => 157,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+        ]);
+        $i=0;
+        foreach ($inputs as $key => $value) {
+            if ($value > 0) {
+                echo ($key . "=>". $value);
+                $ficheData = [
+                    'user_id' => Auth::user()->id,
+                    'date_fiche' => $request['date'],
+                    'declaré' => false,
+                    'id_bus' => $key,
+                    'id_ligne' => null,
+                    'brigade' => $request->brigade,
+                    'id_chauffeur' => null,
+                    'heur_depart' => "00:00",
+                    'heur_arrive' => "00:00",
+                    'gasoile' => "0",
+                    'kmdepart' => "0",
+                    'kmarrive' => "0",
+                    'kmhlp' => "0",
+                    'kmgobale' => "0",
+                    'kmcommerciale' => "0",
+                ];
+                $fiche = fichemaintenance::create($ficheData);
+                $fichepanne_data = [
+                    'fichemaintenance_id' => $fiche->id,
+                    'pannnename_id' => 157,
+                    'solved' => true,
+                    'date_resoudre' => $request->date,
+                    'lieu_resoudre' => 'Depot',
+                    'brigade' => $request->brigade,
+                    'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+                    'description' => '',
+                ];
+                $fichepanne = fichepanne_model::create($fichepanne_data);
+                used_pieces::create(
+                    [
+                        'fichepanne_id' => $fichepanne->id,
+                        'piece_id' => 2,
+                        'quantité' => $value,
+                    ]
+                );
+                $i++;
+            }
+        }
+        return redirect()->back()->with('success', $i.' Jauges ajouter avec succès.');
+    }
+    public function ajouter_jauge_glaciole(Request $request)
+    {
+        $request->validate([
+            'date' => [
+                'date',
+                Rule::unique('jaugesdates', 'date')->where(function ($query) {
+                    return $query->where('type_id', 161);  
+                }),
+            ],
+            'equipe' => ['required', 'array'],
+            'brigade' => ['required'],
+        ]);
+        
+        $inputs = $request->except('_token', 'date', 'equipe','brigade');
+        jaugesmodel::create([
+            'date' => $request->date,
+            'type_id' => 161,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+        ]);
+        $i=0;
+        foreach ($inputs as $key => $value) {
+            if ($value > 0) {
+                echo ($key . "=>". $value);
+                $ficheData = [
+                    'user_id' => Auth::user()->id,
+                    'date_fiche' => $request['date'],
+                    'declaré' => false,
+                    'id_bus' => $key,
+                    'id_ligne' => null,
+                    'brigade' => $request->brigade,
+                    'id_chauffeur' => null,
+                    'heur_depart' => "00:00",
+                    'heur_arrive' => "00:00",
+                    'gasoile' => "0",
+                    'kmdepart' => "0",
+                    'kmarrive' => "0",
+                    'kmhlp' => "0",
+                    'kmgobale' => "0",
+                    'kmcommerciale' => "0",
+                ];
+                $fiche = fichemaintenance::create($ficheData);
+                $fichepanne_data = [
+                    'fichemaintenance_id' => $fiche->id,
+                    'pannnename_id' => 161,
+                    'solved' => true,
+                    'date_resoudre' => $request->date,
+                    'lieu_resoudre' => 'Depot',
+                    'brigade' => $request->brigade,
+                    'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+                    'description' => '',
+                ];
+                $fichepanne = fichepanne_model::create($fichepanne_data);
+                used_pieces::create(
+                    [
+                        'fichepanne_id' => $fichepanne->id,
+                        'piece_id' => 9,
+                        'quantité' => $value,
+                    ]
+                );
+                $i++;
+            }
+        }
+        return redirect()->back()->with('success', $i.' Jauges ajouter avec succès.');
     }
     public function ajouter_jauge(Request $request)
     {
@@ -819,12 +962,9 @@ class maintenanceController extends Controller
     // }
     public function generate_suivijournaliere_pdf(Request $request)
     {
-        $request->validate([
-            
-            
-        ]);
+        $request->validate([]);
 
-        if($request->month&&$year = $request->year){
+        if ($request->month && $year = $request->year) {
             $month = $request->month;
             $year = $request->year;
             $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
@@ -844,10 +984,10 @@ class maintenanceController extends Controller
                 12 => 'Décembre'
             ];
             $monthName = $months_fr_array[$month] . $year;
-        }else{
+        } else {
             $firstDay = $request->datedu;
             $lastDay = $request->dateau;
-            $monthName = 'Du '.$firstDay.' Au '.$lastDay;
+            $monthName = 'Du ' . $firstDay . ' Au ' . $lastDay;
         }
 
 

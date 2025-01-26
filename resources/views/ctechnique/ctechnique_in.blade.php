@@ -74,7 +74,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" required id="floatingName" name="phone[]"pattern="[0-9]{10}"
+                    <input type="text" class="form-control" id="phone" id="floatingName" name="phone[]"pattern="[0-9]{10}"
                         placeholder="phone">
                     <label for="name">N° Téléphone</label>
                 </div>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="phone[]"pattern="[0-9]{10}" placeholder="N° Téléphone">
+                        <input type="text" class="form-control" id="phone" name="phone[]"pattern="[0-9]{10}" placeholder="N° Téléphone">
                         <label for="phone">N° Téléphone</label>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="phone[]"pattern="[0-9]{10}" placeholder="N° Téléphone">
+                        <input type="text" class="form-control" id="phone" name="phone[]"pattern="[0-9]{10}" placeholder="N° Téléphone">
                         <label for="phone">N° Téléphone</label>
                     </div>
                 </div>
@@ -176,7 +176,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="phone[]" pattern="[0-9]{10}" placeholder="N° Téléphone">
+                        <input type="text" class="form-control" id="phone" name="phone[]" pattern="[0-9]{10}" placeholder="N° Téléphone">
                         <label for="phone">N° Téléphone</label>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="phone[]" pattern="[0-9]{10}" placeholder="N° Téléphone">
+                        <input type="text" class="form-control" id="phone" name="phone[]" pattern="[0-9]{10}" placeholder="N° Téléphone">
                         <label for="phone">N° Téléphone</label>
                     </div>
                 </div>
@@ -228,7 +228,9 @@
             inputs.forEach(function(input) {
                 input.addEventListener('change', function() {
                     formDiv.querySelectorAll('input, select').forEach(function(el) {
+                        if (el.id !== 'phone') {
                         el.setAttribute('required', 'required');
+                        }
                     });
                 });
             });
