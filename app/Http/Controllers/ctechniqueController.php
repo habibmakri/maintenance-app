@@ -51,7 +51,10 @@ class ctechniqueController extends Controller
         }, $request['type'], $request['name'], $request['immatriculation'], $request['phone']);
         $cnt = 0;
         foreach ($combined as $item) {
-            $phoneExists = ctechnique_clients::where('phone', $item['phone'])->exists();
+            $phoneExists = null;
+            if($item['phone']){
+                $phoneExists = ctechnique_clients::where('phone', $item['phone'])->exists();
+            }
             if (!$phoneExists) {
                 if ($item['type'] && $item['name'] && $item['immatriculation']) { //&& $item['phone']){
                     ctechnique_clients::create([
