@@ -187,7 +187,7 @@
                                         tooltip: { trigger: 'item' },
                                         legend: { top: '5%', left: 'center' },
                                         series: [{
-                                            name: 'Access From',
+                                            name: 'Service',
                                             type: 'pie',
                                             radius: ['40%', '70%'],
                                             avoidLabelOverlap: false,
@@ -195,9 +195,9 @@
                                             emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
                                             labelLine: { show: false },
                                             data: [
-                                                { value: 1048, name: 'Bien' },
-                                                { value: 735, name: 'Mauvais' },
-                                                { value: 580, name: 'Moyen' }
+                                                { value: <?php echo $sbien; ?>, name: 'Bien' },
+                                                { value: <?php echo $smauvais; ?>, name: 'Mauvais' },
+                                                { value: <?php echo $smoyen; ?>, name: 'Moyen' }
                                             ]
                                         }]
                                     });
@@ -217,7 +217,7 @@
                                         tooltip: { trigger: 'item' },
                                         legend: { top: '5%', left: 'center' },
                                         series: [{
-                                            name: 'Access From',
+                                            name: 'Controleur',
                                             type: 'pie',
                                             radius: ['40%', '70%'],
                                             avoidLabelOverlap: false,
@@ -225,9 +225,9 @@
                                             emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
                                             labelLine: { show: false },
                                             data: [
-                                                { value: 1048, name: 'Bien' },
-                                                { value: 735, name: 'Mauvais' },
-                                                { value: 580, name: 'Moyen' }
+                                                { value: <?php echo $cbien; ?>, name: 'Bien' },
+                                                { value: <?php echo $cmauvais; ?>, name: 'Mauvais' },
+                                                { value: <?php echo $cmoyen; ?>, name: 'Moyen' }
                                             ]
                                         }]
                                     });
@@ -247,7 +247,7 @@
                                         tooltip: { trigger: 'item' },
                                         legend: { top: '5%', left: 'center' },
                                         series: [{
-                                            name: 'Access From',
+                                            name: 'Proprété',
                                             type: 'pie',
                                             radius: ['40%', '70%'],
                                             avoidLabelOverlap: false,
@@ -255,9 +255,9 @@
                                             emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
                                             labelLine: { show: false },
                                             data: [
-                                                { value: 1048, name: 'Bien' },
-                                                { value: 735, name: 'Mauvais' },
-                                                { value: 580, name: 'Moyen' }
+                                                { value: <?php echo $clbien; ?>, name: 'Bien' },
+                                                { value: <?php echo $clmauvais; ?>, name: 'Mauvais' },
+                                                { value: <?php echo $clmoyen; ?>, name: 'Moyen' }
                                             ]
                                         }]
                                     });
@@ -277,7 +277,7 @@
                                         tooltip: { trigger: 'item' },
                                         legend: { top: '5%', left: 'center' },
                                         series: [{
-                                            name: 'Access From',
+                                            name: 'Gérance',
                                             type: 'pie',
                                             radius: ['40%', '70%'],
                                             avoidLabelOverlap: false,
@@ -285,9 +285,9 @@
                                             emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
                                             labelLine: { show: false },
                                             data: [
-                                                { value: 1048, name: 'Bien' },
-                                                { value: 735, name: 'Mauvais' },
-                                                { value: 580, name: 'Moyen' }
+                                                { value: <?php echo $obien; ?>, name: 'Bien' },
+                                                { value: <?php echo $omauvais; ?>, name: 'Mauvais' },
+                                                { value: <?php echo $omoyen; ?>, name: 'Moyen' }
                                             ]
                                         }]
                                     });

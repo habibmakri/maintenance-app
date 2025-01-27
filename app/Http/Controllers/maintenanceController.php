@@ -443,7 +443,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::all();
+        $pieces = pieces_maintanance::whereIn('name',['Huile 15w40','Filtre Gasoile WK723','Filtre Gasoile GS150','Filtre à huile','Filtre à huile Hydrolique','Huile G3','Huile W10','Huile W90'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }

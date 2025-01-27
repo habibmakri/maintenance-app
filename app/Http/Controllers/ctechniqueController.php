@@ -113,7 +113,57 @@ class ctechniqueController extends Controller
     public function evaluations(Request $request)
     {
         $ratings = ctechnique_rating::all();
-        return view('ctechnique.evaluations', compact(['ratings']));
+        $sbien = 0;
+        $smoyen = 0;
+        $smauvais = 0;
+        $cbien = 0;
+        $cmoyen = 0;
+        $cmauvais = 0;
+        $clbien = 0;
+        $clmoyen = 0;
+        $clmauvais = 0;
+        $obien = 0;
+        $omoyen = 0;
+        $omauvais = 0;
+        foreach ($ratings as $rating) {
+            if ($rating->service == 'bien') {
+                $sbien++;
+            }
+            if ($rating->controler == 'bien') {
+                $cbien++;
+            }
+            if ($rating->clean == 'bien') {
+                $clbien++;
+            }
+            if ($rating->order == 'bien') {
+                $obien++;
+            }
+            if ($rating->service == 'moyen') {
+                $smoyen++;
+            }
+            if ($rating->controler == 'moyen') {
+                $cmoyen++;
+            }
+            if ($rating->clean == 'moyen') {
+                $clmoyen++;
+            }
+            if ($rating->order == 'moyen') {
+                $omoyen++;
+            }
+            if ($rating->service == 'mauvais') {
+                $smauvais++;
+            }
+            if ($rating->controler == 'mauvais') {
+                $cmauvais++;
+            }
+            if ($rating->clean == 'mauvais') {
+                $clmauvais++;
+            }
+            if ($rating->order == 'mauvais') {
+                $omauvais++;
+            }
+        }
+        return view('ctechnique.evaluations', compact(['ratings', 'sbien', 'smoyen', 'smauvais', 'cbien', 'cmoyen', 'cmauvais', 'clbien', 'clmoyen', 'clmauvais', 'obien', 'omoyen', 'omauvais']));
     }
     public function marquercommelue(Request $request)
     {
