@@ -69,7 +69,7 @@
             justify-content: center;
             gap: 16px;
         }
-        
+
         .stars i {
             font-size: 2.5rem;
             cursor: pointer;
@@ -77,6 +77,7 @@
             /* Couleur par défaut des icônes */
             transition: color 0.3s ease, transform 0.3s ease;
         }
+
         .stars p {
             cursor: pointer;
             color: #98a6bf;
@@ -164,7 +165,8 @@
     <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/quill/quill.bubble.css') }}">
     <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/remixicon/remixicon.css') }}">
     <link rel="stylesheet" href="{{ asset('/theme/assets/vendor/simple-datatables/style.css') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/theme/assets/img/LOGO ETUS.png') }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/theme/assets/img/LOGO ETUS.png') }}"
+        media="(prefers-color-scheme: light)">
 </head>
 
 <body class="vh-100">
@@ -186,17 +188,17 @@
                 <p>كيف تقيم الخدمة بشكل عام</p>
                 <div class="stars my-3">
                     <label>
-                        <input type="radio" name="service_rating" value="bien" style="display: none;">
+                        <input type="radio" required name="service_rating" value="bien" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>جيدة</p>
                     </label>
                     <label>
-                        <input type="radio" name="service_rating" value="moyen" style="display: none;">
+                        <input type="radio" required name="service_rating" value="moyen" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>متوسطة</p>
                     </label>
                     <label>
-                        <input type="radio" name="service_rating" value="mauvais" style="display: none;">
+                        <input type="radio" required name="service_rating" value="mauvais" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>سيئة</p>
                     </label>
@@ -204,17 +206,17 @@
                 <p>مدى رضاك عن تعامل المراقب</p>
                 <div class="stars my-3">
                     <label>
-                        <input type="radio" name="controler_rating" value="bien" style="display: none;">
+                        <input type="radio" required name="controler_rating" value="bien" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>جيدة</p>
                     </label>
                     <label>
-                        <input type="radio" name="controler_rating" value="moyen" style="display: none;">
+                        <input type="radio" required name="controler_rating" value="moyen" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>متوسطة</p>
                     </label>
                     <label>
-                        <input type="radio" name="controler_rating" value="mauvais" style="display: none;">
+                        <input type="radio" required name="controler_rating" value="mauvais" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>سيئة</p>
                     </label>
@@ -222,17 +224,17 @@
                 <p>مدى رضاك عن نظافة الوكالة</p>
                 <div class="stars my-3">
                     <label>
-                        <input type="radio" name="clean_rating" value="bien" style="display: none;">
+                        <input type="radio" required name="clean_rating" value="bien" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>جيدة</p>
                     </label>
                     <label>
-                        <input type="radio" name="clean_rating" value="moyen" style="display: none;">
+                        <input type="radio" required name="clean_rating" value="moyen" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>متوسطة</p>
                     </label>
                     <label>
-                        <input type="radio" name="clean_rating" value="mauvais" style="display: none;">
+                        <input type="radio" required name="clean_rating" value="mauvais" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>سيئة</p>
                     </label>
@@ -240,17 +242,17 @@
                 <p>مدى رضاك عن التنظيم</p>
                 <div class="stars my-3">
                     <label>
-                        <input type="radio" name="order_rating" value="bien" style="display: none;">
+                        <input type="radio" required name="order_rating" value="bien" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-smile mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>جيدة</p>
                     </label>
                     <label>
-                        <input type="radio" name="order_rating" value="moyen" style="display: none;">
+                        <input type="radio" required name="order_rating" value="moyen" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-neutral mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>متوسطة</p>
                     </label>
                     <label>
-                        <input type="radio" name="order_rating" value="mauvais" style="display: none;">
+                        <input type="radio" required name="order_rating" value="mauvais" style="opacity: 0; position: absolute;">
                         <i class="bi bi-emoji-angry mx-4" style="font-size: 3.5rem; cursor: pointer;"></i>
                         <p>سيئة</p>
                     </label>
@@ -261,19 +263,37 @@
                 <p class="mt-4">رقم الهاتف</p>
                 <input type="text" class="form-control my-3" name="phone"
                     placeholder=" أدخل رقم الهاتف - إختياري">
+                <p id="errorMessage" style="color: #EB5757; display: none;">يرجى ملأ كل الخيارت</p>
 
-                <input type="submit" value="تأكيد">
+                <input type="submit" id="submit" value="تأكيد">
         </form>
         </div>
     </main>
     <script>
+        // document.querySelector("#submit").addEventListener("click", function(event) {
+        //     let allFieldsFilled = true;
+        //     // Check if any of the required fields are not selected
+        //     const requiredFields = document.querySelectorAll('input[required]');
+        //     requiredFields.forEach((field) => {
+        //         if (!field.checked) {
+        //             allFieldsFilled = false;
+        //         }
+        //     });
+
+        //     if (!allFieldsFilled) {
+        //         event.preventDefault(); // Prevent form submission
+        //         document.getElementById("errorMessage").style.display = "block"; // Show the error message
+        //     } else {
+        //         document.getElementById("errorMessage").style.display = "none"; // Hide the error message
+        //     }
+        // });
         document.querySelectorAll('.stars input[type="radio"]').forEach((radio) => {
             radio.addEventListener('change', (e) => {
                 const parent = e.target.closest('.stars');
                 parent.querySelectorAll('i').forEach(icon => icon.style.color = '#98a6bf');
                 parent.querySelectorAll('p').forEach(icon => icon.style.color = '#98a6bf');
-                e.target.nextElementSibling.style.color = '#007bff'; 
-                e.target.nextElementSibling.nextElementSibling.style.color = '#007bff'; 
+                e.target.nextElementSibling.style.color = '#007bff';
+                e.target.nextElementSibling.nextElementSibling.style.color = '#007bff';
             });
         });
     </script>

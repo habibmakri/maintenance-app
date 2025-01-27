@@ -1,10 +1,10 @@
 @extends('base')
 
-@section('title', 'Evaluations')
+@section('title', 'Clients cTechnique')
 
 @section('content')
     <div class="pagetitle">
-        <h1>Evaluations</h1>
+        <h1>Clients</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('app.main') }}">App</a></li>
@@ -127,20 +127,16 @@
                             <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)->format('Y-m-d') }}
                             </td>
                             <td style="display: flex">
-                                <i class="bi bi-trash delete-icon" data-id="100" style="cursor: pointer;"
+                                <i class="bi bi-trash delete-icon"  style="cursor: pointer;"
                                     onclick="delete_client({{ $client->id }})"></i>
+                                    <i class="bi bi-pencil edit-icon"  style="margin-left:15%;cursor: pointer;" onclick="handleEditClick({{ $client->id }})"></i>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-
         </div>
-
-
     </div>
-
-
     <script>
         function handleresoudreclick(panne) {
             const modal_title = document.getElementById('modal_title');
@@ -172,5 +168,11 @@
                     .catch(error => console.error('Erreur:', error));
             }
         }
+
+        function handleEditClick(id) {
+            console.log("Editing Client with ID:", id);
+            window.location.href = `/app/ctechnique_clients/edit_client:${id}`;
+        }
+
     </script>
 @endsection

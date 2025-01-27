@@ -24,6 +24,10 @@
                 role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Lue</button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="stat-tab" data-bs-toggle="tab" data-bs-target="#bordered-stat" type="button"
+                role="tab" aria-controls="stat" aria-selected="false" tabindex="-1">Statistiques</button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="extraire-tab" data-bs-toggle="tab" data-bs-target="#bordered-extraire"
                 type="button" role="tab" aria-controls="extraire" aria-selected="false"
                 tabindex="-1">Extraire</button>
@@ -115,6 +119,8 @@
 
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
             <h5 class="mt-2">Selectionner la date :</h5>
+
+
             <table class="table datatable mt-1">
                 <thead>
                     <tr>
@@ -165,6 +171,134 @@
             </table>
 
         </div>
+        
+        <div class="tab-pane fade" id="bordered-stat" role="tabpanel" aria-labelledby="stat-tab">
+            <div class="container">
+                <div class="row">
+                    <!-- Carte 1 -->
+                    <div class="col-md-6">
+                        <div class="card-body pb-0">
+                            <h5 class="card-title" style="text-align: center;">Service</h5>
+                            <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    echarts.init(document.querySelector("#trafficChart")).setOption({
+                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                                        tooltip: { trigger: 'item' },
+                                        legend: { top: '5%', left: 'center' },
+                                        series: [{
+                                            name: 'Access From',
+                                            type: 'pie',
+                                            radius: ['40%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: { show: false, position: 'center' },
+                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
+                                            labelLine: { show: false },
+                                            data: [
+                                                { value: 1048, name: 'Bien' },
+                                                { value: 735, name: 'Mauvais' },
+                                                { value: 580, name: 'Moyen' }
+                                            ]
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <!-- Carte 2 -->
+                    <div class="col-md-6">
+                        <div class="card-body pb-0">
+                            <h5 class="card-title" style="text-align: center;">Controleur</h5>
+                            <div id="trafficChart2" style="min-height: 400px;" class="echart"></div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    echarts.init(document.querySelector("#trafficChart2")).setOption({
+                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                                        tooltip: { trigger: 'item' },
+                                        legend: { top: '5%', left: 'center' },
+                                        series: [{
+                                            name: 'Access From',
+                                            type: 'pie',
+                                            radius: ['40%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: { show: false, position: 'center' },
+                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
+                                            labelLine: { show: false },
+                                            data: [
+                                                { value: 1048, name: 'Bien' },
+                                                { value: 735, name: 'Mauvais' },
+                                                { value: 580, name: 'Moyen' }
+                                            ]
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <!-- Carte 3 -->
+                    <div class="col-md-6">
+                        <div class="card-body pb-0">
+                            <h5 class="card-title" style="text-align: center;">Propreté</h5>
+                            <div id="trafficChart3" style="min-height: 400px;" class="echart"></div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    echarts.init(document.querySelector("#trafficChart3")).setOption({
+                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                                        tooltip: { trigger: 'item' },
+                                        legend: { top: '5%', left: 'center' },
+                                        series: [{
+                                            name: 'Access From',
+                                            type: 'pie',
+                                            radius: ['40%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: { show: false, position: 'center' },
+                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
+                                            labelLine: { show: false },
+                                            data: [
+                                                { value: 1048, name: 'Bien' },
+                                                { value: 735, name: 'Mauvais' },
+                                                { value: 580, name: 'Moyen' }
+                                            ]
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <!-- Carte 4 -->
+                    <div class="col-md-6">
+                        <div class="card-body pb-0">
+                            <h5 class="card-title" style="text-align: center;">Gérance</h5>
+                            <div id="trafficChart4" style="min-height: 400px;" class="echart"></div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    echarts.init(document.querySelector("#trafficChart4")).setOption({
+                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                                        tooltip: { trigger: 'item' },
+                                        legend: { top: '5%', left: 'center' },
+                                        series: [{
+                                            name: 'Access From',
+                                            type: 'pie',
+                                            radius: ['40%', '70%'],
+                                            avoidLabelOverlap: false,
+                                            label: { show: false, position: 'center' },
+                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
+                                            labelLine: { show: false },
+                                            data: [
+                                                { value: 1048, name: 'Bien' },
+                                                { value: 735, name: 'Mauvais' },
+                                                { value: 580, name: 'Moyen' }
+                                            ]
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="tab-pane fade" id="bordered-extraire" role="tabpanel" aria-labelledby="extraire-tab">
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner la date pour l'extraction des Evaluations:</h5>
@@ -182,7 +316,7 @@
                             <label for="dateau">Au</label>
                         </div>
                     </div>
-                  
+
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
@@ -203,13 +337,11 @@
                             <label for="dateau">Au</label>
                         </div>
                     </div>
-                  
+
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
         </div>
-
-
     </div>
 
 

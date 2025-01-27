@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', 'Gestion des comptes')
+@section('title', 'Clients cTechnique')
 @section('content')
 
     <div class="pagetitle">

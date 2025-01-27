@@ -6,6 +6,7 @@ use App\Models\ctechnique_clients;
 use App\Models\ctechnique_rating;
 use App\Models\ctechniqueclienttypes;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 
@@ -70,6 +71,27 @@ class ctechniqueController extends Controller
         } else {
             return redirect()->back()->with('error', 'Aucun client n\'a été ajouté.');
         }
+    }
+    public function edit_client($id)
+    {
+        $client = ctechnique_clients::find($id);
+        $clienttypes = ctechniqueclienttypes::all();
+        if ($client) {
+            return view('ctechnique.edit_client', compact(['client','clienttypes']));
+        }
+        abort(404);
+    }
+    public function do_edit_client(Request $request,$id)
+    {
+        $client = ctechnique_clients::find($id);
+        if($client){
+            $client->type_id=$request->type;   
+            $client->phone=$request->phone;   
+            $client->immatriculation=$request->immatriculation;   
+            $client->update();
+            return to_route('app.ctechnique.ctechnique_clients')->with('success', 'Client modifié avec succès!');
+        }
+        return to_route('app.ctechnique.ctechnique_clients')->with('error', 'Erreur');
     }
     public function deleteclient($id)
     {
