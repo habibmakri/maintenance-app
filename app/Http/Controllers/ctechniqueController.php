@@ -52,7 +52,7 @@ class ctechniqueController extends Controller
         $cnt = 0;
         foreach ($combined as $item) {
             $phoneExists = null;
-            if($item['phone']){
+            if ($item['phone']) {
                 $phoneExists = ctechnique_clients::where('phone', $item['phone'])->exists();
             }
             if (!$phoneExists) {
@@ -80,17 +80,17 @@ class ctechniqueController extends Controller
         $client = ctechnique_clients::find($id);
         $clienttypes = ctechniqueclienttypes::all();
         if ($client) {
-            return view('ctechnique.edit_client', compact(['client','clienttypes']));
+            return view('ctechnique.edit_client', compact(['client', 'clienttypes']));
         }
         abort(404);
     }
-    public function do_edit_client(Request $request,$id)
+    public function do_edit_client(Request $request, $id)
     {
         $client = ctechnique_clients::find($id);
-        if($client){
-            $client->type_id=$request->type;   
-            $client->phone=$request->phone;   
-            $client->immatriculation=$request->immatriculation;   
+        if ($client) {
+            $client->type_id = $request->type;
+            $client->phone = $request->phone;
+            $client->immatriculation = $request->immatriculation;
             $client->update();
             return to_route('app.ctechnique.ctechnique_clients')->with('success', 'Client modifié avec succès!');
         }
@@ -164,6 +164,94 @@ class ctechniqueController extends Controller
             }
         }
         return view('ctechnique.evaluations', compact(['ratings', 'sbien', 'smoyen', 'smauvais', 'cbien', 'cmoyen', 'cmauvais', 'clbien', 'clmoyen', 'clmauvais', 'obien', 'omoyen', 'omauvais']));
+    }
+    public function refreshCharts(Request $request)
+    {
+        $datedu = Carbon::parse($request->datedu)->startOfDay()->toDateTimeString();
+        $dateau =  Carbon::parse($request->dateau)->endOfDay()->toDateTimeString();
+        $ratings = ctechnique_rating::whereBetween('created_at', [$datedu, $dateau])->get();
+        $sbien = 0;
+        $smoyen = 0;
+        $smauvais = 0;
+        $cbien = 0;
+        $cmoyen = 0;
+        $cmauvais = 0;
+        $clbien = 0;
+        $clmoyen = 0;
+        $clmauvais = 0;
+        $obien = 0;
+        $omoyen = 0;
+        $omauvais = 0;
+        foreach ($ratings as $rating) {
+            if ($rating->service == 'bien') {
+                $sbien++;
+            }
+            if ($rating->controler == 'bien') {
+                $cbien++;
+            }
+            if ($rating->clean == 'bien') {
+                $clbien++;
+            }
+            if ($rating->order == 'bien') {
+                $obien++;
+            }
+            if ($rating->service == 'moyen') {
+                $smoyen++;
+            }
+            if ($rating->controler == 'moyen') {
+                $cmoyen++;
+            }
+            if ($rating->clean == 'moyen') {
+                $clmoyen++;
+            }
+            if ($rating->order == 'moyen') {
+                $omoyen++;
+            }
+            if ($rating->service == 'mauvais') {
+                $smauvais++;
+            }
+            if ($rating->controler == 'mauvais') {
+                $cmauvais++;
+            }
+            if ($rating->clean == 'mauvais') {
+                $clmauvais++;
+            }
+            if ($rating->order == 'mauvais') {
+                $omauvais++;
+            }
+        }
+
+        $serviceData = [
+            ['value' => $sbien, 'name' => 'Bien'],
+            ['value' => $smauvais, 'name' => 'Mauvais'],
+            ['value' => $smoyen, 'name' => 'Moyen'],
+        ];
+
+        $controleurData = [
+            ['value' => $cbien, 'name' => 'Bien'],
+            ['value' => $cmauvais, 'name' => 'Mauvais'],
+            ['value' => $cmoyen, 'name' => 'Moyen'],
+        ];
+
+        $propreteData = [
+            ['value' => $clbien, 'name' => 'Bien'],
+            ['value' => $clmauvais, 'name' => 'Mauvais'],
+            ['value' => $clmoyen, 'name' => 'Moyen'],
+        ];
+
+        $geranceData = [
+            ['value' => $obien, 'name' => 'Bien'],
+            ['value' => $omauvais, 'name' => 'Mauvais'],
+            ['value' => $omoyen, 'name' => 'Moyen'],
+        ];
+
+        return response()->json([
+            'success' => true,
+            'serviceData' => $serviceData,
+            'controleurData' => $controleurData,
+            'propreteData' => $propreteData,
+            'geranceData' => $geranceData,
+        ]);
     }
     public function marquercommelue(Request $request)
     {

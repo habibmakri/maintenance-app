@@ -115,6 +115,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('ctechnique_clients/edit_client:{id}','do_edit_client');
         // Route::post('ctechnique_in','add_ctechnique_in');
         Route::get('evaluations','evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
+        Route::get('evaluations/refreshcharts',  'refreshCharts');
         Route::post('evaluations/marquercommelue','marquercommelue')->name('marquercommelue');
         Route::post('evaluations/evaluations_pdf','evaluations_pdf')->name('evaluations_pdf');
         Route::post('evaluations/etatevaluations_pdf','etatevaluations_pdf')->name('etatevaluations_pdf');

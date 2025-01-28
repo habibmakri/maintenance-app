@@ -171,8 +171,22 @@
             </table>
 
         </div>
-        
+
         <div class="tab-pane fade" id="bordered-stat" role="tabpanel" aria-labelledby="stat-tab">
+            <form class="row g-3" action="" method="post">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input id="dateduInput" name="datedu" type="date" required class="form-control">
+                        <label for="datedu">Du</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input id="dateauInput" name="dateau" type="date" required class="form-control">
+                        <label for="dateau">Au</label>
+                    </div>
+                </div>
+            </form>
             <div class="container">
                 <div class="row">
                     <!-- Carte 1 -->
@@ -180,29 +194,7 @@
                         <div class="card-body pb-0">
                             <h5 class="card-title" style="text-align: center;">Service</h5>
                             <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    echarts.init(document.querySelector("#trafficChart")).setOption({
-                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
-                                        tooltip: { trigger: 'item' },
-                                        legend: { top: '5%', left: 'center' },
-                                        series: [{
-                                            name: 'Service',
-                                            type: 'pie',
-                                            radius: ['40%', '70%'],
-                                            avoidLabelOverlap: false,
-                                            label: { show: false, position: 'center' },
-                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
-                                            labelLine: { show: false },
-                                            data: [
-                                                { value: <?php echo $sbien; ?>, name: 'Bien' },
-                                                { value: <?php echo $smauvais; ?>, name: 'Mauvais' },
-                                                { value: <?php echo $smoyen; ?>, name: 'Moyen' }
-                                            ]
-                                        }]
-                                    });
-                                });
-                            </script>
+                            <script></script>
                         </div>
                     </div>
                     <!-- Carte 2 -->
@@ -210,59 +202,14 @@
                         <div class="card-body pb-0">
                             <h5 class="card-title" style="text-align: center;">Controleur</h5>
                             <div id="trafficChart2" style="min-height: 400px;" class="echart"></div>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    echarts.init(document.querySelector("#trafficChart2")).setOption({
-                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
-                                        tooltip: { trigger: 'item' },
-                                        legend: { top: '5%', left: 'center' },
-                                        series: [{
-                                            name: 'Controleur',
-                                            type: 'pie',
-                                            radius: ['40%', '70%'],
-                                            avoidLabelOverlap: false,
-                                            label: { show: false, position: 'center' },
-                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
-                                            labelLine: { show: false },
-                                            data: [
-                                                { value: <?php echo $cbien; ?>, name: 'Bien' },
-                                                { value: <?php echo $cmauvais; ?>, name: 'Mauvais' },
-                                                { value: <?php echo $cmoyen; ?>, name: 'Moyen' }
-                                            ]
-                                        }]
-                                    });
-                                });
-                            </script>
+                            <script></script>
                         </div>
                     </div>
-                    <!-- Carte 3 -->
                     <div class="col-md-6">
                         <div class="card-body pb-0">
                             <h5 class="card-title" style="text-align: center;">Propreté</h5>
                             <div id="trafficChart3" style="min-height: 400px;" class="echart"></div>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    echarts.init(document.querySelector("#trafficChart3")).setOption({
-                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
-                                        tooltip: { trigger: 'item' },
-                                        legend: { top: '5%', left: 'center' },
-                                        series: [{
-                                            name: 'Proprété',
-                                            type: 'pie',
-                                            radius: ['40%', '70%'],
-                                            avoidLabelOverlap: false,
-                                            label: { show: false, position: 'center' },
-                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
-                                            labelLine: { show: false },
-                                            data: [
-                                                { value: <?php echo $clbien; ?>, name: 'Bien' },
-                                                { value: <?php echo $clmauvais; ?>, name: 'Mauvais' },
-                                                { value: <?php echo $clmoyen; ?>, name: 'Moyen' }
-                                            ]
-                                        }]
-                                    });
-                                });
-                            </script>
+                            <script></script>
                         </div>
                     </div>
                     <!-- Carte 4 -->
@@ -270,35 +217,13 @@
                         <div class="card-body pb-0">
                             <h5 class="card-title" style="text-align: center;">Gérance</h5>
                             <div id="trafficChart4" style="min-height: 400px;" class="echart"></div>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    echarts.init(document.querySelector("#trafficChart4")).setOption({
-                                        color: ['#6FCF97', '#EB5757', '#F2C94C'],
-                                        tooltip: { trigger: 'item' },
-                                        legend: { top: '5%', left: 'center' },
-                                        series: [{
-                                            name: 'Gérance',
-                                            type: 'pie',
-                                            radius: ['40%', '70%'],
-                                            avoidLabelOverlap: false,
-                                            label: { show: false, position: 'center' },
-                                            emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
-                                            labelLine: { show: false },
-                                            data: [
-                                                { value: <?php echo $obien; ?>, name: 'Bien' },
-                                                { value: <?php echo $omauvais; ?>, name: 'Mauvais' },
-                                                { value: <?php echo $omoyen; ?>, name: 'Moyen' }
-                                            ]
-                                        }]
-                                    });
-                                });
-                            </script>
+                            <script></script>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="tab-pane fade" id="bordered-extraire" role="tabpanel" aria-labelledby="extraire-tab">
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner la date pour l'extraction des Evaluations:</h5>
@@ -353,5 +278,237 @@
             const panneIdInput = document.getElementById('fichepanne_id');
             panneIdInput.value = panne.id;
         }
+        document.addEventListener("DOMContentLoaded", () => {
+            const dateduInput = document.getElementById("dateduInput");
+            const dateauInput = document.getElementById("dateauInput");
+            const refreshButton = document.getElementById("refreshButton");
+
+            dateduInput.addEventListener('change', fetchData);
+            dateauInput.addEventListener('change', fetchData);
+            function fetchData() {
+                const datedu = dateduInput.value;
+                const dateau = dateauInput.value;
+                if (!datedu || !dateau ) return;
+
+                fetch(`/app/evaluations/refreshcharts?datedu=${datedu}&dateau=${dateau}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateChart("trafficChart", data.serviceData);
+                            updateChart("trafficChart2", data.controleurData);
+                            updateChart("trafficChart3", data.propreteData);
+                            updateChart("trafficChart4", data.geranceData);
+                        } else {
+                            alert("Erreur lors de la récupération des données.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur:", error);
+                        alert("Une erreur est survenue lors de la mise à jour des graphiques.");
+                    });
+            }
+
+            function updateChart(chartId, chartData) {
+                const chart = echarts.getInstanceByDom(document.getElementById(chartId));
+                if (chart) {
+                    chart.setOption({
+                        series: [{
+                            data: chartData
+                        }]
+                    });
+                }
+            }
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            echarts.init(document.querySelector("#trafficChart")).setOption({
+                color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Service',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {d}%'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [{
+                            value: <?php echo $sbien; ?>,
+                            name: 'Bien'
+                        },
+                        {
+                            value: <?php echo $smauvais; ?>,
+                            name: 'Mauvais'
+                        },
+                        {
+                            value: <?php echo $smoyen; ?>,
+                            name: 'Moyen'
+                        }
+                    ]
+                }]
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            echarts.init(document.querySelector("#trafficChart2")).setOption({
+                color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Controleur',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {d}%'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [{
+                            value: <?php echo $cbien; ?>,
+                            name: 'Bien'
+                        },
+                        {
+                            value: <?php echo $cmauvais; ?>,
+                            name: 'Mauvais'
+                        },
+                        {
+                            value: <?php echo $cmoyen; ?>,
+                            name: 'Moyen'
+                        }
+                    ]
+                }]
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            echarts.init(document.querySelector("#trafficChart3")).setOption({
+                color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Proprété',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {d}%'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [{
+                            value: <?php echo $clbien; ?>,
+                            name: 'Bien'
+                        },
+                        {
+                            value: <?php echo $clmauvais; ?>,
+                            name: 'Mauvais'
+                        },
+                        {
+                            value: <?php echo $clmoyen; ?>,
+                            name: 'Moyen'
+                        }
+                    ]
+                }]
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            echarts.init(document.querySelector("#trafficChart4")).setOption({
+                color: ['#6FCF97', '#EB5757', '#F2C94C'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Gérance',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {d}%'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [{
+                            value: <?php echo $obien; ?>,
+                            name: 'Bien'
+                        },
+                        {
+                            value: <?php echo $omauvais; ?>,
+                            name: 'Mauvais'
+                        },
+                        {
+                            value: <?php echo $omoyen; ?>,
+                            name: 'Moyen'
+                        }
+                    ]
+                }]
+            });
+        });
     </script>
 @endsection
