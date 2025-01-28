@@ -318,6 +318,16 @@ class maintenanceController extends Controller
         }
         return response()->json(['success' => false]);
     }
+    public function deletetraveauxlibre($id)
+    {
+        $record = traveauxlibre_model::find($id);
+        if ($record) {
+            $record->used_pieces()->delete();
+            $record->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
     public function editfiche($id)
     {
         $record = fichemaintenance::find($id);

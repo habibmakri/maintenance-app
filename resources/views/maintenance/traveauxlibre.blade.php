@@ -180,7 +180,7 @@
     <script>
         function handleDeleteClick(id) {
             if (confirm('Vous êtes sur?')) {
-                fetch(`manage_panne/deletepannesd:${id}`, {
+                fetch(`maintenance/deletetraveauxlibre:${id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -190,7 +190,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // alert('Operation Reussit!');
+                            alert('Operation Reussit!');
                             window.location.reload();
                         } else {
                             alert('Operation echoué!');

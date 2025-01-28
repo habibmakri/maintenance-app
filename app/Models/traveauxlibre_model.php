@@ -20,4 +20,5 @@ class traveauxlibre_model extends Model
     public function used_pieces(){
         return $this->hasMany(traveauxlibreusedpieces::class,'traveauxlibre_id');
     }
+    
 }
