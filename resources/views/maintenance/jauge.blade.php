@@ -225,7 +225,7 @@
                     <div class="col-md-4">
                         <div class="form-floating">
                             <input type="number" class="form-control" step="any" name="piece_quantities[]"
-                                min="1">
+                                min="0">
                             <label for="piece_quantities">Quantité</label>
                         </div>
                     </div>
