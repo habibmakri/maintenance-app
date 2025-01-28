@@ -29,7 +29,8 @@ class ctechniqueController extends Controller
             $rating->phone = $request->input('phone', null);
             $rating->save();
         }
-        return redirect()->away('https://etus22.dz');
+        // return redirect()->away('https://etus22.dz');
+        return view('ctechnique.thanks_rate_us');
     }
     public function ctechnique_in(Request $request)
     {
