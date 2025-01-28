@@ -333,7 +333,7 @@
                 series: [{
                     name: 'Service',
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
@@ -381,7 +381,7 @@
                 series: [{
                     name: 'Controleur',
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
@@ -429,7 +429,7 @@
                 series: [{
                     name: 'Proprété',
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
@@ -477,7 +477,7 @@
                 series: [{
                     name: 'Gérance',
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
