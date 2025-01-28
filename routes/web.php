@@ -51,6 +51,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('maintenance_panne','maintenance_panne')->name('maintenance_panne')->middleware('rolesMiddleware:maintenance_panne');
         Route::post('maintenance_panne','resoudre_maintenance_panne');
         Route::post('maintenance/ajouter_ndpanne', 'ajouter_ndpanne')->name('ajouter_ndpanne');
+        Route::post('maintenance/deletefichepanne:{id}', 'deletefichepanne');
         Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');

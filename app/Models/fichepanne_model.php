@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class fichepanne_model extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'fichepanne'; // Specify the table name if it's not the default plural form
+    protected $table = 'fichepanne'; 
 
     // Add fillable fields
     protected $fillable = ['fichemaintenance_id','pannnename_id','solved','date_resoudre','lieu_resoudre','brigade','equipe','description'];

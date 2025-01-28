@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class used_pieces extends Model
 {
+    use SoftDeletes;
     protected $table = 'used_pieces';
 
     protected $hidden = ['created_at', 'updated_at'];

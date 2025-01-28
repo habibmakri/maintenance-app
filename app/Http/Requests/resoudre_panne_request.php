@@ -28,7 +28,7 @@ class resoudre_panne_request extends FormRequest
             'brigade' => 'required|string',
             'equipe' => 'nullable|array',
             // 'equipe.*' => 'exists:maintenance_agents,id',
-            'description' => 'required|string',
+            // 'description' => 'required|string',
             'pieces' => 'nullable|array', 
             'pieces.*' => 'nullable|exists:pieces_maintenance,id', 
             'piece_quantities' => 'nullable|array', 

@@ -281,6 +281,8 @@
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal2"
                                     onclick="handlerapportclick({{ json_encode($panne) }}, {{ json_encode($panne->used_pieces->map(function ($piece) {return ['name' => $piece->piece->name, 'quantity' => $piece->quantité];})->toArray()) }},{{ json_encode($panne->fichemaintenance->chauffeur) }})">Rapport</button>
+                                <i class="bi bi-trash delete-icon" style="margin-left:15%;cursor: pointer;"
+                                    onclick="handleDeleteClick({{ $panne->id }})"></i>
 
                             </td>
                         </tr>
@@ -362,7 +364,27 @@
             const panneIdInput = document.getElementById('fichepanne_id');
             panneIdInput.value = panne.id;
         }
-
+        function handleDeleteClick(id) {
+            if (confirm('Vous êtes sur?')) {
+                fetch(`maintenance/deletefichepanne:${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Opération réussie!');
+                            location.reload(); 
+                        } else {
+                            alert('Opération échouée!');
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+        }
 
         function handlerapportclick(panne, used_pieces, chauffeur) {
             const modal_title = document.getElementById('modal_title2');
