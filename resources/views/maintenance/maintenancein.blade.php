@@ -295,6 +295,7 @@
                             if (!bus.filled) {
                                 const option = document.createElement('option');
                                 option.value = bus.id;
+                                option.dataset.type = bus.type;
                                 option.dataset.kmactuelle = bus.kmactuelle;
                                 option.dataset.kmderniervidange = bus.kmderniervidange;
                                 option.dataset.kmderniervidangeboite = bus.kmderniervidangeboite;
@@ -488,44 +489,68 @@
             if (!selectedBusKmactuelle) return;
             kmdepart.value = selectedBusKmactuelle;
 
-            //
-            const moteurPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidange)) / 10000) * 100, 100);
-            const boitePercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidangeboite)) / 10000) * 100, 100);
-            const pondPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidangepond)) / 10000) * 100, 100);
+            console.log(selectedOption.dataset.type);
+            if (selectedOption.dataset.type === 'v8') {
+                var moteurPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidange)) / 8000) * 100, 100);
+                var boitePercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangeboite)) / 50000) * 100, 100);
+                var pondPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangepond)) / 100000) * 100, 100);
+            } else if (selectedOption.dataset.type === 'l5') {
+                var moteurPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidange)) / 8000) * 100, 100);
+                var boitePercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangeboite)) / 30000) * 100, 100);
+                var pondPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangepond)) / 100000) * 100, 100);
+            }
+            // const moteurPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+            //     selectedBuskmderniervidange)) / 10000) * 100, 100);
+            // const boitePercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+            //     selectedBuskmderniervidangeboite)) / 10000) * 100, 100);
+            // const pondPercentage = Math.min(((parseInt(selectedBusKmactuelle) - parseInt(
+            //     selectedBuskmderniervidangepond)) / 10000) * 100, 100);
 
-            
+
             vidangemoteurbar.style.width = moteurPercentage + '%';
             vidangeboitebar.style.width = boitePercentage + '%';
             vidangepondbar.style.width = pondPercentage + '%';
 
-            
+
             vidangemoteurbar.innerHTML = '';
             vidangeboitebar.innerHTML = '';
             vidangepondbar.innerHTML = '';
 
-            
-            vidangemoteurbar.innerHTML = 'Moteur: ' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidange)));
-            vidangeboitebar.innerHTML = 'Boite:' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidangeboite)));
-            vidangepondbar.innerHTML = 'Pond:' + (10000 - (parseInt(selectedBusKmactuelle) - parseInt(
-                selectedBuskmderniervidangepond)));
+            if (selectedOption.dataset.type === 'v8') {
+                vidangemoteurbar.innerHTML = 'Moteur: ' + (8000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidange)));
+                vidangeboitebar.innerHTML = 'Boite:' + (50000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangeboite)));
+                vidangepondbar.innerHTML = 'Pond:' + (100000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangepond)));
+            } else if (selectedOption.dataset.type === 'l5') {
+                vidangemoteurbar.innerHTML = 'Moteur: ' + (8000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidange)));
+                vidangeboitebar.innerHTML = 'Boite:' + (30000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangeboite)));
+                vidangepondbar.innerHTML = 'Pond:' + (100000 - (parseInt(selectedBusKmactuelle) - parseInt(
+                    selectedBuskmderniervidangepond)));
+            }
 
-            
+
+
             function setColor(bar, percentage) {
                 if (percentage >= 85) {
                     bar.style.backgroundColor = '#EB5757';
                 } else if (percentage >= 60) {
                     bar.style.backgroundColor = '#F2C94C';
                 } else {
-                    bar.style.backgroundColor = '#6FCF97'; 
+                    bar.style.backgroundColor = '#6FCF97';
                 }
             }
 
-            
+
             setColor(vidangemoteurbar, moteurPercentage);
             setColor(vidangeboitebar, boitePercentage);
             setColor(vidangepondbar, pondPercentage);

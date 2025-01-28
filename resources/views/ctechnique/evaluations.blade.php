@@ -3,6 +3,9 @@
 @section('title', 'Evaluations')
 
 @section('content')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
     <div class="pagetitle">
         <h1>Evaluations</h1>
         <nav>
@@ -173,20 +176,21 @@
         </div>
 
         <div class="tab-pane fade" id="bordered-stat" role="tabpanel" aria-labelledby="stat-tab">
-            <form class="row g-3" action="" method="post">
-                <div class="col-md-6">
+            <div class="row g-3">
+                <div class="col-md-5">
                     <div class="form-floating">
                         <input id="dateduInput" name="datedu" type="date" required class="form-control">
                         <label for="datedu">Du</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-floating">
                         <input id="dateauInput" name="dateau" type="date" required class="form-control">
                         <label for="dateau">Au</label>
                     </div>
                 </div>
-            </form>
+                <button id="downloadPDF" class="btn btn-outline-primary col-md-2">Télécharger le PDF</button>
+            </div>
             <div class="container">
                 <div class="row">
                     <!-- Carte 1 -->
@@ -285,10 +289,11 @@
 
             dateduInput.addEventListener('change', fetchData);
             dateauInput.addEventListener('change', fetchData);
+
             function fetchData() {
                 const datedu = dateduInput.value;
                 const dateau = dateauInput.value;
-                if (!datedu || !dateau ) return;
+                if (!datedu || !dateau) return;
 
                 fetch(`/app/evaluations/refreshcharts?datedu=${datedu}&dateau=${dateau}`)
                     .then(response => response.json())
@@ -510,5 +515,55 @@
                 }]
             });
         });
+        document.getElementById("downloadPDF").addEventListener("click", generatePDF);
+
+
+        async function generatePDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "px",
+                format: "a4",
+            });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 10;
+            const spacing = 20;
+            const columnWidth = (pageWidth - margin * 2 - spacing) / 2;
+            let yOffset = margin;
+            let xOffset = margin;
+            const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
+            const chartTitles = ["Service", "Controleur", "Propreté", "Gérance"];
+            for (let i = 0; i < chartIds.length; i++) {
+                const chartId = chartIds[i];
+                const chartTitle = chartTitles[i];
+                const chartElement = document.getElementById(chartId);
+                if (chartElement) {
+                    pdf.setFont("helvetica", "bold");
+                    pdf.setFontSize(12);
+                    pdf.text(chartTitle, xOffset + 122, yOffset + 8);
+                    const canvas = await html2canvas(chartElement);
+                    const imgData = canvas.toDataURL("image/png");
+                    const chartHeight = (chartElement.offsetHeight / chartElement.offsetWidth) * columnWidth;
+                    if (yOffset + chartHeight + spacing > pageHeight - margin) {
+                        pdf.addPage();
+                        yOffset = margin;
+                    }
+                    pdf.addImage(imgData, "PNG", xOffset, yOffset + 16, columnWidth, chartHeight);
+                    if (xOffset + columnWidth + spacing > pageWidth - margin) {
+                        xOffset = margin;
+                        yOffset += chartHeight + spacing;
+                    } else {
+
+                        xOffset += columnWidth + spacing;
+                    }
+                }
+            }
+
+            // Télécharger le PDF
+            pdf.save("charts_landscape.pdf");
+        }
     </script>
 @endsection

@@ -165,6 +165,7 @@ class maintenanceController extends Controller
                 return [
                     'id' => $bus->id,
                     'name' => $bus->name,
+                    'type' => $bus->type,
                     'kmactuelle' => $bus->kmactuelle,
                     'kmderniervidange' => $bus->derniervidange,
                     'kmderniervidangeboite' => $bus->derniervidangeboite,
