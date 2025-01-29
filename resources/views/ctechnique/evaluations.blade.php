@@ -245,7 +245,7 @@
                         <label for="dateau">Au</label>
                     </div>
                 </div>
-                <button id="downloadPDF" class="btn btn-outline-primary col-md-2">Télécharger le PDF</button>
+                <button id="downloadPDF" class="btn btn-outline-primary col-md-2" disabled>Télécharger le PDF</button>
             </div>
             <div class="container">
                 <div class="row">
@@ -341,7 +341,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const dateduInput = document.getElementById("dateduInput");
             const dateauInput = document.getElementById("dateauInput");
-            const refreshButton = document.getElementById("refreshButton");
+            const downlaod = document.getElementById("downloadPDF");
 
             dateduInput.addEventListener('change', fetchData);
             dateauInput.addEventListener('change', fetchData);
@@ -359,6 +359,7 @@
                             updateChart("trafficChart2", data.controleurData);
                             updateChart("trafficChart3", data.propreteData);
                             updateChart("trafficChart4", data.geranceData);
+                            downlaod.disabled = false;
                         } else {
                             alert("Erreur lors de la récupération des données.");
                         }
@@ -626,6 +627,8 @@
         //     pdf.save("charts_landscape.pdf");
         // }
         async function generatePDF() {
+            const dateduInput = document.getElementById("dateduInput");
+            const dateauInput = document.getElementById("dateauInput");
             const {
                 jsPDF
             } = window.jspdf;
@@ -660,8 +663,11 @@
             let yOffset = margin;
             let xOffset = margin;
             const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
-            const chartTitles = ["خدمة", "مراقب", "نظافة", "تسيير"];
-
+            const chartTitles = ["ـالخدمة", "ـالمرـاقب", "ـالنظافة", "ـالتسيير"];
+            
+            pdf.setFont("Tajawal", "normal");
+            pdf.text(`ـاحصائيات تطبيق قيمني من: ${dateduInput.value} ـالى: ${dateauInput.value}`, xOffset + 450, yOffset, { align: "right" });
+            yOffset = margin+10;
             for (let i = 0; i < chartIds.length; i++) {
                 const chartId = chartIds[i];
                 const chartTitle = chartTitles[i];
