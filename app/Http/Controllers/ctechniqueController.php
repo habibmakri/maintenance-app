@@ -223,27 +223,27 @@ class ctechniqueController extends Controller
         }
 
         $serviceData = [
-            ['value' => $sbien, 'name' => 'Bien'],
-            ['value' => $smauvais, 'name' => 'Mauvais'],
-            ['value' => $smoyen, 'name' => 'Moyen'],
+            ['value' => $sbien, 'name' => 'جيدة'],
+            ['value' => $smauvais, 'name' => 'سيئة'],
+            ['value' => $smoyen, 'name' => 'متوسطة'],
         ];
 
         $controleurData = [
-            ['value' => $cbien, 'name' => 'Bien'],
-            ['value' => $cmauvais, 'name' => 'Mauvais'],
-            ['value' => $cmoyen, 'name' => 'Moyen'],
+            ['value' => $cbien, 'name' => 'جيدة'],
+            ['value' => $cmauvais, 'name' => 'سيئة'],
+            ['value' => $cmoyen, 'name' => 'متوسطة'],
         ];
 
         $propreteData = [
-            ['value' => $clbien, 'name' => 'Bien'],
-            ['value' => $clmauvais, 'name' => 'Mauvais'],
-            ['value' => $clmoyen, 'name' => 'Moyen'],
+            ['value' => $clbien, 'name' => 'جيدة'],
+            ['value' => $clmauvais, 'name' => 'سيئة'],
+            ['value' => $clmoyen, 'name' => 'متوسطة'],
         ];
 
         $geranceData = [
-            ['value' => $obien, 'name' => 'Bien'],
-            ['value' => $omauvais, 'name' => 'Mauvais'],
-            ['value' => $omoyen, 'name' => 'Moyen'],
+            ['value' => $obien, 'name' => 'جيدة'],
+            ['value' => $omauvais, 'name' => 'سيئة'],
+            ['value' => $omoyen, 'name' => 'متوسطة'],
         ];
 
         return response()->json([

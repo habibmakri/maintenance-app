@@ -67,13 +67,13 @@
                 <thead>
                     <tr>
                         <th>N°</th>
-                        <th>Service</th>
-                        <th>Controlleur</th>
-                        <th>propreté</th>
-                        <th>gestion</th>
-                        <th>message</th>
-                        <th>N°Telephone</th>
-                        <th>Date</th>
+                        <th>الخدمة</th>
+                        <th>المراقب</th>
+                        <th>النظافة</th>
+                        <th>التسيير</th>
+                        <th>رسالة</th>
+                        <th>رقم الهاتف</th>
+                        <th>التاريخ</th>
                         <th>action</th>
                     </tr>
                 </thead>
@@ -84,16 +84,44 @@
                                 <td>{{ $rating->id }}</td>
                                 <td
                                     @if ($rating->service === 'mauvais') style="border-color: red;" @elseif ($rating->service === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->service }}</td>
+                                    @if ($rating->service === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->service === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->controler === 'mauvais') style="border-color: red;" @elseif ($rating->controler === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->controler }}</td>
+                                    @if ($rating->controler === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->controler === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->clean === 'mauvais') style="border-color: red;" @elseif ($rating->clean === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->clean }}</td>
+                                    @if ($rating->clean === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->clean === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->order === 'mauvais') style="border-color: red;" @elseif ($rating->order === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->order }}</td>
+                                    @if ($rating->order === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->order === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td>{{ $rating->message }}</td>
                                 <td>{{ $rating->phone }}</td>
                                 <td>{{ $rating->created_at }}</td>
@@ -128,13 +156,13 @@
                 <thead>
                     <tr>
                         <th>N°</th>
-                        <th>Service</th>
-                        <th>Controlleur</th>
-                        <th>propreté</th>
-                        <th>gestion</th>
-                        <th>message</th>
-                        <th>N°Telephone</th>
-                        <th data-type="date" data-format="YYYY/DD/MM">Date</th>
+                        <th>الخدمة</th>
+                        <th>المراقب</th>
+                        <th>النظافة</th>
+                        <th>التسيير</th>
+                        <th>رسالة</th>
+                        <th>رقم الهاتف</th>
+                        <th data-type="date" data-format="YYYY/DD/MM">التاريخ</th>
                         <th>action</th>
                     </tr>
                 </thead>
@@ -145,16 +173,44 @@
                                 <td>{{ $rating->id }}</td>
                                 <td
                                     @if ($rating->service === 'mauvais') style="border-color: red;" @elseif ($rating->service === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->service }}</td>
+                                    @if ($rating->service === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->service === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->controler === 'mauvais') style="border-color: red;" @elseif ($rating->controler === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->controler }}</td>
+                                    @if ($rating->controler === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->controler === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->clean === 'mauvais') style="border-color: red;" @elseif ($rating->clean === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->clean }}</td>
+                                    @if ($rating->clean === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->clean === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td
                                     @if ($rating->order === 'mauvais') style="border-color: red;" @elseif ($rating->order === 'moyen') style="border-color: yellow;" @else style="border-color: green;" @endif>
-                                    {{ $rating->order }}</td>
+                                    @if ($rating->order === 'mauvais')
+                                        سيئ
+                                    @elseif ($rating->order === 'moyen')
+                                        متوسط
+                                    @else
+                                        جبد
+                                    @endif
+                                </td>
                                 <td>{{ $rating->message }}</td>
                                 <td>{{ $rating->phone }}</td>
                                 <td>{{ $rating->created_at }}</td>
@@ -196,7 +252,7 @@
                     <!-- Carte 1 -->
                     <div class="col-md-6">
                         <div class="card-body pb-0">
-                            <h5 class="card-title" style="text-align: center;">Service</h5>
+                            <h5 class="card-title" style="text-align: center;">الخدمة</h5>
                             <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
                             <script></script>
                         </div>
@@ -204,14 +260,14 @@
                     <!-- Carte 2 -->
                     <div class="col-md-6">
                         <div class="card-body pb-0">
-                            <h5 class="card-title" style="text-align: center;">Controleur</h5>
+                            <h5 class="card-title" style="text-align: center;">المراقب</h5>
                             <div id="trafficChart2" style="min-height: 400px;" class="echart"></div>
                             <script></script>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card-body pb-0">
-                            <h5 class="card-title" style="text-align: center;">Propreté</h5>
+                            <h5 class="card-title" style="text-align: center;">النظافة</h5>
                             <div id="trafficChart3" style="min-height: 400px;" class="echart"></div>
                             <script></script>
                         </div>
@@ -219,7 +275,7 @@
                     <!-- Carte 4 -->
                     <div class="col-md-6">
                         <div class="card-body pb-0">
-                            <h5 class="card-title" style="text-align: center;">Gérance</h5>
+                            <h5 class="card-title" style="text-align: center;">التسيير</h5>
                             <div id="trafficChart4" style="min-height: 400px;" class="echart"></div>
                             <script></script>
                         </div>
@@ -336,14 +392,14 @@
                     left: 'center'
                 },
                 series: [{
-                    name: 'Service',
+                    name: 'الخدمة',
                     type: 'pie',
                     radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
                         position: 'inside',
-                        formatter: '{b}: {d}%'
+                        formatter: '{b}: %{d}'
                     },
                     emphasis: {
                         label: {
@@ -357,15 +413,15 @@
                     },
                     data: [{
                             value: <?php echo $sbien; ?>,
-                            name: 'Bien'
+                            name: 'جيدة'
                         },
                         {
                             value: <?php echo $smauvais; ?>,
-                            name: 'Mauvais'
+                            name: 'سيئة'
                         },
                         {
                             value: <?php echo $smoyen; ?>,
-                            name: 'Moyen'
+                            name: 'متوسطة'
                         }
                     ]
                 }]
@@ -384,14 +440,15 @@
                     left: 'center'
                 },
                 series: [{
-                    name: 'Controleur',
+                    name: 'المراقب',
                     type: 'pie',
                     radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
                         position: 'inside',
-                        formatter: '{b}: {d}%'
+                        formatter: '{b}: %{d}'
+
                     },
                     emphasis: {
                         label: {
@@ -405,15 +462,15 @@
                     },
                     data: [{
                             value: <?php echo $cbien; ?>,
-                            name: 'Bien'
+                            name: 'جيدة'
                         },
                         {
                             value: <?php echo $cmauvais; ?>,
-                            name: 'Mauvais'
+                            name: 'سيئة'
                         },
                         {
                             value: <?php echo $cmoyen; ?>,
-                            name: 'Moyen'
+                            name: 'متوسطة'
                         }
                     ]
                 }]
@@ -432,14 +489,15 @@
                     left: 'center'
                 },
                 series: [{
-                    name: 'Proprété',
+                    name: 'النظافة',
                     type: 'pie',
                     radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
                         position: 'inside',
-                        formatter: '{b}: {d}%'
+                        formatter: '{b}: %{d}'
+
                     },
                     emphasis: {
                         label: {
@@ -453,15 +511,15 @@
                     },
                     data: [{
                             value: <?php echo $clbien; ?>,
-                            name: 'Bien'
+                            name: 'جيدة'
                         },
                         {
                             value: <?php echo $clmauvais; ?>,
-                            name: 'Mauvais'
+                            name: 'سيئة'
                         },
                         {
                             value: <?php echo $clmoyen; ?>,
-                            name: 'Moyen'
+                            name: 'متوسطة'
                         }
                     ]
                 }]
@@ -480,14 +538,15 @@
                     left: 'center'
                 },
                 series: [{
-                    name: 'Gérance',
+                    name: 'التسيير',
                     type: 'pie',
                     radius: ['20%', '70%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
                         position: 'inside',
-                        formatter: '{b}: {d}%'
+                        formatter: '{b}: %{d}'
+
                     },
                     emphasis: {
                         label: {
@@ -501,15 +560,15 @@
                     },
                     data: [{
                             value: <?php echo $obien; ?>,
-                            name: 'Bien'
+                            name: 'جيدة'
                         },
                         {
                             value: <?php echo $omauvais; ?>,
-                            name: 'Mauvais'
+                            name: 'سيئة'
                         },
                         {
                             value: <?php echo $omoyen; ?>,
-                            name: 'Moyen'
+                            name: 'متوسطة'
                         }
                     ]
                 }]
@@ -518,6 +577,54 @@
         document.getElementById("downloadPDF").addEventListener("click", generatePDF);
 
 
+        // async function generatePDF() {
+        //     const {
+        //         jsPDF
+        //     } = window.jspdf;
+        //     const pdf = new jsPDF({
+        //         orientation: "landscape",
+        //         unit: "px",
+        //         format: "a4",
+        //     });
+        //     pdf.setFont("arial", "normal");
+        //     const pageWidth = pdf.internal.pageSize.getWidth();
+        //     const pageHeight = pdf.internal.pageSize.getHeight();
+        //     const margin = 10;
+        //     const spacing = 20;
+        //     const columnWidth = (pageWidth - margin * 2 - spacing) / 2;
+        //     let yOffset = margin;
+        //     let xOffset = margin;
+        //     const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
+        //     const chartTitles = ["الخدمة", "المراقب", "النظافة", "التسيير"];
+        //     for (let i = 0; i < chartIds.length; i++) {
+        //         const chartId = chartIds[i];
+        //         const chartTitle = chartTitles[i];
+        //         const chartElement = document.getElementById(chartId);
+        //         if (chartElement) {
+        //             // pdf.setFont("helvetica", "bold");
+        //             pdf.setFontSize(12);
+        //             pdf.text(chartTitle, xOffset + 122, yOffset + 8);
+        //             const canvas = await html2canvas(chartElement);
+        //             const imgData = canvas.toDataURL("image/png");
+        //             const chartHeight = (chartElement.offsetHeight / chartElement.offsetWidth) * columnWidth;
+        //             if (yOffset + chartHeight + spacing > pageHeight - margin) {
+        //                 pdf.addPage();
+        //                 yOffset = margin;
+        //             }
+        //             pdf.addImage(imgData, "PNG", xOffset, yOffset + 16, columnWidth, chartHeight);
+        //             if (xOffset + columnWidth + spacing > pageWidth - margin) {
+        //                 xOffset = margin;
+        //                 yOffset += chartHeight + spacing;
+        //             } else {
+
+        //                 xOffset += columnWidth + spacing;
+        //             }
+        //         }
+        //     }
+
+        //     // Télécharger le PDF
+        //     pdf.save("charts_landscape.pdf");
+        // }
         async function generatePDF() {
             const {
                 jsPDF
@@ -527,6 +634,24 @@
                 unit: "px",
                 format: "a4",
             });
+
+            // Load the custom font (Tajawal-Light.ttf) from your server
+            try {
+                const fontUrl = '{{ asset('theme/fonts/tajwal/Tajawal-Light.ttf') }}';
+                const response = await fetch(fontUrl);
+                const fontArrayBuffer = await response.arrayBuffer();
+                const fontBase64 = arrayBufferToBase64(fontArrayBuffer);
+
+                // Add the font to the PDF's virtual file system (VFS)
+                pdf.addFileToVFS("Tajawal-Light.ttf", fontBase64);
+                pdf.addFont("Tajawal-Light.ttf", "Tajawal", "normal");
+
+                // Now set the custom font
+                pdf.setFont("Tajawal");
+            } catch (error) {
+                console.error("Error loading font:", error);
+            }
+
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
             const margin = 10;
@@ -535,35 +660,51 @@
             let yOffset = margin;
             let xOffset = margin;
             const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
-            const chartTitles = ["Service", "Controleur", "Propreté", "Gérance"];
+            const chartTitles = ["خدمة", "مراقب", "نظافة", "تسيير"];
+
             for (let i = 0; i < chartIds.length; i++) {
                 const chartId = chartIds[i];
                 const chartTitle = chartTitles[i];
                 const chartElement = document.getElementById(chartId);
+
                 if (chartElement) {
-                    pdf.setFont("helvetica", "bold");
+                    // Using the custom font for the title
+                    pdf.setFont("Tajawal", "normal");
                     pdf.setFontSize(12);
-                    pdf.text(chartTitle, xOffset + 122, yOffset + 8);
+                    pdf.text(chartTitle, xOffset + 132, yOffset + 8);
+
                     const canvas = await html2canvas(chartElement);
                     const imgData = canvas.toDataURL("image/png");
                     const chartHeight = (chartElement.offsetHeight / chartElement.offsetWidth) * columnWidth;
+
                     if (yOffset + chartHeight + spacing > pageHeight - margin) {
                         pdf.addPage();
                         yOffset = margin;
                     }
+
                     pdf.addImage(imgData, "PNG", xOffset, yOffset + 16, columnWidth, chartHeight);
+
                     if (xOffset + columnWidth + spacing > pageWidth - margin) {
                         xOffset = margin;
                         yOffset += chartHeight + spacing;
                     } else {
-
                         xOffset += columnWidth + spacing;
                     }
                 }
             }
 
-            // Télécharger le PDF
+            // Download the PDF
             pdf.save("charts_landscape.pdf");
+        }
+
+        // Helper function to convert ArrayBuffer to base64
+        function arrayBufferToBase64(buffer) {
+            const byteArray = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i < byteArray.length; i++) {
+                binary += String.fromCharCode(byteArray[i]);
+            }
+            return window.btoa(binary);
         }
     </script>
 @endsection
