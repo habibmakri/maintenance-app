@@ -128,7 +128,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-floating">
-                <input type="number" required step="any" class="form-control" name="gasoile" id="gasoile">
+                <input type="number" required step="any" class="form-control" name="gasoile" id="gasoile" value="0" min="0">
                 <label for="gasoile">Consomation Gasoile(L)</label>
             </div>
         </div>
