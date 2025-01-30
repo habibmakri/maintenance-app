@@ -116,7 +116,7 @@ class maintenanceController extends Controller
             'id_chauffeur' => $ficheitem['partit'] === 'oui' ? $ficheitem['id_chauffeur'] : null,
             'heur_depart' => $ficheitem['partit'] === 'oui' ? $ficheitem['hdepart'] : '00:00',
             'heur_arrive' => $ficheitem['partit'] === 'oui' ? $ficheitem['harrive'] : '00:00',
-            'gasoile' => $ficheitem['partit'] === 'oui' ? $ficheitem['gasoile'] : '0',
+            'gasoile' => $ficheitem['gasoile'],//$ficheitem['partit'] === 'oui' ? $ficheitem['gasoile'] : '0',
             'kmdepart' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmdepart'] : '0',
             'kmarrive' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmarive'] : '0',
             'kmhlp' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmhlp'] : '0',

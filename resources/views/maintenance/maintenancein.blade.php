@@ -322,7 +322,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const partitSelect = document.getElementById('partit');
             const inputsToControl = Array.from(document.querySelectorAll(
-                ' #ligne,#id_chauffeur,#destination , #hdepart, #harrive, #gasoile, #kmhlp, #kmdepart, #kmarive'
+                ' #ligne,#id_chauffeur,#destination , #hdepart, #harrive,  #kmhlp, #kmdepart, #kmarive'
             ));
             const defaultValues = {
                 ligne: '/',
