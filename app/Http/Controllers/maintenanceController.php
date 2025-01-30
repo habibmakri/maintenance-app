@@ -100,6 +100,7 @@ class maintenanceController extends Controller
         $exists = fichemaintenance::where('id_bus', $ficheitem['bus'])
             ->where('date_fiche', $ficheitem['date'])
             ->where('brigade', $ficheitem['brigade'])
+            ->where('declaré',true)
             ->exists();
 
         if ($exists) {
@@ -160,6 +161,7 @@ class maintenanceController extends Controller
                 $isFilled = $bus->maintenanceRecords
                     ->where('date_fiche', $date)
                     ->where('brigade', $brigade)
+                    ->where('declaré', true)
                     ->isNotEmpty();
 
                 return [
@@ -198,6 +200,7 @@ class maintenanceController extends Controller
                     $query->where('brigade', $request->brigade);
                 }
             }
+            $query->where('declaré', true);
             $query->with(['bus', 'ligne'])->orderBy('date_fiche')->orderBy('id_bus');
 
             $data = $query->get()->map(function ($item) {
