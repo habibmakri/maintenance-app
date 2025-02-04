@@ -7,8 +7,11 @@ use App\Models\ctechnique_rating;
 use App\Models\ctechniqueclienttypes;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use iio\libmergepdf\Merger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mpdf\Mpdf;
+use Mpdf\PdfMerger;
 
 class ctechniqueController extends Controller
 {
@@ -421,5 +424,14 @@ class ctechniqueController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
+    }
+    
+
+    // Helper function to decode the base64 image data
+    private function decodeImage($imageData)
+    {
+        list($type, $data) = explode(';', $imageData);
+        list(, $data) = explode(',', $data);
+        return base64_decode($data);
     }
 }

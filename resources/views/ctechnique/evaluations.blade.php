@@ -5,6 +5,7 @@
 @section('content')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="pagetitle">
         <h1>Evaluations</h1>
@@ -245,13 +246,20 @@
                         <label for="dateau">Au</label>
                     </div>
                 </div>
+                <div id="entete" style="display: none;text-align: center;font-weight: bold;font-size: 20px;">
+                    <p>الجمهورية الجزائرية الديمقراطية الشعبية</p>
+                    <p>وزارةالنقل</p>
+                    <p> المؤسسة العمومية للنقل الحضري وشبه حضري</p>
+                    <p> وكالةالمراقية التقنية للسيارات ETUS سيدي بلعباس</p>
+                    <p id="minila"></p>
+                </div>
                 <button id="downloadPDF" class="btn btn-outline-primary col-md-2" disabled>Télécharger le PDF</button>
             </div>
             <div class="container">
                 <div class="row">
                     <!-- Carte 1 -->
                     <div class="col-md-6">
-                        <div class="card-body pb-0">
+                        <div id="testchart" class="card-body pb-0">
                             <h5 class="card-title" style="text-align: center;">الخدمة</h5>
                             <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
                             <script></script>
@@ -626,7 +634,7 @@
         //     // Télécharger le PDF
         //     pdf.save("charts_landscape.pdf");
         // }
-        async function generatePDF() {
+        async function generatePDF2() {
             const dateduInput = document.getElementById("dateduInput");
             const dateauInput = document.getElementById("dateauInput");
             const {
@@ -664,10 +672,13 @@
             let xOffset = margin;
             const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
             const chartTitles = ["ـالخدمة", "ـالمرـاقب", "ـالنظافة", "ـالتسيير"];
-            
+
             pdf.setFont("Tajawal", "normal");
-            pdf.text(`ـاحصائيات تطبيق قيمني من: ${dateduInput.value} ـالى: ${dateauInput.value}`, xOffset + 450, yOffset, { align: "right" });
-            yOffset = margin+10;
+            pdf.text(`ـاحصائيات تطبيق قيمني من: ${dateduInput.value} ـالى: ${dateauInput.value}`, xOffset + 450,
+                yOffset, {
+                    align: "right"
+                });
+            yOffset = margin + 10;
             for (let i = 0; i < chartIds.length; i++) {
                 const chartId = chartIds[i];
                 const chartTitle = chartTitles[i];
@@ -699,18 +710,189 @@
                 }
             }
 
-            // Download the PDF
             pdf.save("charts_landscape.pdf");
         }
+        async function generatePDF() {
+            const dateduInput = document.getElementById("dateduInput");
+            const dateauInput = document.getElementById("dateauInput");
+            const {
+                jsPDF
+            } = window.jspdf;
+            const pdf = new jsPDF({
+                unit: "px",
+                format: "a4"
+            });
 
-        // Helper function to convert ArrayBuffer to base64
+
+            try {
+                const fontUrl = '{{ asset('/theme/fonts/Mirza/Mirza-Medium.ttf') }}';
+                const response = await fetch(fontUrl);
+                const fontArrayBuffer = await response.arrayBuffer();
+                const fontBase64 = arrayBufferToBase64(fontArrayBuffer);
+
+                pdf.addFileToVFS("Mirza-Medium.ttf", fontBase64);
+                pdf.addFont("Mirza-Medium.ttf", "Tajawal", "normal");
+                pdf.setFont("Tajawal");
+            } catch (error) {
+                console.error("Erreur chargement police :", error);
+            }
+            // try {
+            //     const fontUrl = '{{ asset('theme/fonts/tajwal/Tajawal-Light.ttf') }}';
+            //     const response = await fetch(fontUrl);
+            //     const fontArrayBuffer = await response.arrayBuffer();
+            //     const fontBase64 = arrayBufferToBase64(fontArrayBuffer);
+
+            //     pdf.addFileToVFS("Tajawal-Light.ttf", fontBase64);
+            //     pdf.addFont("Tajawal-Light.ttf", "Tajawal", "normal");
+            //     pdf.setFont("Tajawal");
+            // } catch (error) {
+            //     console.error("Erreur chargement police :", error);
+            // }
+
+            const entetid = document.querySelector('#entete');
+            const minila = document.querySelector('#minila');
+            minila.innerHTML = `احصائيات تطبيق قيمني من: ${dateduInput.value} الى: ${dateauInput.value}`;
+            entetid.style.display = 'block';
+
+            const canvas = await html2canvas(entetid);
+            console.log(canvas)
+            const imgData = canvas.toDataURL("image/png");
+
+            pdf.addImage(imgData, "PNG", -120, 25, 720, 100);
+            entetid.style.display = 'none';
+
+            try {
+                const logoUrl = '{{ asset('theme/assets/img/LOGO_ETUS_white.png') }}';
+                const response = await fetch(logoUrl);
+                const imageBlob = await response.blob();
+
+                const base64data = await blobToBase64(imageBlob);
+                const resizedLogo = await resizeImage(base64data, 100, 100, 1);
+
+                pdf.addImage(resizedLogo, "JPEG", 45, 40, 55, 55);
+            } catch (error) {
+                console.error("Erreur chargement logo :", error);
+            }
+
+            const pageWidth = 740; //pdf.internal.pageSize.getWidth();
+            const pageHeight = 1020.5; //pdf.internal.pageSize.getHeight();
+            const margin = 10;
+            const spacing = 10;
+            const columnWidth = (pageWidth - margin * 2 - spacing) / 3;
+            let yOffset = margin;
+            let xOffset = 0;
+
+            const chartIds = ["trafficChart", "trafficChart2", "trafficChart3", "trafficChart4"];
+            const chartTitles = ["ـالخدمة", "ـالمرـاقب", "ـالنظافة", "ـالتسيير"];
+
+            // pdf.setFontSize(18);
+            // pdf.text(pdf.processArabic(`الجمهورية الجزائرية الديمقراطية الشعبية`),
+            // xOffset + 370, yOffset+40, {
+            //     align: "right"
+            // });
+            // pdf.text(`وزـارةـالنقل`,
+            // xOffset + 380, yOffset+55, {
+            //     align: "right"
+            // });
+            // pdf.text(` ـالمؤسسة ـالعمومية للنقل ـالحضري وشبه حضري `,
+            // xOffset + 380, yOffset+70, {
+            //     align: "right"
+            // });
+            // pdf.text(`ـاحصائيات تطبيق قيمني من: ${dateduInput.value} ـالى: ${dateauInput.value}`,
+            // xOffset + 400, yOffset+85, {
+            //     align: "right"
+            // });
+
+            yOffset += 160;
+            pdf.setFontSize(16);
+
+
+            for (let i = 0; i < chartIds.length; i++) {
+                const chartId = chartIds[i];
+                const chartTitle = chartTitles[i];
+                const chartElement = document.getElementById(chartId);
+
+                if (chartElement) {
+
+                    pdf.setFont("Tajawal", "normal");
+                    pdf.setFontSize(12);
+                    pdf.text(chartTitle, xOffset + 85, yOffset + 8);
+
+                    const canvas = await html2canvas(chartElement);
+                    console.log(canvas)
+                    const imgData = canvas.toDataURL("image/png");
+                    const chartwidth = 300;
+                    const chartHeight = 200; // (chartElement.offsetHeight / chartElement.offsetWidth) * columnWidth;px
+
+                    if (yOffset + chartHeight + spacing > pageHeight - margin) {
+                        pdf.addPage();
+                        yOffset = margin;
+                    }
+
+                    pdf.addImage(imgData, "PNG", xOffset - 50, yOffset + 16, chartwidth, chartHeight);
+
+                    if (i == 1) {
+                        xOffset = margin;
+                        yOffset += chartHeight + spacing;
+                    } else {
+                        xOffset += columnWidth + spacing;
+                    }
+                }
+            }
+
+
+            pdf.save("charts_high_quality.pdf");
+        }
+
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+
         function arrayBufferToBase64(buffer) {
-            const byteArray = new Uint8Array(buffer);
             let binary = '';
-            for (let i = 0; i < byteArray.length; i++) {
-                binary += String.fromCharCode(byteArray[i]);
+            const bytes = new Uint8Array(buffer);
+            for (let i = 0; i < bytes.length; i++) {
+                binary += String.fromCharCode(bytes[i]);
             }
             return window.btoa(binary);
+        }
+
+
+        async function resizeImage(base64Str, maxWidth, maxHeight, quality) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = base64Str;
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    let width = img.width;
+                    let height = img.height;
+
+
+                    if (width > maxWidth) {
+                        height = (maxWidth / width) * height;
+                        width = maxWidth;
+                    }
+                    if (height > maxHeight) {
+                        width = (maxHeight / height) * width;
+                        height = maxHeight;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    resolve(canvas.toDataURL("image/jpeg", quality));
+                };
+            });
         }
     </script>
 @endsection
