@@ -755,7 +755,6 @@
             entetid.style.display = 'block';
 
             const canvas = await html2canvas(entetid);
-            console.log(canvas)
             const imgData = canvas.toDataURL("image/png");
 
             pdf.addImage(imgData, "PNG", -120, 25, 720, 100);
@@ -819,7 +818,6 @@
                     pdf.text(chartTitle, xOffset + 85, yOffset + 8);
 
                     const canvas = await html2canvas(chartElement);
-                    console.log(canvas)
                     const imgData = canvas.toDataURL("image/png");
                     const chartwidth = 300;
                     const chartHeight = 200; // (chartElement.offsetHeight / chartElement.offsetWidth) * columnWidth;px
