@@ -109,7 +109,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
         Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');
         Route::post('ctechnique_in','add_ctechnique_in');
-        Route::get('ctechnique_clients','ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_in');
+        Route::get('ctechnique_clients','ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_rendezvous');
         Route::post('ctechnique/deleteclient:{id}', 'deleteclient');
         Route::get('ctechnique_clients/edit_client:{id}','edit_client')->name('edit_client')->middleware('rolesMiddleware:ctechnique_in');
         Route::post('ctechnique_clients/edit_client:{id}','do_edit_client');
