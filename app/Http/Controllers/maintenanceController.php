@@ -100,7 +100,7 @@ class maintenanceController extends Controller
         $exists = fichemaintenance::where('id_bus', $ficheitem['bus'])
             ->where('date_fiche', $ficheitem['date'])
             ->where('brigade', $ficheitem['brigade'])
-            ->where('declaré',true)
+            ->where('declaré', true)
             ->exists();
 
         if ($exists) {
@@ -116,7 +116,7 @@ class maintenanceController extends Controller
             'id_chauffeur' => $ficheitem['partit'] === 'oui' ? $ficheitem['id_chauffeur'] : null,
             'heur_depart' => $ficheitem['partit'] === 'oui' ? $ficheitem['hdepart'] : '00:00',
             'heur_arrive' => $ficheitem['partit'] === 'oui' ? $ficheitem['harrive'] : '00:00',
-            'gasoile' => $ficheitem['gasoile'],//$ficheitem['partit'] === 'oui' ? $ficheitem['gasoile'] : '0',
+            'gasoile' => $ficheitem['gasoile'], //$ficheitem['partit'] === 'oui' ? $ficheitem['gasoile'] : '0',
             'kmdepart' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmdepart'] : '0',
             'kmarrive' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmarive'] : '0',
             'kmhlp' => $ficheitem['partit'] === 'oui' ? $ficheitem['kmhlp'] : '0',
@@ -297,7 +297,8 @@ class maintenanceController extends Controller
         // $f = fichemaintenance::all();
         // dd($f[12]->chauffeur->fr_name);
         $buses = Bus::all();
-        return view('maintenance.maintenanceshow', compact(['buses']));
+        $pieces = pieces_maintanance::all();
+        return view('maintenance.maintenanceshow', compact(['buses', 'pieces']));
     }
     public function maintnenance_fix(Request $request)
     {
@@ -467,7 +468,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::whereIn('name',['Huile 15w40','Filtre Gasoile WK723','Filtre Gasoile GS150','Filtre à huile','Filtre à huile Hydrolique','Huile G3','Huile W10','Huile W90'])->get();
+        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
@@ -556,8 +557,8 @@ class maintenanceController extends Controller
         $agents = maintenance_agent::all();
         $pieces = pieces_maintanance::all();
         $typejauges = Panne::where('type', '=', 'jauge')
-        ->whereNotIn('name', ['Jauge huile moteur', 'GLACIOL'])
-        ->get();
+            ->whereNotIn('name', ['Jauge huile moteur', 'GLACIOL'])
+            ->get();
         return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges']));
     }
     public function check_jauge_date(Request $request)
@@ -575,25 +576,25 @@ class maintenanceController extends Controller
         $request->validate([
             'date' => [
                 'required',
-                'date',     
+                'date',
                 Rule::unique('jaugesdates', 'date')->where(function ($query) {
-                    return $query->where('type_id', 157);  
+                    return $query->where('type_id', 157);
                 }),
             ],
             'equipe' => ['required', 'array'],
             'brigade' => ['required'],
         ]);
-        
-        $inputs = $request->except('_token', 'date', 'equipe','brigade');
+
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 157,
             'equipe' => $request->equipe ? json_encode($request->equipe) : null,
         ]);
-        $i=0;
+        $i = 0;
         foreach ($inputs as $key => $value) {
             if ($value > 0) {
-                echo ($key . "=>". $value);
+                echo ($key . "=>" . $value);
                 $ficheData = [
                     'user_id' => Auth::user()->id,
                     'date_fiche' => $request['date'],
@@ -633,7 +634,7 @@ class maintenanceController extends Controller
                 $i++;
             }
         }
-        return redirect()->back()->with('success', $i.' Jauges ajouter avec succès.');
+        return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
     }
     public function ajouter_jauge_glaciole(Request $request)
     {
@@ -641,23 +642,23 @@ class maintenanceController extends Controller
             'date' => [
                 'date',
                 Rule::unique('jaugesdates', 'date')->where(function ($query) {
-                    return $query->where('type_id', 161);  
+                    return $query->where('type_id', 161);
                 }),
             ],
             'equipe' => ['required', 'array'],
             'brigade' => ['required'],
         ]);
-        
-        $inputs = $request->except('_token', 'date', 'equipe','brigade');
+
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 161,
             'equipe' => $request->equipe ? json_encode($request->equipe) : null,
         ]);
-        $i=0;
+        $i = 0;
         foreach ($inputs as $key => $value) {
             if ($value > 0) {
-                echo ($key . "=>". $value);
+                echo ($key . "=>" . $value);
                 $ficheData = [
                     'user_id' => Auth::user()->id,
                     'date_fiche' => $request['date'],
@@ -697,7 +698,7 @@ class maintenanceController extends Controller
                 $i++;
             }
         }
-        return redirect()->back()->with('success', $i.' Jauges ajouter avec succès.');
+        return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
     }
     public function ajouter_jauge(Request $request)
     {
@@ -1749,6 +1750,97 @@ class maintenanceController extends Controller
                         ";
             $nomfichier = 'لائحة الصيانة من_' . $datedupdf . 'إلى' . $dateaupdf  . '.pdf';
         }
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function generate_etat_piece_pdf(Request $request)
+    {
+        $request->validate([
+            'month' => 'required',
+            'year' => 'required',
+            'piece' => 'required',
+        ]);
+
+        $month = $request->month;
+        $year = $request->year;
+        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+        $months_fr_array = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+        $monthName = $months_fr_array[$month].' '. $request->year;
+        $piecename = pieces_maintanance::find($request->piece)->name;
+        $pieces = used_pieces::query()
+            ->where('piece_id', '=', $request->piece)
+            ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            })
+            ->get()
+            ->map(function ($piece) {
+                return [
+                    'id' => $piece->id,
+                    'name' => $piece->piece->name,
+                    'quantite' => $piece->quantité,
+                    'date' => $piece->fichepanne->date_resoudre,
+                    'bus' => $piece->fichepanne->fichemaintenance->bus->name,
+                    'equipe' => $piece->fichepanne->equipe,
+                ];
+            });
+        $tlpieces = traveauxlibreusedpieces::query()
+            ->where('piece_id', '=', $request->piece)
+            ->whereHas('traveauxlibre', function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            })
+            ->get()
+            ->map(function ($piece) {
+                return [
+                    'id' => $piece->id,
+                    'name' => $piece->piece->name,
+                    'quantite' => $piece->quantité,
+                    'date' => $piece->traveauxlibre->date_resoudre,
+                    'bus' => $piece->traveauxlibre->bus->name,
+                    'equipe' => $piece->traveauxlibre->equipe,
+                ];
+            });
+
+        // dd($firstDay, $pieces, $tlpieces);
+        $mergedPieces = collect($pieces)->merge($tlpieces);
+        $groupedtotal = $mergedPieces->groupBy('bus');
+        // dd($groupedtotal);
+        
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $html = view('maintenance.etatpiecepdf', compact(['groupedtotal', 'monthName','piecename']))->render();
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 30, 10, 20, 20, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+                        <div style='text-align: right; font-size: 12px;'>
+                            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+                        </div>
+                        ";
+        $nomfichier = 'etat_gasoile_' . $monthName  . '.pdf';
+
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
         return response()->make($mpdf->Output($nomfichier, 'D'), 200, [

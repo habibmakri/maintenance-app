@@ -55,6 +55,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/deletetraveauxlibre:{id}', 'deletetraveauxlibre');
         Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
+        Route::post('maintenance/etat_piece_pdf', 'generate_etat_piece_pdf')->name('etat_piece_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');
         Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
         Route::get('maintenance_vidange','maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_vidange');
