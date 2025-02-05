@@ -1839,7 +1839,7 @@ class maintenanceController extends Controller
                             Généré le: $currentdate | Page {PAGENO} sur {nbpg}
                         </div>
                         ";
-        $nomfichier = 'etat_gasoile_' . $monthName  . '.pdf';
+        $nomfichier = 'etat_'.$piecename.'_' . $monthName  . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
