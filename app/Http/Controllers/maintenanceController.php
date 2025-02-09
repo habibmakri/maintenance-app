@@ -2111,7 +2111,7 @@ class maintenanceController extends Controller
                             $kDistValue = $matinRecord->kmarrive - $matinRecord->kmdepart;
                         } elseif ($matinRecord->kmarrive === 0.0) {
                             $kDepartValue = $soirRecord->kmdepart;
-                            $kDistValue = $soirRecord->kmarrive - $matinRecord->kmdepart;
+                            $kDistValue = $soirRecord->kmarrive - $soirRecord->kmdepart;
                         } else {
                             $kDepartValue = $matinRecord->kmdepart;
                             $kDistValue = $soirRecord->kmarrive - $matinRecord->kmdepart;

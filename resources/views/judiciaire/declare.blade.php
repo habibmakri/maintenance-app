@@ -48,7 +48,7 @@
         <div class="col-md-8">
             <div class="form-floating">
                 <input name="date" id="dateInput" type="date"
-                    value="</script>new Date().toISOString().split('T')[0];</script>" required class="form-control"
+                    required class="form-control"
                     style="text-align: end;">
                 <label for="date">اليوم</label>
             </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <select class="form-select" required name="service" required id="service" placeholder="Service"
+                <select class="form-select" required name="bus" required id="bus" placeholder="bus"
                     aria-label="Floating label select example">
                     <option value="" disabled selected>المركبة</option>
                     @foreach ($buses as $bus)
@@ -70,12 +70,12 @@
                     @endforeach
 
                 </select>
-                <label for="service">المركبة</label>
+                <label for="bus">المركبة</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <select class="form-select" required name="service" required id="service" placeholder="Service"
+                <select class="form-select" required name="chauffeur" required id="chauffeur" placeholder="chauffeur"
                     aria-label="Floating label select example">
                     <option value="" disabled selected>السائق</option>
                     @foreach ($chauffeurs as $chauffeur)
@@ -83,12 +83,12 @@
                     @endforeach
 
                 </select>
-                <label for="service">السائق</label>
+                <label for="chauffeur">السائق</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <select class="form-select" required name="service" required id="service" placeholder="Service"
+                <select class="form-select" required name="ligne" required id="ligne" placeholder="ligne"
                     aria-label="Floating label select example">
                     <option value="" disabled selected>الخط</option>
                     @foreach ($lines as $line)
@@ -96,41 +96,46 @@
                     @endforeach
 
                 </select>
-                <label for="service">خط الخدمة</label>
+                <label for="ligne">خط الخدمة</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input name="date" id="dateInput" type="date"
-                    value="</script>new Date().toISOString().split('T')[0];</script>" required class="form-control"
+                <input name="day" id="dateInput" type="date"
+                     required class="form-control"
                     style="text-align: end;">
-                <label for="date">تاريخ</label>
+                <label for="day">تاريخ</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input type="time" required class="form-control" name="hdepart" id="hdepart">
+                <input name="time" type="time" required class="form-control" name="hdepart" id="hdepart">
                 <label for="hdepart">ساعة</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input type="text" class="form-control" required id="floatingName" name="lastname" placeholder="prénom">
+                <input name="place" type="text" class="form-control" required id="floatingName" name="lastname" placeholder="prénom">
                 <label for="lastname">المكان</label>
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
-                <label for="lastname">ظروف الحادث</label>
+                <textarea name="description" class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
+                <label for="description">ظروف الحادث</label>
             </div>
         </div>
 
         <div class="col-md-12">
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
-                <label for="lastname">الخسائر المسجلة</label>
+                <textarea name="pertes" class="form-control"  placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
+                <label for="pertes">الخسائر المسجلة</label>
             </div>
+        </div>
+
+        <div class="col-md-12">
+            <label  for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
+            <input name="photos[]" class="form-control" type="file" id="formFile" accept=".png, .jpg, .jpeg" multiple>
         </div>
 
 
@@ -143,5 +148,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("dateInput").value = new Date().toISOString().split('T')[0];
         });
+        
     </script>
 @endsection

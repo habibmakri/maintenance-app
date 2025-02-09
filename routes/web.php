@@ -110,6 +110,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     });
     Route::prefix('/')->controller(judiciaireController::class)->name('judiciaire.')->group(function () {
         Route::get('judiciaire_in','judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
+        Route::post('judiciaire_in','do_judiciaire_in')->middleware('rolesMiddleware:judiciaire_in');
         
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
