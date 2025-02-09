@@ -211,21 +211,21 @@
         <ul id="judiciaire-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           @if(in_array('judiciaire_in', $permissions))
             <li>
-              <a href="{{ route('app.exploatation.statistiques') }}">
-                <i class="bi bi-circle"></i><span>Remplire</span>
+              <a href="{{ route('app.judiciaire.declare') }}">
+                <i class="bi bi-circle"></i><span>Déclarer</span>
               </a>
             </li>
           @endif
           @if(in_array('judiciaire_in', $permissions))
             <li>
               <a href="{{ route('app.exploatation.statistiques') }}">
-                <i class="bi bi-circle"></i><span>Modifier</span>
+                <i class="bi bi-circle"></i><span>Suivre</span>
               </a>
             </li>
           @endif
           @if(in_array('judiciaire_out', $permissions))
             <li>
-              <a href="{{ route('app.exploatation.statistiques') }}">
+              <a href="{{ route('app.judiciaire.declare') }}">
                 <i class="bi bi-circle"></i><span>Extraire</span>
               </a>
             </li>

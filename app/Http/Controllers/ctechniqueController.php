@@ -38,7 +38,15 @@ class ctechniqueController extends Controller
     public function ctechnique_in(Request $request)
     {
         $clienttypes = ctechniqueclienttypes::all();
-        return view('ctechnique.ctechnique_in', compact(['clienttypes']));
+        $clients = ctechnique_clients::all();
+        $nbprocheclients = 0;
+        foreach ($clients as $client)
+            if (abs(
+                \Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)->diffInDays(now())
+            ) < 10. && \Carbon\Carbon::parse($client->last_remind)->diffInDays(\Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)) > 10.) {
+                $nbprocheclients++;
+            }
+        return view('ctechnique.ctechnique_in', compact(['clienttypes','nbprocheclients']));
     }
     public function add_ctechnique_in(Request $request)
     {
@@ -425,7 +433,7 @@ class ctechniqueController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
     }
-    
+
 
     // Helper function to decode the base64 image data
     private function decodeImage($imageData)

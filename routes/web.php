@@ -5,6 +5,7 @@ use App\Http\Controllers\comptabiliteController;
 use App\Http\Controllers\ctechniqueController;
 use App\Http\Controllers\exploatationController;
 use App\Http\Controllers\gestionController;
+use App\Http\Controllers\judiciaireController;
 use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
 use App\Http\Controllers\personelleController;
@@ -105,6 +106,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     });
     Route::prefix('/')->controller(exploatationController::class)->name('exploatation.')->group(function () {
         Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
+        
+    });
+    Route::prefix('/')->controller(judiciaireController::class)->name('judiciaire.')->group(function () {
+        Route::get('judiciaire_in','judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
         
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {

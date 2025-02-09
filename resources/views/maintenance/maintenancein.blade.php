@@ -42,7 +42,7 @@
         <h4>Kilométrage:</h4>
         <div class="col-md-3">
             <div class="form-floating">
-                <input name="date" type="date" required class="form-control">
+                <input name="date" type="date" required class="form-control" value="{{$date}}">
                 <label for="date">Date</label>
             </div>
         </div>

@@ -39,7 +39,13 @@ class maintenanceController extends Controller
         $stations = Station::all();
         $pannes = Panne::all();
         $chauffeurs = chauffeurs::orderBy('fr_name')->get();
-        return view("maintenance.maintenancein", compact('buses', 'lines', 'stations', 'pannes', 'chauffeurs'));
+        // dd($_COOKIE['date']);
+        if (isset($_COOKIE['date'])) {
+            $date = $_COOKIE['date'];
+        } else {
+            $date = date('Y-m-d');
+        }
+        return view("maintenance.maintenancein", compact('buses', 'lines', 'stations', 'pannes', 'chauffeurs','date'));
     }
 
     // public function insertFichemaintenance(maintenanceinRequest $request)
@@ -106,7 +112,7 @@ class maintenanceController extends Controller
         if ($exists) {
             return redirect()->back()->with('error', 'Fiche déjà remplie pour ce bus à cette date.');
         }
-
+        setcookie('date', $ficheitem['date'], 0, '/');
         $ficheData = [
             'user_id' => Auth::user()->id,
             'date_fiche' => $ficheitem['date'],
@@ -757,6 +763,40 @@ class maintenanceController extends Controller
                 );
             }
         }
+        // $ficheData = [
+        //     'user_id' => Auth::user()->id,
+        //     'date_fiche' => $request['date'],
+        //     'declaré' => false,
+        //     'id_bus' => $request['bus'],
+        //     'brigade' => $request->brigade,
+        //     'kmarrive' => "0",
+        //     'kmhlp' => "0",
+        //     'kmgobale' => "0",
+        //     'kmcommerciale' => "0",
+        // ];
+        // $fiche = fichemaintenance::create($ficheData);
+        // $fichepanne_data = [
+        //     'fichemaintenance_id' => $fiche->id,
+        //     'pannnename_id' => $request->nomvidange,
+        //     'solved' => true,
+        //     'date_resoudre' => $request->date,
+        //     'lieu_resoudre' => 'Depot',
+        //     'brigade' => $request->brigade,
+        //     'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+        //     'description' => $request->description,
+        // ];
+        // $fichepanne = fichepanne_model::create($fichepanne_data);
+        // if ($mergedPieces) {
+        //     foreach ($mergedPieces as $pieceId => $quantity) {
+        //         used_pieces::create(
+        //             [
+        //                 'fichepanne_id' => $fichepanne->id,
+        //                 'piece_id' => $pieceId,
+        //                 'quantité' => $quantity,
+        //             ]
+        //         );
+        //     }
+        // }
         return redirect()->back()->with('success', 'Jauge ajouter avec succès.');
     }
     public function maintenance_panne()

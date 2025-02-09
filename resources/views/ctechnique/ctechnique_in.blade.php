@@ -222,6 +222,11 @@
         </div>
         <div id="bus-form-container" class="row"></div>
     </form>
+    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+        <i class="bi bi-info-circle me-1"></i>
+        {{$nbprocheclients}} client{{ $nbprocheclients > 1 ? 's ont' : ' a' }}  un contrôle technique qui expire dans les 10 prochains jours. 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     <script>
         document.querySelectorAll('.client-form').forEach(function(formDiv) {
             const inputs = formDiv.querySelectorAll('input, select');
