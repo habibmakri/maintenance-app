@@ -12,13 +12,16 @@ use App\Http\Requests\edit_ligne_request;
 use App\Http\Requests\edit_user_request;
 use App\Models\Bus;
 use App\Models\chauffeurs;
+use App\Models\declaration_judiciaire;
 use App\Models\Ligne;
 use App\Models\Panne;
 use App\Models\pieces_maintanance;
 use App\Models\Station;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class judiciaireController extends Controller
 {
@@ -27,13 +30,13 @@ class judiciaireController extends Controller
         $buses = Bus::all();
         $chauffeurs = chauffeurs::all();
         $lines = Ligne::all();
-        return view("judiciaire.declare", compact(['buses','chauffeurs','lines']));
+        return view("judiciaire.declare", compact(['buses', 'chauffeurs', 'lines']));
     }
     public function do_judiciaire_in(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'date' => 'required|date',
-            'name' => 'required|string',
+            'number' => ['required', 'regex:/^\d{3}$/'],
             'bus' => 'required',
             'chauffeur' => 'required',
             'ligne' => 'required',
@@ -42,21 +45,45 @@ class judiciaireController extends Controller
             'place' => 'required|string',
             'description' => 'nullable|string',
             'pertes' => 'nullable|string',
-            'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048', // Validation des images
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
         ]);
-        dd($request);
-        $buses = Bus::all();
-        $chauffeurs = chauffeurs::all();
-        $lines = Ligne::all();
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed
-            'date' => 'required|date',
-        ]);
-        
 
-        return view("judiciaire.declare", compact(['buses','chauffeurs','lines']));
+        try {
+            $bus = Bus::findOrFail($request->bus);
+            $imagePaths = [];
+
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $imageName = time() . '_' . $request->day . '_' . $bus->name . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                    $path = $photo->storeAs('judiciaire_img', $imageName, 'public');
+                    $imagePaths[] = 'storage/' . $path;
+                }
+            }
+
+            declaration_judiciaire::create([
+                'date_fiche' => $request->date,
+                'number' => $request->number,
+                'caat' => false,
+                'paye' => false,
+                'id_bus' => $request->bus,
+                'id_chauffeur' => $request->chauffeur,
+                'id_ligne' => $request->ligne,
+                'time_day' => Carbon::createFromFormat('Y-m-d H:i', $request->day . ' ' . $request->time)->toDateTimeString(),
+                'place' => $request->place,
+                'description' => $request->description,
+                'pertes' => $request->pertes,
+                'photos' => json_encode($imagePaths),
+            ]);
+
+            return redirect()->back()->with('success', 'Déclaration enregistrée avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()]);
+        }
     }
-
-    
-    
+    public function judiciaire_suivre()
+    {
+        $declarations = declaration_judiciaire::all();
+        // dd($declarations);
+        return view("judiciaire.suivie_declaration", compact('declarations'));
+    }
 }

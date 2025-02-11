@@ -49,7 +49,7 @@
             </a>
           </li>
           @endif
-          @if(in_array('maintenance_in', $permissions))
+          @if(in_array('maintenance_tlibre', $permissions))
             <li>
               <a href="{{ route('app.maintenance.traveaux_libre') }}">
                 <i class="bi bi-circle"></i><span>Traveaux libre</span>
@@ -218,7 +218,7 @@
           @endif
           @if(in_array('judiciaire_in', $permissions))
             <li>
-              <a href="{{ route('app.exploatation.statistiques') }}">
+              <a href="{{ route('app.judiciaire.suivre') }}">
                 <i class="bi bi-circle"></i><span>Suivre</span>
               </a>
             </li>

@@ -42,31 +42,33 @@
     @endif
 
 
-    <form class="row g-3" action="" method="post" dir="rtl">
+    <form class="row g-3" action="" method="post" dir="rtl" enctype="multipart/form-data">
         @csrf
 
         <div class="col-md-8">
             <div class="form-floating">
                 <input name="date" id="dateInput" type="date"
                     required class="form-control"
-                    style="text-align: end;">
+                    style="text-align: end;" value="{{ old('date') }}">
                 <label for="date">اليوم</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input type="text" class="form-control" required="" id="floatingName" name="name"
-                    placeholder="nom">
-                <label for="name">الرقم</label>
+                <input type="text" class="form-control" required id="floatingNumber" 
+                       name="number" placeholder="الرقم"  value="{{ old('number') }}"
+                       maxlength="3">
+                <label for="floatingNumber">الرقم</label>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="form-floating">
                 <select class="form-select" required name="bus" required id="bus" placeholder="bus"
                     aria-label="Floating label select example">
                     <option value="" disabled selected>المركبة</option>
                     @foreach ($buses as $bus)
-                        <option value="{{ $bus->id }}">{{ $bus->name }}</option>
+                        <option value="{{ $bus->id }}" @if (old('bus')==$bus->id) selected @endif>{{ $bus->name }}</option>
                     @endforeach
 
                 </select>
@@ -79,7 +81,7 @@
                     aria-label="Floating label select example">
                     <option value="" disabled selected>السائق</option>
                     @foreach ($chauffeurs as $chauffeur)
-                        <option value="{{ $chauffeur->id }}">{{ $chauffeur->name }}</option>
+                        <option value="{{ $chauffeur->id }}" @if (old('chauffeur')==$chauffeur->id) selected @endif >{{ $chauffeur->name }}</option>
                     @endforeach
 
                 </select>
@@ -92,7 +94,7 @@
                     aria-label="Floating label select example">
                     <option value="" disabled selected>الخط</option>
                     @foreach ($lines as $line)
-                        <option value="{{ $line->id }}">{{ $line->name }}</option>
+                        <option value="{{ $line->id }}" @if (old('ligne')==$line->id) selected @endif>{{ $line->name }}</option>
                     @endforeach
 
                 </select>
@@ -103,32 +105,32 @@
             <div class="form-floating">
                 <input name="day" id="dateInput" type="date"
                      required class="form-control"
-                    style="text-align: end;">
-                <label for="day">تاريخ</label>
+                    style="text-align: end;" value="{{ old('day') }}">
+                <label for="day" >تاريخ</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input name="time" type="time" required class="form-control" name="hdepart" id="hdepart">
+                <input name="time" type="time" required class="form-control" name="hdepart" id="hdepart" value="{{ old('time') }}">
                 <label for="hdepart">ساعة</label>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input name="place" type="text" class="form-control" required id="floatingName" name="lastname" placeholder="prénom">
+                <input name="place" type="text" value="{{ old('place') }}" class="form-control" required id="floatingName" name="lastname" placeholder="prénom">
                 <label for="lastname">المكان</label>
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-floating">
-                <textarea name="description" class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
+                <textarea name="description" class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;">{{old('description')}}</textarea>
                 <label for="description">ظروف الحادث</label>
             </div>
         </div>
 
         <div class="col-md-12">
             <div class="form-floating">
-                <textarea name="pertes" class="form-control"  placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"></textarea>
+                <textarea name="pertes" class="form-control"  placeholder="Leave a comment here" id="floatingTextarea" style="height: 150px;"> {{old('pertes')}}</textarea>
                 <label for="pertes">الخسائر المسجلة</label>
             </div>
         </div>
