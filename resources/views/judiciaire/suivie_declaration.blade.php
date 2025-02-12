@@ -245,7 +245,7 @@
 
                     slides += `
             <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                <img src="https://direction.etus22.dz/storage/judiciaire_img/${photo}" class="d-block w-100" alt="Image ${index + 1}">
+                <img src="https://direction.etus22.dz/${photo}" class="d-block w-100" alt="Image ${index + 1}">
             </div>
         `;
                 });
