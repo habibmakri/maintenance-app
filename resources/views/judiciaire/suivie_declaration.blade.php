@@ -38,7 +38,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            
+
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <ul>
@@ -54,49 +54,99 @@
                 <thead dir="rtl">
                     <tr>
                         <th style="text-align: right;">الرقم</th>
-                        <th style="text-align: right;" >التاريخ</th>
+                        <th style="text-align: right;">التاريخ</th>
                         <th style="text-align: right;">السائق</th>
                         <th style="text-align: right;">الحافلة</th>
                         <th style="text-align: right;">CAAT</th>
                         <th style="text-align: right;">مصاريف</th>
                         {{-- <th>اللجنة</th> --}}
-                        <th style="text-align: right;">عمليات</th>
+                        <th style="text-align: left;">عمليات</th>
                     </tr>
                 </thead>
                 <tbody dir="rtl">
-                    @foreach ($declarations as $daclaration)
+                    @foreach ($declarations as $declaration)
                         <tr
-                            @if ($daclaration->caat) style="border-color: green;" @else style="border-color: red;" @endif>
-                            <td>{{date('Y', strtotime($daclaration->date_fiche))}}/{{$daclaration->number }}</td>
-                            <td>{{$daclaration->time_day}}</td>
-                            <td>{{$daclaration->chauffeur->name }}</td>
-                            <td>{{$daclaration->bus->name }}</td>
-                            <td>{{$daclaration->caat }}</td>
-                            <td>{{$daclaration->paye }}</td>
+                            @if ($declaration->caat) style="border-color: green;" @else style="border-color: red;" @endif>
+                            <td>{{ date('Y', strtotime($declaration->date_fiche)) }}/{{ $declaration->number }}</td>
+                            <td>{{ $declaration->time_day }}</td>
+                            <td>{{ $declaration->chauffeur->name }}</td>
+                            <td>{{ $declaration->bus->name }}</td>
+                            <td>
+                                @if ($declaration->caat == true)
+                                    مصرح
+                                @else
+                                    غير مصرح
+                                @endif
+                            </td>
+                            <td>
+                                @if ($declaration->paye == true)
+                                    مدفوع
+                                @else
+                                    غير مدفوع
+                                @endif
+                            </td>
                             <td style="text-align:left ;">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal1"
-                                onclick="handleresoudreclick({{ $daclaration }})">CAAT</button>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal1"
-                                onclick="handleresoudreclick({{ $daclaration }})">أموال</button>
+                                <button type="button"
+                                    @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
+                                    data-bs-toggle="modal" onclick="handlecaatclick({{ $declaration->id }})">CAAT</button>
+                                <button type="button"
+                                    @if ($declaration->paye == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
+                                    data-bs-toggle="modal" onclick="handlepayeclick({{ $declaration->id }})">أموال</button>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
-                                    onclick="handleresoudreclick({{ $daclaration }})">تقرير</button>
+                                    onclick="handleresoudreclick({{ $declaration }},{{ $declaration->ligne }})">تقرير</button>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+
             <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
-                
-                
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header" dir="ltr">
+                            <h5 class="modal-title" id="modal_title"> </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>سيدي بلعباس يوم: <span id="declaration_date"></span></h5>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5>الحافلة: <span id="bus"></span></h5>
+                                <h5>السائق: <span id="chauffeur"></span></h5>
+                                <h5>الخط: <span id="ligne"></span></h5>
+                            </div>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5>الوقت: <span id="time"></span></h5>
+                                <h5>اليوم: <span id="day"></span></h5>
+                                <h5>المكان: <span id="place"></span></h5>
+                            </div>
+
+                            <h5>الوصف: <br><span id="description"></span></h5>
+                            <h5>الخسائر: <br><span id="pertes"></span></h5>
+                            <div id="photos">
+
+                            </div>
+
+
+                            <form class="row g-3" action="" method="post">
+                                @csrf
+                                <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Fermer</button>
+                                    <button type="submit" class="btn btn-primary">Imprimer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-            
-            
+
+
         </div>
         <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
             <h5 class="mt-2">Selectionner la date:</h5>
@@ -108,13 +158,121 @@
 
 
     <script>
-        function handleresoudreclick(panne) {
-            const modal_title = document.getElementById('modal_title');
-            modal_title.innerHTML = panne.pannename.name + ' du ' + panne.fichemaintenance.bus.name + ' signaler le ' +
-                panne.fichemaintenance.date_fiche + ' - ' + panne.fichemaintenance.brigade;
-            const panneIdInput = document.getElementById('fichepanne_id');
-            panneIdInput.value = panne.id;
+        function handlecaatclick(id) {
+            if (confirm('هل ثم تصريح بالحادث عند CAAT؟')) {
+                fetch(`judiciaire/handle_caat:${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Opération réussie!');
+                            location.reload();
+                        } else {
+                            alert('Opération échouée!');
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
         }
+
+        function handlepayeclick(id) {
+            if (confirm('هل ثم تلقي الأموال؟')) {
+                fetch(`judiciaire/handle_paye:${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Opération réussie!');
+                            location.reload();
+                        } else {
+                            alert('Opération échouée!');
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+        }
+
+        function handleresoudreclick(declaration, ligneval) {
+            const modal_title = document.getElementById('modal_title');
+            modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
+                .time_day + ' signaler le ' +
+                declaration.date_fiche;
+            const declarationIdInput = document.getElementById('fichedeclaration_id');
+            declarationIdInput.value = declaration.id;
+            const declarationdate = document.getElementById('declaration_date');
+            const dateObj = new Date(declaration.date_fiche);
+            const formattedDate =
+                `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()}`;
+            declarationdate.innerHTML = formattedDate;
+            const bus = document.getElementById('bus');
+            bus.innerHTML = declaration.bus.name
+            const chauffeur = document.getElementById('chauffeur');
+            chauffeur.innerHTML = declaration.chauffeur.name
+            const ligne = document.getElementById('ligne');
+            ligne.innerHTML = ligneval.name
+            const time = document.getElementById('time');
+            time.innerHTML = declaration.time_day.split(" ")[1];
+            const day = document.getElementById('day');
+            day.innerHTML = declaration.time_day
+            const place = document.getElementById('place');
+            place.innerHTML = declaration.place
+            const description = document.getElementById('description');
+            description.innerHTML = declaration.description
+            const pertes = document.getElementById('pertes');
+            pertes.innerHTML = declaration.pertes
+            const photos = document.getElementById('photos');
+            photos.innerHTML = ``
+            if (declaration.photos && Array.isArray(declaration.photos) && declaration.photos.length > 0) {
+                let indicators = '';
+                let slides = '';
+
+                declaration.photos.forEach((photo, index) => {
+                    indicators += `
+            <button type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="${index}" class="${index === 0 ? 'active' : ''}"
+            aria-label="Slide ${index + 1}"></button>
+        `;
+
+                    slides += `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="${photo}" class="d-block w-100" alt="Image ${index + 1}">
+            </div>
+        `;
+                });
+
+                photos.innerHTML = `
+        <h5>الصور: <br><span id="pertes"></span></h5>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="width: 65%; justify-self: center;">
+            <div class="carousel-indicators">
+                ${indicators}
+            </div>
+            <div class="carousel-inner">
+                ${slides}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    `;
+            }
+
+        }
+
         function handleDeleteClick(id) {
             if (confirm('Vous êtes sur?')) {
                 fetch(`maintenance/deletefichepanne:${id}`, {
@@ -128,7 +286,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Opération réussie!');
-                            location.reload(); 
+                            location.reload();
                         } else {
                             alert('Opération échouée!');
                         }
@@ -136,94 +294,5 @@
                     .catch(error => console.error('Erreur:', error));
             }
         }
-
-        function handlerapportclick(panne, used_pieces, chauffeur) {
-            const modal_title = document.getElementById('modal_title2');
-            const raport_bus = document.getElementById('raport_bus');
-            const raport_panne = document.getElementById('raport_panne');
-            const raport_declarepar = document.getElementById('raport_declarepar');
-            const raport_datedeclaration = document.getElementById('raport_datedeclaration');
-            const raport_dateresolution = document.getElementById('raport_dateresolution');
-            const raport_brigadedeclaration = document.getElementById('raport_brigadedeclaration');
-            const raport_brigaderesolution = document.getElementById('raport_brigaderesolution');
-            const raport_equipe = document.getElementById('raport_equipe');
-            const raport_description = document.getElementById('raport_description');
-            const raport_pieces = document.getElementById('raport_pieces');
-            const id_raport_bus = document.getElementById('id_raport_bus');
-            const raport_panne_type = document.getElementById('raport_panne_type');
-            modal_title.innerHTML = '';
-            raport_bus.innerHTML = '';
-            raport_panne.innerHTML = '';
-            raport_panne_type.innerHTML = '';
-            raport_declarepar.innerHTML = '';
-            raport_datedeclaration.innerHTML = '';
-            raport_dateresolution.innerHTML = '';
-            raport_equipe.innerHTML = '';
-            raport_description.innerHTML = '';
-            raport_pieces.innerHTML = '';
-            id_raport_bus.value = '';
-            modal_title.innerHTML = 'Rapport du Panne: ' + panne.pannename.name + ' du ' + panne.fichemaintenance.bus.name +
-                ' signaler le ' +
-                panne.fichemaintenance.date_fiche + ' - ' + panne.fichemaintenance.brigade;
-            raport_bus.innerHTML = 'Bus: ' + panne.fichemaintenance.bus.name;
-            raport_panne.innerHTML = 'Panne: ' + panne.pannename.name;
-            raport_panne_type.innerHTML = 'Type: ' + panne.pannename.type;
-            if (chauffeur && chauffeur.fr_name) {
-                raport_declarepar.innerHTML = 'Déclaré par: ' + chauffeur.fr_name;
-            } else {
-                raport_declarepar.innerHTML = 'Déclaré par: Équipe Maintenance';
-            }
-            raport_datedeclaration.innerHTML = 'Déclaré le: ' + panne.fichemaintenance.date_fiche + '-' + panne
-                .fichemaintenance.brigade;
-            raport_dateresolution.innerHTML = 'Résolue le: ' + panne.date_resoudre + '-' + panne.brigade;
-            raport_equipe.innerHTML = 'Équipe intervenue:<br> ' + JSON.parse(panne.equipe).join(', ');
-            raport_description.innerHTML = 'Description:<br> ' + panne.description;
-            const piecesDetails = used_pieces.map(piece => `${piece.name} => Quantié: ${piece.quantity}`).join('  ||  ');
-            raport_pieces.innerHTML = 'Pièces utilisées:<br>' + piecesDetails;
-            id_raport_bus.value = panne.id;
-            console.log(panne.id);
-        }
-        
-        
-        
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectIds = ['equipe'];
-            selectIds.forEach((id) => {
-                new TomSelect(`#${id}`, {
-                    plugins: ['remove_button'],
-                    create: false,
-                    maxItems: null,
-                    placeholder: 'Equipe',
-                    searchField: ['text'],
-                });
-            });
-        });
-
-        function toggleSelect(selectId) {
-            const selectElement = document.getElementById(selectId); // Corrected to use `getElementById`
-            const partitSelect = document.getElementById('partit');
-            const id_chauffer = document.getElementById('id_chauffeur');
-            if (selectElement.tomselect) {
-                if (selectElement.disabled) {
-                    selectElement.tomselect.enable(); // Enable Tom Select
-                } else {
-                    selectElement.tomselect.disable(); // Disable Tom Select
-                }
-            }
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Tom Select for each <select> element
-            const selectIds = ['panneMecanique', 'panneElectrique', 'panneTolle'];
-            selectIds.forEach((id) => {
-                new TomSelect(`#${id}`, {
-                    plugins: ['remove_button'], // Enables the remove button for selected items
-                    create: false, // Prevents users from adding custom options
-                    maxItems: null, // Allows multiple selection
-                    placeholder: 'Selectionner', // Placeholder text
-                    searchField: ['text'], // Enables searching in the options
-                });
-            });
-        });
     </script>
 @endsection

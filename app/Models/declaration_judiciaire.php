@@ -9,23 +9,27 @@ class declaration_judiciaire extends Model
     protected $table = 'declaration_judiciaire';
     protected $primaryKey = 'id';
     public $timestamps = true;
-    protected $fillable = [	
-	'number',
-	'date_fiche',
-	'caat',
-	'paye',
-	'id_bus',
-	'id_chauffeur',
-	'id_ligne',
-	'time_day',
-	'place',
-	'description',
-	'pertes',
-	'photos',
+    protected $fillable = [
+        'number',
+        'date_fiche',
+        'caat',
+        'paye',
+        'id_bus',
+        'id_chauffeur',
+        'id_ligne',
+        'time_day',
+        'place',
+        'description',
+        'pertes',
+        'photos',
     ];
     protected $hidden = ['created_at', 'updated_at'];
 
-	public function bus()
+    protected $casts = [
+        'photos' => 'array',
+    ];
+    
+    public function bus()
     {
         return $this->belongsTo(Bus::class, 'id_bus', 'id');
     }
@@ -39,5 +43,4 @@ class declaration_judiciaire extends Model
     {
         return $this->belongsTo(chauffeurs::class, 'id_chauffeur', 'id');
     }
-
 }

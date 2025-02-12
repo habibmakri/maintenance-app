@@ -112,7 +112,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('judiciaire_in','judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
         Route::post('judiciaire_in','do_judiciaire_in')->middleware('rolesMiddleware:judiciaire_in');
         Route::get('judiciaire_suivre','judiciaire_suivre')->name('suivre')->middleware('rolesMiddleware:judiciaire_in');
-        
+        Route::post('judiciaire/handle_caat:{id}', 'handle_caat');
+        Route::post('judiciaire/handle_paye:{id}', 'handle_paye');
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
         Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');
