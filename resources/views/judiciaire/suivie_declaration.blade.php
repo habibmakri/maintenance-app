@@ -3,6 +3,14 @@
 @section('title', 'Pannes')
 
 @section('content')
+    <style>
+        @font-face {
+            font-family: 'lateef';
+            src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
     <div class="pagetitle">
         <h1>Suivie des déclaration</h1>
         <nav>
@@ -17,7 +25,7 @@
     <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist" dir="rtl">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home"
-                type="button" role="tab" aria-controls="home" aria-selected="true">هذا الشهر</button>
+                type="button" role="tab" aria-controls="home" aria-selected="true" >هذا الشهر</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button"
@@ -50,7 +58,7 @@
                 </div>
             @endif
 
-            <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
+            <table class="table datatable mt-1" dir="rtl" style="text-align: right;" >
                 <thead dir="rtl">
                     <tr>
                         <th style="text-align: right;">الرقم</th>
@@ -101,7 +109,7 @@
                 </tbody>
             </table>
 
-            <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
+            <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true" >
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">

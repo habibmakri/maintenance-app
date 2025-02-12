@@ -52,13 +52,53 @@ class judiciaireController extends Controller
             $bus = Bus::findOrFail($request->bus);
             $imagePaths = [];
 
+            // if ($request->hasFile('photos')) {
+            //     foreach ($request->file('photos') as $photo) {
+            //         $imageName = time() . '_' . $request->day . '_' . $bus->name . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+            //         $path = $photo->storeAs('judiciaire_img', $imageName, 'public');
+            //         $imagePaths[] = 'storage/' . $path;
+            //     }
+            // }
             if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $photo) {
-                    $imageName = time() . '_' . $request->day . '_' . $bus->name . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-                    $path = $photo->storeAs('judiciaire_img', $imageName, 'public');
-                    $imagePaths[] = 'storage/' . $path;
+                    $imageName = time() . '_' . $request->day . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                    $destinationPath = storage_path('app/public/judiciaire_img/' . $imageName);
+            
+                    
+                    $imageType = $photo->getClientOriginalExtension();
+            
+                    
+                    if ($imageType == 'jpeg' || $imageType == 'jpg') {
+                        $image = imagecreatefromjpeg($photo->getRealPath());
+                    } elseif ($imageType == 'png') {
+                        $image = imagecreatefrompng($photo->getRealPath());
+                    } else {
+                        continue; 
+                    }
+            
+                    
+                    list($width, $height) = getimagesize($photo);
+                    $newWidth = 1024;
+                    $newHeight = ($height / $width) * 1024;
+                    $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+                    imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            
+                    
+                    if ($imageType == 'jpeg' || $imageType == 'jpg') {
+                        imagejpeg($resizedImage, $destinationPath, 60); 
+                    } elseif ($imageType == 'png') {
+                        imagepng($resizedImage, $destinationPath, 6); 
+                    }
+            
+                    
+                    imagedestroy($image);
+                    imagedestroy($resizedImage);
+            
+                    $imagePaths[] = 'storage/judiciaire_img/' . $imageName;
                 }
             }
+
+
 
             declaration_judiciaire::create([
                 'date_fiche' => $request->date,
