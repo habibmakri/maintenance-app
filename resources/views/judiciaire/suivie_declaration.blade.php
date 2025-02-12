@@ -239,12 +239,14 @@
             const pertes = document.getElementById('pertes');
             pertes.innerHTML = declaration.pertes
             const photos = document.getElementById('photos');
-            photos.innerHTML = ``
-            if (declaration.photos && Array.isArray(declaration.photos) && declaration.photos.length > 0) {
+            photos.innerHTML = ``;
+            declarationphotos = JSON.parse(declaration.photos);
+
+            if (declarationphotos && Array.isArray(declarationphotos) && declarationphotos.length > 0) {
                 let indicators = '';
                 let slides = '';
 
-                declaration.photos.forEach((photo, index) => {
+                declarationphotos.forEach((photo, index) => {
                     indicators += `
             <button type="button" data-bs-target="#carouselExampleIndicators"
             data-bs-slide-to="${index}" class="${index === 0 ? 'active' : ''}"

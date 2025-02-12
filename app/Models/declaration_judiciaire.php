@@ -25,9 +25,9 @@ class declaration_judiciaire extends Model
     ];
     protected $hidden = ['created_at', 'updated_at'];
 
-    protected $casts = [
-        'photos' => 'array',
-    ];
+    // protected $casts = [
+    //     'photos' => 'array',
+    // ];
     
     public function bus()
     {
