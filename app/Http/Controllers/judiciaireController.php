@@ -126,20 +126,22 @@ class judiciaireController extends Controller
         // dd($declarations);
         return view("judiciaire.suivie_declaration", compact('declarations'));
     }
-    public function handle_caat($id)
+    public function handle_caat($id,$date)
     {
         $declaration = declaration_judiciaire::find($id);
         if ($declaration) {
             $declaration->caat = true;
+            $declaration->date_caat = $date; 
             $declaration->update();
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);
     }
-    public function handle_paye($id)
+    public function handle_paye($id,$date)
     {
         $declaration = declaration_judiciaire::find($id);
         if ($declaration) {
+            $declaration->date_paye = $date; 
             $declaration->paye = true;
             $declaration->update();
             return response()->json(['success' => true]);

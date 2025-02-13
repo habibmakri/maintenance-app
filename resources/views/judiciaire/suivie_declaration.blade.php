@@ -32,7 +32,7 @@
                 role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">الكل</button>
         </li>
     </ul>
-    <div class="tab-content pt-2" id="borderedTabContent">
+    <div class="tab-content pt-2" id="borderedTabContent" style = "font-family: 'Tajwal';">
         <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab" dir="rtl">
 
             @if (session('success'))
@@ -58,10 +58,10 @@
                 </div>
             @endif
 
-            <table class="table datatable mt-1" dir="rtl" style="text-align: right;" >
+            <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
                 <thead dir="rtl">
                     <tr>
-                        <th style="text-align: right;">الرقم</th>
+                        <th style="text-align: right;" >الرقم</th>
                         <th style="text-align: right;">التاريخ</th>
                         <th style="text-align: right;">السائق</th>
                         <th style="text-align: right;">الحافلة</th>
@@ -166,47 +166,66 @@
 
 
     <script>
+        
         function handlecaatclick(id) {
             if (confirm('هل ثم تصريح بالحادث عند CAAT؟')) {
-                fetch(`judiciaire/handle_caat:${id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Opération réussie!');
-                            location.reload();
-                        } else {
-                            alert('Opération échouée!');
-                        }
-                    })
-                    .catch(error => console.error('Erreur:', error));
+                let date = prompt("تاريخ التصريح (YYYY-MM-DD) :");
+
+                if (date) {
+                    fetch(`judiciaire/handle_caat:${id},${date}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                date: date
+                            }) // Envoi de la date au contrôleur
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Opération réussie!');
+                                location.reload();
+                            } else {
+                                alert('Opération échouée!');
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                } else {
+                    alert("Date invalide ou annulée !");
+                }
             }
         }
 
         function handlepayeclick(id) {
             if (confirm('هل ثم تلقي الأموال؟')) {
-                fetch(`judiciaire/handle_paye:${id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Opération réussie!');
-                            location.reload();
-                        } else {
-                            alert('Opération échouée!');
-                        }
-                    })
-                    .catch(error => console.error('Erreur:', error));
+                let date = prompt("تاريخ التصريح (YYYY-MM-DD) :");
+
+                if (date) {
+                    fetch(`judiciaire/handle_paye:${id},${date}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                date: date
+                            }) // Envoi de la date au contrôleur
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Opération réussie!');
+                                location.reload();
+                            } else {
+                                alert('Opération échouée!');
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                } else {
+                    alert("Date invalide ou annulée !");
+                }
             }
         }
 
@@ -304,5 +323,6 @@
                     .catch(error => console.error('Erreur:', error));
             }
         }
+        
     </script>
 @endsection
