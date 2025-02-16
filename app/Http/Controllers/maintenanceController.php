@@ -428,7 +428,7 @@ class maintenanceController extends Controller
             'lieuresolu' => 'required',
             'typetravaille' => ['required'],
             'equipe' => 'required|array',
-            'description' => 'required',
+            // 'description' => 'required',
         ]);
         $pieces = $request->input('pieces', []);
         $quantities = $request->input('piece_quantities', []);
