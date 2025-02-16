@@ -287,7 +287,7 @@
             if(declaration.paye){
                 paye.innerHTML = `ثم تلقي المصاريف في ${declaration.date_paye}`
             }else{
-                caat.innerHTML = `لم يتم تلقي المصاريف بعد`
+                paye.innerHTML = `لم يتم تلقي المصاريف بعد`
             }
             
             if (declarationphotos && Array.isArray(declarationphotos) && declarationphotos.length > 0) {
