@@ -25,7 +25,7 @@
     <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist" dir="rtl">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home"
-                type="button" role="tab" aria-controls="home" aria-selected="true" >هذا الشهر</button>
+                type="button" role="tab" aria-controls="home" aria-selected="true">هذا الشهر</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button"
@@ -61,7 +61,7 @@
             <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
                 <thead dir="rtl">
                     <tr>
-                        <th style="text-align: right;" >الرقم</th>
+                        <th style="text-align: right;">الرقم</th>
                         <th style="text-align: right;">التاريخ</th>
                         <th style="text-align: right;">السائق</th>
                         <th style="text-align: right;">الحافلة</th>
@@ -109,29 +109,33 @@
                 </tbody>
             </table>
 
-            <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true" >
+            <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
                             <h5 class="modal-title" id="modal_title"> </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <h5>سيدي بلعباس يوم: <span id="declaration_date"></span></h5>
+                        <div class="modal-body" >
+                            <h5 style="font-family: 'Tajwal'">سيدي بلعباس يوم: <span style="font-weight: bold;" id="declaration_date"></span></h5>
                             <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
-                                <h5>الحافلة: <span id="bus"></span></h5>
-                                <h5>السائق: <span id="chauffeur"></span></h5>
-                                <h5>الخط: <span id="ligne"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">الحافلة: <span style="font-weight: bold;" id="bus"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">السائق: <span style="font-weight: bold;" id="chauffeur"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">الخط: <span style="font-weight: bold;" id="ligne"></span></h5>
                             </div>
                             <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
-                                <h5>الوقت: <span id="time"></span></h5>
-                                <h5>اليوم: <span id="day"></span></h5>
-                                <h5>المكان: <span id="place"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">الوقت: <span style="font-weight: bold;" id="time"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">اليوم: <span style="font-weight: bold;" id="day"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">المكان: <span style="font-weight: bold;" id="place"></span></h5>
+                            </div>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5 style="font-family: 'Tajwal'">تصريح لدى CAAT: <span style="font-weight: bold;" id="caat"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">مصاريف: <span style="font-weight: bold;" id="paye"></span></h5>
                             </div>
 
-                            <h5>الوصف: <br><span id="description"></span></h5>
-                            <h5>الخسائر: <br><span id="pertes"></span></h5>
-                            <div id="photos">
+                            <h5 style="font-family: 'Tajwal'">الوصف: <br><span style="font-weight: bold;" id="description"></span></h5>
+                            <h5 style="font-family: 'Tajwal'">الخسائر: <br><span style="font-weight: bold;" id="pertes"></span></h5>
+                            <div id="photos" style="font-family: 'Tajwal';font-weight: bold;">
 
                             </div>
 
@@ -166,7 +170,6 @@
 
 
     <script>
-        
         function handlecaatclick(id) {
             if (confirm('هل ثم تصريح بالحادث عند CAAT؟')) {
                 let date = prompt("تاريخ التصريح (YYYY-MM-DD) :");
@@ -211,7 +214,7 @@
                             },
                             body: JSON.stringify({
                                 date: date
-                            }) // Envoi de la date au contrôleur
+                            }) 
                         })
                         .then(response => response.json())
                         .then(data => {
@@ -231,36 +234,62 @@
 
         function handleresoudreclick(declaration, ligneval) {
             const modal_title = document.getElementById('modal_title');
-            modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
-                .time_day + ' signaler le ' +
-                declaration.date_fiche;
             const declarationIdInput = document.getElementById('fichedeclaration_id');
-            declarationIdInput.value = declaration.id;
             const declarationdate = document.getElementById('declaration_date');
+            const chauffeur = document.getElementById('chauffeur');
+            const ligne = document.getElementById('ligne');
+            const time = document.getElementById('time');
+            const day = document.getElementById('day');
+            const place = document.getElementById('place');
+            const description = document.getElementById('description');
+            const pertes = document.getElementById('pertes');
+            const photos = document.getElementById('photos');
+            const caat = document.getElementById('caat');
+            const paye = document.getElementById('paye');
             const dateObj = new Date(declaration.date_fiche);
             const formattedDate =
                 `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()}`;
-            declarationdate.innerHTML = formattedDate;
             const bus = document.getElementById('bus');
-            bus.innerHTML = declaration.bus.name
-            const chauffeur = document.getElementById('chauffeur');
-            chauffeur.innerHTML = declaration.chauffeur.name
-            const ligne = document.getElementById('ligne');
-            ligne.innerHTML = ligneval.name
-            const time = document.getElementById('time');
+            modal_title.innerHTML = '';
+            declarationdate.innerHTML ='';
+            bus.innerHTML ='';
+            chauffeur.innerHTML ='';
+            ligne.innerHTML ='';
+            time.innerHTML ='';
+            day.innerHTML ='';
+            place.innerHTML ='';
+            caat.innerHTML ='';
+            paye.innerHTML ='';
+            description.innerHTML ='';
+            pertes.innerHTML ='';
+            photos.innerHTML ='';
+            declarationphotos = ''; 
+            modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
+                .time_day + ' signaler le ' +
+                declaration.date_fiche;
+            declarationIdInput.value = declaration.id;
+            declarationdate.innerHTML = formattedDate;
+            bus.innerHTML = declaration.bus.name;
+            chauffeur.innerHTML = declaration.chauffeur.name;
+            ligne.innerHTML = ligneval.name;
             time.innerHTML = declaration.time_day.split(" ")[1];
-            const day = document.getElementById('day');
-            day.innerHTML = declaration.time_day
-            const place = document.getElementById('place');
-            place.innerHTML = declaration.place
-            const description = document.getElementById('description');
-            description.innerHTML = declaration.description
-            const pertes = document.getElementById('pertes');
-            pertes.innerHTML = declaration.pertes
-            const photos = document.getElementById('photos');
+            day.innerHTML = declaration.time_day;
+            place.innerHTML = declaration.place;
+            description.innerHTML = declaration.description;
+            pertes.innerHTML = declaration.pertes;
             photos.innerHTML = ``;
             declarationphotos = JSON.parse(declaration.photos);
-
+            if(declaration.caat){
+                caat.innerHTML = `ثم التصريح في ${declaration.date_caat}`
+            }else{
+                caat.innerHTML = `لم يتم التصريح بعد`
+            }
+            if(declaration.paye){
+                paye.innerHTML = `ثم تلقي المصاريف في ${declaration.date_paye}`
+            }else{
+                caat.innerHTML = `لم يتم تلقي المصاريف بعد`
+            }
+            
             if (declarationphotos && Array.isArray(declarationphotos) && declarationphotos.length > 0) {
                 let indicators = '';
                 let slides = '';
@@ -280,7 +309,7 @@
                 });
 
                 photos.innerHTML = `
-        <h5>الصور: <br><span id="pertes"></span></h5>
+        <h5 style="font-family: 'Tajwal';font-weight: bold;">الصور: <br><span id="pertes"></span></h5>
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="width: 65%; justify-self: center;">
             <div class="carousel-indicators">
                 ${indicators}
@@ -323,6 +352,5 @@
                     .catch(error => console.error('Erreur:', error));
             }
         }
-        
     </script>
 @endsection
