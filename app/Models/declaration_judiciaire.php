@@ -16,6 +16,7 @@ class declaration_judiciaire extends Model
         'date_caat',
         'paye',
         'date_paye',
+        'paye_montant',
         'id_bus',
         'id_chauffeur',
         'id_ligne',

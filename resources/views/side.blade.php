@@ -225,7 +225,7 @@
           @endif
           @if(in_array('judiciaire_out', $permissions))
             <li>
-              <a href="{{ route('app.judiciaire.declare') }}">
+              <a href="{{ route('app.judiciaire.extraire') }}">
                 <i class="bi bi-circle"></i><span>Extraire</span>
               </a>
             </li>

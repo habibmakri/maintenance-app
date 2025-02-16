@@ -177,7 +177,7 @@
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner l'année</option>
-                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                @for ($i = date('Y'); $i >= 2024; $i--)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
@@ -250,7 +250,7 @@
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner l'année</option>
-                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                @for ($i = date('Y'); $i >= 2024; $i--)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
@@ -323,7 +323,7 @@
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner l'année</option>
-                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                @for ($i = date('Y'); $i >= 2024; $i--)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
@@ -398,7 +398,7 @@
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner l'année</option>
-                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                @for ($i = date('Y'); $i >= 2024; $i--)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
@@ -450,7 +450,7 @@
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner l'année</option>
-                                @for ($i = date('Y'); $i >= 2000; $i--)
+                                @for ($i = date('Y'); $i >= 2024; $i--)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
@@ -521,7 +521,7 @@
                         <select class="form-select" required name="year" id="year"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner l'année</option>
-                            @for ($i = date('Y'); $i >= 2000; $i--)
+                            @for ($i = date('Y'); $i >= 2024; $i--)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
@@ -573,7 +573,7 @@
                         <select class="form-select" required name="year" id="year"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner l'année</option>
-                            @for ($i = date('Y'); $i >= 2000; $i--)
+                            @for ($i = date('Y'); $i >= 2024; $i--)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>

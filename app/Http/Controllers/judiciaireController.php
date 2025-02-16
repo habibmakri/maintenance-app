@@ -139,15 +139,24 @@ class judiciaireController extends Controller
         }
         return response()->json(['success' => false]);
     }
-    public function handle_paye($id,$date)
+    public function handle_paye($id,$date,$montant)
     {
         $declaration = declaration_judiciaire::find($id);
         if ($declaration) {
             $declaration->date_paye = $date; 
             $declaration->paye = true;
+            $declaration->paye_montant = $montant;
             $declaration->update();
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);
+    }
+    public function judiciaire_extraire()
+    {
+        $declarations = declaration_judiciaire::all();
+        $declarationsmonth = declaration_judiciaire::whereMonth('time_day', date('m'))
+                ->whereYear('time_day', date('Y'))
+                ->get();
+        return view("judiciaire.extraire", compact(['declarations']));
     }
 }
