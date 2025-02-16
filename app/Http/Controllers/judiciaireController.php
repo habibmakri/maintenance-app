@@ -123,8 +123,10 @@ class judiciaireController extends Controller
     public function judiciaire_suivre()
     {
         $declarations = declaration_judiciaire::all();
-        // dd($declarations);
-        return view("judiciaire.suivie_declaration", compact('declarations'));
+        $declarationsmonth = declaration_judiciaire::whereMonth('time_day', date('m'))
+                ->whereYear('time_day', date('Y'))
+                ->get();
+        return view("judiciaire.suivie_declaration", compact(['declarations','declarationsmonth']));
     }
     public function handle_caat($id,$date)
     {

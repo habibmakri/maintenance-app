@@ -72,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody dir="rtl">
-                    @foreach ($declarations as $declaration)
+                    @foreach ($declarationsmonth as $declaration)
                         <tr
                             @if ($declaration->caat) style="border-color: green;" @else style="border-color: red;" @endif>
                             <td>{{ date('Y', strtotime($declaration->date_fiche)) }}/{{ $declaration->number }}</td>
@@ -161,8 +161,101 @@
 
         </div>
         <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
-            <h5 class="mt-2">Selectionner la date:</h5>
+            <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
+                <thead dir="rtl">
+                    <tr>
+                        <th style="text-align: right;">الرقم</th>
+                        <th style="text-align: right;">التاريخ</th>
+                        <th style="text-align: right;">السائق</th>
+                        <th style="text-align: right;">الحافلة</th>
+                        <th style="text-align: right;">CAAT</th>
+                        <th style="text-align: right;">مصاريف</th>
+                        {{-- <th>اللجنة</th> --}}
+                        <th style="text-align: left;">عمليات</th>
+                    </tr>
+                </thead>
+                <tbody dir="rtl">
+                    @foreach ($declarationsmonth as $declaration)
+                        <tr
+                            @if ($declaration->caat) style="border-color: green;" @else style="border-color: red;" @endif>
+                            <td>{{ date('Y', strtotime($declaration->date_fiche)) }}/{{ $declaration->number }}</td>
+                            <td>{{ $declaration->time_day }}</td>
+                            <td>{{ $declaration->chauffeur->name }}</td>
+                            <td>{{ $declaration->bus->name }}</td>
+                            <td>
+                                @if ($declaration->caat == true)
+                                    مصرح
+                                @else
+                                    غير مصرح
+                                @endif
+                            </td>
+                            <td>
+                                @if ($declaration->paye == true)
+                                    مدفوع
+                                @else
+                                    غير مدفوع
+                                @endif
+                            </td>
+                            <td style="text-align:left ;">
+                                <button type="button"
+                                    @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
+                                    data-bs-toggle="modal" onclick="handlecaatclick({{ $declaration->id }})">CAAT</button>
+                                <button type="button"
+                                    @if ($declaration->paye == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
+                                    data-bs-toggle="modal" onclick="handlepayeclick({{ $declaration->id }})">أموال</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#ExtralargeModal2"
+                                    onclick="handleresoudreclick({{ $declaration }},{{ $declaration->ligne }})">تقرير</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="modal fade" id="ExtralargeModal2" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header" dir="ltr">
+                            <h5 class="modal-title" id="modal_title"> </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" >
+                            <h5 style="font-family: 'Tajwal'">سيدي بلعباس يوم: <span style="font-weight: bold;" id="declaration_date"></span></h5>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5 style="font-family: 'Tajwal'">الحافلة: <span style="font-weight: bold;" id="bus"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">السائق: <span style="font-weight: bold;" id="chauffeur"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">الخط: <span style="font-weight: bold;" id="ligne"></span></h5>
+                            </div>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5 style="font-family: 'Tajwal'">الوقت: <span style="font-weight: bold;" id="time"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">اليوم: <span style="font-weight: bold;" id="day"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">المكان: <span style="font-weight: bold;" id="place"></span></h5>
+                            </div>
+                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
+                                <h5 style="font-family: 'Tajwal'">تصريح لدى CAAT: <span style="font-weight: bold;" id="caat"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">مصاريف: <span style="font-weight: bold;" id="paye"></span></h5>
+                            </div>
 
+                            <h5 style="font-family: 'Tajwal'">الوصف: <br><span style="font-weight: bold;" id="description"></span></h5>
+                            <h5 style="font-family: 'Tajwal'">الخسائر: <br><span style="font-weight: bold;" id="pertes"></span></h5>
+                            <div id="photos" style="font-family: 'Tajwal';font-weight: bold;">
+
+                            </div>
+
+
+                            <form class="row g-3" action="" method="post">
+                                @csrf
+                                <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Fermer</button>
+                                    <button type="submit" class="btn btn-primary">Imprimer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 

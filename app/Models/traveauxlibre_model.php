@@ -15,7 +15,7 @@ class traveauxlibre_model extends Model
     protected $hidden = ['created_at', 'updated_at'];
     public function bus()
     {
-        return $this->belongsTo(bus::class, 'id_bus');
+        return $this->belongsTo(Bus::class, 'id_bus');
     }
     public function used_pieces(){
         return $this->hasMany(traveauxlibreusedpieces::class,'traveauxlibre_id');
