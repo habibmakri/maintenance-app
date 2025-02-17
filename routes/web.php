@@ -115,6 +115,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('judiciaire/handle_caat:{id},{date}', 'handle_caat');
         Route::post('judiciaire/handle_paye:{id},{date},{montant}', 'handle_paye');
         Route::get('judiciaire_extraire','judiciaire_extraire')->name('extraire')->middleware('rolesMiddleware:judiciaire_out');
+        Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
+        Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
         Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');

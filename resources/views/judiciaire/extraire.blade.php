@@ -166,7 +166,7 @@
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab" dir="rtl">
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;" dir="rtl">
                 <h5 class="mt-5" style = "font-family: 'Tajwal';font-weight: bold">إختر الشهر والسنة لإستخراج حالة الحوادث:</h5>
-                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post" >
+                <form class="row g-3" action="{{ route('app.judiciaire.etat_accident') }}" method="post" >
                     @csrf
                     <div class="col-md-5">
                         <div class="form-floating">
@@ -202,11 +202,29 @@
                             <label for="year">السنة</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">تحميل</button>
                 </form>
             </div>
 
-
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;" dir="rtl">
+                <h5 class="mt-5" style = "font-family: 'Tajwal';font-weight: bold">إختر السنة لإستخراج عدد الحوادث حسب السائق:</h5>
+                <form class="row g-3" action="{{ route('app.judiciaire.naccident_chauffeur') }}" method="post" >
+                    @csrf
+                    <div class="col-md-10">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>إختر السنة</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">السنة</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">تحميل</button>
+                </form>
+            </div>
         </div>
 
     </div>
