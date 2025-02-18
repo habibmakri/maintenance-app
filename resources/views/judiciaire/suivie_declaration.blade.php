@@ -384,7 +384,11 @@
             declarationdate.innerHTML = formattedDate;
             bus.innerHTML = declaration.bus.name;
             chauffeur.innerHTML = declaration.chauffeur.name;
-            ligne.innerHTML = ligneval.name;
+            if(ligneval){
+                ligne.innerHTML = ligneval.name;
+            }else{
+                ligne.innerHTML = "خارج الخدمة";
+            }
             time.innerHTML = declaration.time_day.split(" ")[1];
             day.innerHTML = declaration.time_day;
             place.innerHTML = declaration.place;
@@ -483,7 +487,12 @@
             declarationdate.innerHTML = formattedDate;
             bus.innerHTML = declaration.bus.name;
             chauffeur.innerHTML = declaration.chauffeur.name;
-            ligne.innerHTML = ligneval.name;
+            
+            if(ligneval){
+                ligne.innerHTML = ligneval.name;
+            }else{
+                ligne.innerHTML = "خارج الخدمة";
+            }
             time.innerHTML = declaration.time_day.split(" ")[1];
             day.innerHTML = declaration.time_day;
             place.innerHTML = declaration.place;

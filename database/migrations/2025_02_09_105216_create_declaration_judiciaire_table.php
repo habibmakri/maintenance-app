@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('paye')->default(false); 
             $table->unsignedBigInteger('id_bus'); 
             $table->unsignedBigInteger('id_chauffeur'); 
-            $table->unsignedBigInteger('id_ligne'); 
+            $table->unsignedBigInteger('id_ligne')->nullable(); 
             $table->dateTime('time_day');
             $table->string('place');
             $table->text(column: 'description')->nullable();

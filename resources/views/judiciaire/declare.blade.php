@@ -96,9 +96,10 @@
                     @foreach ($lines as $line)
                         <option value="{{ $line->id }}" @if (old('ligne') == $line->id) selected @endif>
                             {{ $line->name }}</option>
-                    @endforeach
-
-                </select>
+                            @endforeach
+                            <option value="">
+                                خارج الخدمة</option>
+                        </select>
                 <label for="ligne">خط الخدمة</label>
             </div>
         </div>

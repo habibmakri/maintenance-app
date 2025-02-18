@@ -41,7 +41,7 @@ class judiciaireController extends Controller
             'number' => ['required', 'regex:/^\d{3}$/'],
             'bus' => 'required',
             'chauffeur' => 'required',
-            'ligne' => 'required',
+            // 'ligne' => 'required',
             'day' => 'required|date',
             'time' => 'required',
             'place' => 'required|string',
