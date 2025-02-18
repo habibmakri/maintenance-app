@@ -45,7 +45,7 @@ class maintenanceController extends Controller
         } else {
             $date = date('Y-m-d');
         }
-        return view("maintenance.maintenancein", compact('buses', 'lines', 'stations', 'pannes', 'chauffeurs','date'));
+        return view("maintenance.maintenancein", compact('buses', 'lines', 'stations', 'pannes', 'chauffeurs', 'date'));
     }
 
     // public function insertFichemaintenance(maintenanceinRequest $request)
@@ -1138,6 +1138,8 @@ class maintenanceController extends Controller
         $nomfichier = 'Fiche suivi Journalière- ' . $monthName  . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
+        ini_set('pcre.backtrack_limit', 10000000);
+        ini_set('pcre.recursion_limit', 10000000);
         $mpdf->WriteHTML($html);
         return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
             'Content-Type' => 'application/pdf',
@@ -1823,7 +1825,7 @@ class maintenanceController extends Controller
             11 => 'Novembre',
             12 => 'Décembre'
         ];
-        $monthName = $months_fr_array[$month].' '. $request->year;
+        $monthName = $months_fr_array[$month] . ' ' . $request->year;
         $piecename = pieces_maintanance::find($request->piece)->name;
         $pieces = used_pieces::query()
             ->where('piece_id', '=', $request->piece)
@@ -1862,13 +1864,13 @@ class maintenanceController extends Controller
         $mergedPieces = collect($pieces)->merge($tlpieces);
         $groupedtotal = $mergedPieces->groupBy('bus');
         // dd($groupedtotal);
-        
+
         $mpdf = new Mpdf([
             'format' => 'A4',
-            
+
         ]);
         $imagePath = public_path('/LOGO ETUS.png');
-        $html = view('maintenance.etatpiecepdf', compact(['groupedtotal', 'monthName','piecename']))->render();
+        $html = view('maintenance.etatpiecepdf', compact(['groupedtotal', 'monthName', 'piecename']))->render();
         $mpdf->AddPage();
         $mpdf->Image($imagePath, 30, 10, 20, 20, 'png');
         $mpdf->SetY(10);
@@ -1879,7 +1881,7 @@ class maintenanceController extends Controller
                             Généré le: $currentdate | Page {PAGENO} sur {nbpg}
                         </div>
                         ";
-        $nomfichier = 'etat_'.$piecename.'_' . $monthName  . '.pdf';
+        $nomfichier = 'etat_' . $piecename . '_' . $monthName  . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
