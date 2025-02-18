@@ -119,8 +119,15 @@
         <div class="col-md-4">
             <div class="form-floating">
                 <input name="place" type="text" value="{{ old('place') }}" class="form-control" required
-                    id="floatingName" name="lastname" placeholder="prénom">
+                    id="floatingName" placeholder="Leave a comment here" >
                 <label for="lastname">المكان</label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-floating">
+                <input name="adverse" type="text" value="{{ old('adverse') }}" class="form-control" required
+                    id="floatingName" placeholder="Leave a comment here">
+                <label for="adverse">الطرف الآخر</label>
             </div>
         </div>
         <div class="col-md-12">
@@ -134,7 +141,7 @@
         <div class="col-md-12">
             <div class="form-floating">
                 <textarea name="pertes" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-                    style="height: 150px;"> {{ old('pertes') }}</textarea>
+                    style="height: 150px;" > {{ old('pertes') }}</textarea>
                 <label for="pertes">الخسائر المسجلة</label>
             </div>
         </div>

@@ -45,9 +45,10 @@ class judiciaireController extends Controller
             'day' => 'required|date',
             'time' => 'required',
             'place' => 'required|string',
+            'adverse' => 'required|string',
             'description' => 'nullable|string',
             'pertes' => 'nullable|string',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif',//|max:4096',
         ]);
 
         try {
@@ -112,6 +113,9 @@ class judiciaireController extends Controller
                 'id_ligne' => $request->ligne,
                 'time_day' => Carbon::createFromFormat('Y-m-d H:i', $request->day . ' ' . $request->time)->toDateTimeString(),
                 'place' => $request->place,
+                'adverse' => $request->adverse,
+                'responsability' => null,
+                'decision' => null,
                 'description' => $request->description,
                 'pertes' => $request->pertes,
                 'photos' => json_encode($imagePaths),
