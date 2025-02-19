@@ -1500,13 +1500,16 @@ class maintenanceController extends Controller
             'dateaupdf' => 'required|date|after_or_equal:datedupdf',
         ]);
 
-        //
+        
+//         $datedupdf = Carbon::parse($request->datedupdf)->startOfDay();
+// $dateaupdf = Carbon::parse($request->dateaupdf)->endOfDay(); // Définit l'heure à 23:59:59
+
         $query = bus::query()
             ->whereIn('type', ['v8', 'l5'])
             ->leftJoin('fiches_maintenance', function ($join) use ($request) {
                 $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                    ->where('fiches_maintenance.date_fiche', '>=', $request->datedupdf)
-                    ->where('fiches_maintenance.date_fiche', '<=', $request->dateaupdf)
+                    ->where('fiches_maintenance.date_fiche', '>=', Carbon::parse($request->datedupdf)->startOfDay())
+                    ->where('fiches_maintenance.date_fiche', '<=', Carbon::parse($request->dateaupdf)->endOfDay())
                     ->where('fiches_maintenance.declaré', '=', true)
                     ->where(function ($q) {
                         $q->where('fiches_maintenance.brigade', 'soir')
