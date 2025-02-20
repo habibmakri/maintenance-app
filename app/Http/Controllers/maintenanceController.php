@@ -1500,9 +1500,9 @@ class maintenanceController extends Controller
             'dateaupdf' => 'required|date|after_or_equal:datedupdf',
         ]);
 
-        
-//         $datedupdf = Carbon::parse($request->datedupdf)->startOfDay();
-// $dateaupdf = Carbon::parse($request->dateaupdf)->endOfDay(); // Définit l'heure à 23:59:59
+
+        //         $datedupdf = Carbon::parse($request->datedupdf)->startOfDay();
+        // $dateaupdf = Carbon::parse($request->dateaupdf)->endOfDay(); // Définit l'heure à 23:59:59
 
         $query = bus::query()
             ->whereIn('type', ['v8', 'l5'])
@@ -2300,6 +2300,7 @@ class maintenanceController extends Controller
                 $matinRecord = fichemaintenance::whereHas('bus', function ($query) use ($busname) {
                     $query->where('name', $busname);
                 })
+                    ->where('declaré', '=', true)
                     ->where('date_fiche', $dayFormatted)
                     ->where('brigade', 'matin')
                     ->first();
@@ -2307,6 +2308,7 @@ class maintenanceController extends Controller
                 $soirRecord = fichemaintenance::whereHas('bus', function ($query) use ($busname) {
                     $query->where('name', $busname);
                 })
+                    ->where('declaré', '=', true)
                     ->where('date_fiche', $dayFormatted)
                     ->where('brigade', 'soir')
                     ->first();
