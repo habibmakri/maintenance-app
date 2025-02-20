@@ -2098,6 +2098,7 @@ class maintenanceController extends Controller
                     $matinRecord = fichemaintenance::whereHas('bus', function ($query) use ($busname) {
                         $query->where('name', $busname);
                     })
+                        ->where('declaré', '=', true)
                         ->where('date_fiche', $dayFormatted)
                         ->where('brigade', 'matin')
                         ->first();
@@ -2105,6 +2106,7 @@ class maintenanceController extends Controller
                     $soirRecord = fichemaintenance::whereHas('bus', function ($query) use ($busname) {
                         $query->where('name', $busname);
                     })
+                        ->where('declaré', '=', true)
                         ->where('date_fiche', $dayFormatted)
                         ->where('brigade', 'soir')
                         ->first();
