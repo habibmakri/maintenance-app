@@ -70,7 +70,7 @@
                                 <label for="lieuresolu">Lieu</label>
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="form-floating">
                                 <select class="form-select" required name="typetravaille" id="typetravaille"
                                     aria-label="Floating label select example">
@@ -80,6 +80,17 @@
                                     <option value="tolle">Tolle</option>
                                 </select>
                                 <label for="typetravaille">Type</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-floating">
+                                <select class="form-select" required name="grantraveaux" id="grantraveaux"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled selected>Grand Traveuax</option>
+                                    <option value="non" selected>Non</option>
+                                    <option value="oui">Oui</option>
+                                </select>
+                                <label for="grantraveaux">Grand Traveuax</label>
                             </div>
                         </div>
                         <div class="col-md-12">

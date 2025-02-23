@@ -428,8 +428,15 @@ class maintenanceController extends Controller
             'lieuresolu' => 'required',
             'typetravaille' => ['required'],
             'equipe' => 'required|array',
+            'grantraveaux' => 'required',
             // 'description' => 'required',
         ]);
+        if($request->grantraveaux == 'oui'){
+            $grantraveaux = true;
+        }else{
+            $grantraveaux = false;
+        }
+        // dd($request->grantraveaux,$grantraveaux);
         $pieces = $request->input('pieces', []);
         $quantities = $request->input('piece_quantities', []);
         $mergedPieces = [];
@@ -447,6 +454,7 @@ class maintenanceController extends Controller
             'lieu_resoudre' => $request->lieuresolu,
             'brigade' => $request->brigade,
             'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+            'grantraveaux' => $grantraveaux,
             'description' => $request->description,
         ];
         $travaille_item = traveauxlibre_model::create($travaille_data);
