@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 3px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .details-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .details-table td {
+            padding: 10px;
+            border: none;
+            text-align: left;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1,
+        .header h2 {
+            margin: 5px;
+        }
+    </style>
+    
+</head>
+
+<body dir="rtl" >
+    <div style="margin-bottom: 7%;margin-left: 20%;"class="header">
+        <p style="margin: 0px; font-size:18px;">الجمهورية الجزائرية الديمقراطية الشعبية</p>
+        <p style="margin: 0px;font-size:18px;">وزارة النقل</p>
+        <p style="margin: 0px;font-size:18px;">المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</p>
+        <p style="margin: 0px;font-size:18px;">الشؤون القانونية والإدارية</p>
+        <p style="margin: 0px;font-size:28px;">عدد الحوادث حسب السائق</p>
+        <h2 style="margin: 0px;font-size:28px;">{{ $monthName }}</h2>
+    </div>
+
+    <table style="font-size:10px;">
+        <thead>
+            <tr>
+                <td style="font-weight: bold">الرقم</td>
+                <td style="font-weight: bold">السائق</td>
+                <td style="font-weight: bold">عدد الحوادث</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{$i =1;}}
+            @foreach ($declarations as $declaration)
+                <tr>
+                    <td>{{ $i }}</td>
+                    <td>{{ $declaration->chauffeur->name }}</td>
+                    <td>{{ $declaration->count_declarations }}</td>
+                </tr>
+                {{$i++}}
+            @endforeach
+        </tbody>
+    </table>
+    
+</body>
+
+</html>

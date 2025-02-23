@@ -256,7 +256,7 @@ class judiciaireController extends Controller
         ->groupBy('id_chauffeur')
         ->orderByDesc('count_declarations')
         ->get();        
-        dd($declarations);
+        // dd($declarations);
         // $mpdf = new Mpdf([
         //     'format' => 'A4',
         // ]);
@@ -277,7 +277,7 @@ class judiciaireController extends Controller
             ],
             'default_font' => 'tajwal'
         ]);
-        $html = view('judiciaire.etat_accident', compact(['monthName', 'declarations']))->render();
+        $html = view('judiciaire.nbaccident_chauffeur', compact(['monthName', 'declarations']))->render();
         $imagePath = public_path('/LOGO ETUS.png');
         $mpdf->AddPage();
         $mpdf->Image($imagePath, 230, 12, 25, 25, 'png');
