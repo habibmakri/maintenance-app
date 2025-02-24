@@ -94,6 +94,9 @@
                                 @endif
                             </td>
                             <td style="text-align:left ;">
+                                @if ($declaration->photos == "[]")
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages2" onclick="handleimagesclick({{ $declaration }})">إضافة صور</button>
+                                @endif
                                 <button type="button"
                                     @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
                                     data-bs-toggle="modal" onclick="handlecaatclick({{ $declaration->id }})">CAAT</button>
@@ -108,6 +111,35 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="modal fade" id="ExtralargeModalimages2" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header" dir="ltr">
+                            <h5 class="modal-title" id="modal_title_images"> </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="col-md-12">
+                                    <label for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
+                                    <input name="photos[]" class="form-control" type="file" id="formFile" accept=".png, .jpg, .jpeg"
+                                        multiple>
+                                </div>
+                        
+                                <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_images_id">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">تأكيد</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
 
             <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
@@ -187,7 +219,7 @@
                             <td>{{ date('Y', strtotime($declaration->date_fiche)) }}/{{ $declaration->number }}</td>
                             <td>{{ $declaration->time_day }}</td>
                             <td>{{ $declaration->chauffeur->name }}</td>
-                            <td>{{ $declaration->bus->name }}</td>
+                            <td>{{ $declaration->bus->name }} </td>
                             <td>
                                 @if ($declaration->caat == true)
                                     مصرح
@@ -203,6 +235,9 @@
                                 @endif
                             </td>
                             <td style="text-align:left ;">
+                                @if ($declaration->photos == "[]")
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages2" onclick="handleimagesclick({{ $declaration->id }})">إضافة صور</button>
+                                @endif
                                 <button type="button"
                                     @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
                                     data-bs-toggle="modal"
@@ -344,7 +379,15 @@
                 }
             }
         }
-
+        function handleimagesclick(declaration) {
+            const modal_title = document.getElementById('modal_title_images');
+            const declarationIdInput = document.getElementById('fichedeclaration_images_id');
+            modal_title.innerHTML = '';
+            modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
+                .time_day + ' signaler le ' +
+                declaration.date_fiche;
+            declarationIdInput.value = declaration.id;
+        }
         function handleresoudreclick(declaration, ligneval) {
             const modal_title = document.getElementById('modal_title');
             const declarationIdInput = document.getElementById('fichedeclaration_id');
@@ -390,7 +433,7 @@
                 ligne.innerHTML = "خارج الخدمة";
             }
             time.innerHTML = declaration.time_day.split(" ")[1];
-            day.innerHTML = declaration.time_day;
+            day.innerHTML = declaration.time_day.split(" ")[0];
             place.innerHTML = declaration.place;
             description.innerHTML = declaration.description;
             pertes.innerHTML = declaration.pertes;
@@ -572,6 +615,60 @@
                     })
                     .catch(error => console.error('Erreur:', error));
             }
+        }
+        document.getElementById("formFile").addEventListener("change", async function(event) {
+            const files = event.target.files;
+            const compressedImages = [];
+
+            for (const file of files) {
+                const compressedFile = await compressImage(file);
+                compressedImages.push(compressedFile);
+            }
+
+            // Remplace les fichiers originaux par les versions compressées
+            const dataTransfer = new DataTransfer();
+            compressedImages.forEach(file => dataTransfer.items.add(file));
+            event.target.files = dataTransfer.files;
+        });
+
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+
+                    img.onload = function() {
+                        const canvas = document.createElement("canvas");
+                        const ctx = canvas.getContext("2d");
+
+                        const maxWidth = 800; // Largeur max
+                        const maxHeight = 600; // Hauteur max
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth || height > maxHeight) {
+                            const scale = Math.min(maxWidth / width, maxHeight / height);
+                            width *= scale;
+                            height *= scale;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            const compressedFile = new File([blob], file.name, {
+                                type: "image/jpeg",
+                                lastModified: Date.now()
+                            });
+                            resolve(compressedFile);
+                        }, "image/jpeg", 0.7); // Qualité 70%
+                    };
+                };
+            });
         }
     </script>
 @endsection

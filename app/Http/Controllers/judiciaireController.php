@@ -62,46 +62,6 @@ class judiciaireController extends Controller
                     $imagePaths[] = 'storage/' . $path;
                 }
             }
-            // if ($request->hasFile('photos')) {
-            //     foreach ($request->file('photos') as $photo) {
-            //         $imageName = time() . '_' . $request->day . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-            //         $destinationPath = storage_path('app/public/judiciaire_img/' . $imageName);
-
-
-            //         $imageType = $photo->getClientOriginalExtension();
-
-
-            //         if ($imageType == 'jpeg' || $imageType == 'jpg') {
-            //             $image = imagecreatefromjpeg($photo->getRealPath());
-            //         } elseif ($imageType == 'png') {
-            //             $image = imagecreatefrompng($photo->getRealPath());
-            //         } else {
-            //             continue; 
-            //         }
-
-
-            //         list($width, $height) = getimagesize($photo);
-            //         $newWidth = 1024;
-            //         $newHeight = ($height / $width) * 1024;
-            //         $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-            //         imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-
-            //         if ($imageType == 'jpeg' || $imageType == 'jpg') {
-            //             imagejpeg($resizedImage, $destinationPath, 60); 
-            //         } elseif ($imageType == 'png') {
-            //             imagepng($resizedImage, $destinationPath, 6); 
-            //         }
-
-
-            //         imagedestroy($image);
-            //         imagedestroy($resizedImage);
-
-            //         $imagePaths[] = 'storage/judiciaire_img/' . $imageName;
-            //     }
-            // }
-
-
 
             declaration_judiciaire::create([
                 'date_fiche' => $request->date,
@@ -122,6 +82,32 @@ class judiciaireController extends Controller
             ]);
 
             return redirect()->back()->with('success', 'Déclaration enregistrée avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()]);
+        }
+    }
+    public function do_judiciaire_photos(Request $request)
+    {
+        $validatedData = $request->validate([
+            'fichedeclaration_id' => 'required',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif',//|max:4096',
+        ]);
+
+        try {
+            $fiche = declaration_judiciaire::findOrFail($request->fichedeclaration_id);
+            $imagePaths = [];
+
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $imageName = time() . '_' . explode(" ", $fiche->time_day)[0] . '_' . $fiche->bus->name . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                    $path = $photo->storeAs('judiciaire_img', $imageName, 'public');
+                    $imagePaths[] = 'storage/' . $path;
+                }
+            }
+            $fiche->photos = json_encode($imagePaths);
+            $fiche->update();
+
+            return redirect()->back()->with('success', 'Photos enregistrée avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()]);
         }

@@ -112,6 +112,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     Route::prefix('/')->controller(judiciaireController::class)->name('judiciaire.')->group(function () {
         Route::get('judiciaire_in','judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
         Route::post('judiciaire_in','do_judiciaire_in')->middleware('rolesMiddleware:judiciaire_in');
+        Route::post('judiciaire_photos','do_judiciaire_photos')->name('ajoute_photos')->middleware('rolesMiddleware:judiciaire_in');
         Route::get('judiciaire_suivre','judiciaire_suivre')->name('suivre')->middleware('rolesMiddleware:judiciaire_in');
         Route::post('judiciaire/handle_caat:{id},{date}', 'handle_caat');
         Route::post('judiciaire/handle_paye:{id},{date},{montant}', 'handle_paye');
