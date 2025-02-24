@@ -236,7 +236,7 @@
                             </td>
                             <td style="text-align:left ;">
                                 @if ($declaration->photos == "[]")
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages2" onclick="handleimagesclick2({{ $declaration->id }})">إضافة صور</button>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages2" onclick="handleimagesclick2({{ $declaration }})">إضافة صور</button>
                                 @endif
                                 <button type="button"
                                     @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
@@ -263,7 +263,7 @@
                         </div>
                         <div class="modal-body">
                             
-                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post" enctype="multipart/form-data">
+                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post" enctype="multipart/form-data" dir="rtl">
                                 @csrf
                                 <div class="col-md-12">
                                     <label for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
