@@ -431,9 +431,9 @@ class maintenanceController extends Controller
             'grantraveaux' => 'required',
             // 'description' => 'required',
         ]);
-        if($request->grantraveaux == 'oui'){
+        if ($request->grantraveaux == 'oui') {
             $grantraveaux = true;
-        }else{
+        } else {
             $grantraveaux = false;
         }
         // dd($request->grantraveaux,$grantraveaux);
@@ -1179,6 +1179,45 @@ class maintenanceController extends Controller
 
         // dd($data);
         $html = view('maintenance.pannecour_pdf', compact('data'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            // 'tempDir' => sys_get_temp_dir(),
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: right; font-size: 12px;'>
+            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+        </div>
+        ";
+        $nomfichier = 'Panne non résolue.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function generate_etat_vidange_pdf(Request $request)
+    {
+        $request->validate([
+            'type' => 'required',
+        ]);
+
+
+        $typevidange = $request->type;
+
+        $buses = Bus::all();
+
+
+        // dd($data);
+        $html = view('maintenance.etatvidange', compact(['typevidange','buses']))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',

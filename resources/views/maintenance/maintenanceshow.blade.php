@@ -409,6 +409,26 @@
                 </form>
             </div>
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner le type pour l'extraction de l'état de vidange:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_vidange_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-10">
+                        <div class="form-floating">
+                            <select class="form-select" required name="type" id="type"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner la type</option>
+                                <option value="moteur" >Vidange Moteur</option>
+                                <option value="boite" >Vidange Boite</option>
+                                <option value="pond" >Vidange Pond</option>
+                            </select>
+                            <label for="type">Type  Vidange</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le mois et la piece pour l'extraction de l'état:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
