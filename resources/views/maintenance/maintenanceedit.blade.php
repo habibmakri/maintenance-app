@@ -134,7 +134,7 @@
         </div>
         <div class="col-md-4">
             <div class="form-floating">
-                <input type="number" required class="form-control" name="gasoile" id="gasoile"
+                <input type="number" required class="form-control" step="any" name="gasoile" id="gasoile"
                     value ="{{ $record->gasoile }}">
                 <label for="gasoile">Consomation Gasoile(L)</label>
             </div>
