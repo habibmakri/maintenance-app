@@ -573,7 +573,8 @@ class maintenanceController extends Controller
         $typejauges = Panne::where('type', '=', 'jauge')
             ->whereNotIn('name', ['Jauge huile moteur', 'GLACIOL'])
             ->get();
-        return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges']));
+        $stations = Station::all();
+        return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges','stations']));
     }
     public function check_jauge_date(Request $request)
     {
@@ -600,10 +601,11 @@ class maintenanceController extends Controller
                 }),
             ],
             'equipe' => ['required', 'array'],
+            'lieu' => ['required'],
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 157,
@@ -636,7 +638,7 @@ class maintenanceController extends Controller
                     'pannnename_id' => 157,
                     'solved' => true,
                     'date_resoudre' => $request->date,
-                    'lieu_resoudre' => 'Depot',
+                    'lieu_resoudre' => $request->lieu,
                     'brigade' => $request->brigade,
                     'equipe' => $request->equipe ? json_encode($request->equipe) : null,
                     'description' => '',
@@ -664,10 +666,11 @@ class maintenanceController extends Controller
                 }),
             ],
             'equipe' => ['required', 'array'],
+            'lieu' => ['required'],
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 161,
@@ -700,7 +703,7 @@ class maintenanceController extends Controller
                     'pannnename_id' => 161,
                     'solved' => true,
                     'date_resoudre' => $request->date,
-                    'lieu_resoudre' => 'Depot',
+                    'lieu_resoudre' => $request->lieu,
                     'brigade' => $request->brigade,
                     'equipe' => $request->equipe ? json_encode($request->equipe) : null,
                     'description' => '',
@@ -728,10 +731,11 @@ class maintenanceController extends Controller
                 }),
             ],
             'equipe' => ['required', 'array'],
+            'lieu' => ['required'],
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 158,
@@ -764,7 +768,7 @@ class maintenanceController extends Controller
                     'pannnename_id' => 158,
                     'solved' => true,
                     'date_resoudre' => $request->date,
-                    'lieu_resoudre' => 'Depot',
+                    'lieu_resoudre' => $request->lieu,
                     'brigade' => $request->brigade,
                     'equipe' => $request->equipe ? json_encode($request->equipe) : null,
                     'description' => '',
@@ -792,10 +796,11 @@ class maintenanceController extends Controller
                 }),
             ],
             'equipe' => ['required', 'array'],
+            'lieu' => ['required'],
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 159,
@@ -828,7 +833,7 @@ class maintenanceController extends Controller
                     'pannnename_id' => 159,
                     'solved' => true,
                     'date_resoudre' => $request->date,
-                    'lieu_resoudre' => 'Depot',
+                    'lieu_resoudre' => $request->lieu,
                     'brigade' => $request->brigade,
                     'equipe' => $request->equipe ? json_encode($request->equipe) : null,
                     'description' => '',
@@ -846,8 +851,8 @@ class maintenanceController extends Controller
         }
         return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
     }
-    
-    
+
+
     public function ajouter_jauge(Request $request)
     {
         $request->validate([
@@ -1351,7 +1356,7 @@ class maintenanceController extends Controller
 
 
         // dd($data);
-        $html = view('maintenance.etatvidange', compact(['typevidange','buses']))->render();
+        $html = view('maintenance.etatvidange', compact(['typevidange', 'buses']))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',

@@ -91,7 +91,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" required name="lieu" id="lieu"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner Lieu</option>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->name }}" @if ($station->name == 'Depot') selected @endif>{{ $station->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="lieu">Lieu</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" required name="brigade" id="brigade"
                             aria-label="Floating label select example">
@@ -141,7 +153,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" required name="lieu" id="lieu"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner Lieu</option>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->name }}" @if ($station->name == 'Depot') selected @endif>{{ $station->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="lieu">Lieu</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" required name="brigade" id="brigade"
                             aria-label="Floating label select example">
@@ -191,7 +215,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" required name="lieu" id="lieu"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner Lieu</option>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->name }}" @if ($station->name == 'Station 17') selected @endif>{{ $station->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="lieu">Lieu</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" required name="brigade" id="brigade"
                             aria-label="Floating label select example">
@@ -241,7 +277,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" required name="lieu" id="lieu"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>selectionner Lieu</option>
+                            @foreach ($stations as $station)
+                                <option value="{{ $station->name }}" @if ($station->name == 'Station 17') selected @endif>{{ $station->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="lieu">Lieu</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" required name="brigade" id="brigade"
                             aria-label="Floating label select example">
