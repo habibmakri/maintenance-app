@@ -582,6 +582,10 @@ class maintenanceController extends Controller
             $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 157)->exists();
         } elseif ($request->type == 'glaciole') {
             $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 161)->exists();
+        } elseif ($request->type == 'direction') {
+            $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 158)->exists();
+        } elseif ($request->type == 'btv') {
+            $jauge = jaugesmodel::where('date', '=', $date)->where('type_id', '=', 159)->exists();
         }
         return response()->json(['exists' => $jauge]);
     }
@@ -714,6 +718,136 @@ class maintenanceController extends Controller
         }
         return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
     }
+    public function ajouter_jauge_direction(Request $request)
+    {
+        $request->validate([
+            'date' => [
+                'date',
+                Rule::unique('jaugesdates', 'date')->where(function ($query) {
+                    return $query->where('type_id', 158);
+                }),
+            ],
+            'equipe' => ['required', 'array'],
+            'brigade' => ['required'],
+        ]);
+
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        jaugesmodel::create([
+            'date' => $request->date,
+            'type_id' => 158,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+        ]);
+        $i = 0;
+        foreach ($inputs as $key => $value) {
+            if ($value > 0) {
+                echo ($key . "=>" . $value);
+                $ficheData = [
+                    'user_id' => Auth::user()->id,
+                    'date_fiche' => $request['date'],
+                    'declaré' => false,
+                    'id_bus' => $key,
+                    'id_ligne' => null,
+                    'brigade' => $request->brigade,
+                    'id_chauffeur' => null,
+                    'heur_depart' => "00:00",
+                    'heur_arrive' => "00:00",
+                    'gasoile' => "0",
+                    'kmdepart' => "0",
+                    'kmarrive' => "0",
+                    'kmhlp' => "0",
+                    'kmgobale' => "0",
+                    'kmcommerciale' => "0",
+                ];
+                $fiche = fichemaintenance::create($ficheData);
+                $fichepanne_data = [
+                    'fichemaintenance_id' => $fiche->id,
+                    'pannnename_id' => 158,
+                    'solved' => true,
+                    'date_resoudre' => $request->date,
+                    'lieu_resoudre' => 'Depot',
+                    'brigade' => $request->brigade,
+                    'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+                    'description' => '',
+                ];
+                $fichepanne = fichepanne_model::create($fichepanne_data);
+                used_pieces::create(
+                    [
+                        'fichepanne_id' => $fichepanne->id,
+                        'piece_id' => 6,
+                        'quantité' => $value,
+                    ]
+                );
+                $i++;
+            }
+        }
+        return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
+    }
+    public function ajouter_jauge_btv(Request $request)
+    {
+        $request->validate([
+            'date' => [
+                'date',
+                Rule::unique('jaugesdates', 'date')->where(function ($query) {
+                    return $query->where('type_id', 159);
+                }),
+            ],
+            'equipe' => ['required', 'array'],
+            'brigade' => ['required'],
+        ]);
+
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade');
+        jaugesmodel::create([
+            'date' => $request->date,
+            'type_id' => 159,
+            'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+        ]);
+        $i = 0;
+        foreach ($inputs as $key => $value) {
+            if ($value > 0) {
+                echo ($key . "=>" . $value);
+                $ficheData = [
+                    'user_id' => Auth::user()->id,
+                    'date_fiche' => $request['date'],
+                    'declaré' => false,
+                    'id_bus' => $key,
+                    'id_ligne' => null,
+                    'brigade' => $request->brigade,
+                    'id_chauffeur' => null,
+                    'heur_depart' => "00:00",
+                    'heur_arrive' => "00:00",
+                    'gasoile' => "0",
+                    'kmdepart' => "0",
+                    'kmarrive' => "0",
+                    'kmhlp' => "0",
+                    'kmgobale' => "0",
+                    'kmcommerciale' => "0",
+                ];
+                $fiche = fichemaintenance::create($ficheData);
+                $fichepanne_data = [
+                    'fichemaintenance_id' => $fiche->id,
+                    'pannnename_id' => 159,
+                    'solved' => true,
+                    'date_resoudre' => $request->date,
+                    'lieu_resoudre' => 'Depot',
+                    'brigade' => $request->brigade,
+                    'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+                    'description' => '',
+                ];
+                $fichepanne = fichepanne_model::create($fichepanne_data);
+                used_pieces::create(
+                    [
+                        'fichepanne_id' => $fichepanne->id,
+                        'piece_id' => 8,
+                        'quantité' => $value,
+                    ]
+                );
+                $i++;
+            }
+        }
+        return redirect()->back()->with('success', $i . ' Jauges ajouter avec succès.');
+    }
+    
+    
     public function ajouter_jauge(Request $request)
     {
         $request->validate([
