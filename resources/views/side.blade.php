@@ -203,7 +203,7 @@
       </li>
       @endif
       {{-- Judiciaire tabs --}}
-      @if(in_array('judiciaire_in', $permissions))
+      @if(in_array('judiciaire_in', $permissions)||in_array('judiciaire_commission', $permissions)||in_array('judiciaire_out', $permissions))
       <li class="nav-item ">
         <a class="nav-link collapsed" data-bs-target="#judiciaire-nav" data-bs-toggle="collapse" href="#">
           <i class=" ri-auction-fill"></i><span>Judiciaire</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -220,6 +220,13 @@
             <li>
               <a href="{{ route('app.judiciaire.suivre') }}">
                 <i class="bi bi-circle"></i><span>Suivre</span>
+              </a>
+            </li>
+          @endif
+          @if(in_array('judiciaire_commission', $permissions))
+            <li>
+              <a href="{{ route('app.judiciaire.commission') }}">
+                <i class="bi bi-circle"></i><span>commission</span>
               </a>
             </li>
           @endif

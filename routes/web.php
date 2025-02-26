@@ -56,6 +56,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/deletetraveauxlibre:{id}', 'deletetraveauxlibre');
         Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
+        Route::post('maintenance/grandtraveaux_pdf', 'generate_grandtraveaux_pdf')->name('grandtraveaux_pdf');
         Route::post('maintenance/etat_piece_pdf', 'generate_etat_piece_pdf')->name('etat_piece_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');
         Route::post('maintenance/etat_vidange_pdf', 'generate_etat_vidange_pdf')->name('etat_vidange_pdf');
@@ -121,6 +122,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('judiciaire_extraire','judiciaire_extraire')->name('extraire')->middleware('rolesMiddleware:judiciaire_out');
         Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
         Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
+        Route::get('judiciaire_commission','judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
         Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');

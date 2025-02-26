@@ -151,7 +151,13 @@ class judiciaireController extends Controller
             ->get();
         return view("judiciaire.extraire", compact(['declarations']));
     }
-
+    public function judiciaire_commission()
+    {
+        $buses = Bus::all();
+        $chauffeurs = chauffeurs::all();
+        $lines = Ligne::all();
+        return view("judiciaire.declare", compact(['buses', 'chauffeurs', 'lines']));
+    }
     public function etat_accident(Request $request)
     {
         $request->validate([

@@ -574,7 +574,7 @@ class maintenanceController extends Controller
             ->whereNotIn('name', ['Jauge huile moteur', 'GLACIOL'])
             ->get();
         $stations = Station::all();
-        return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges','stations']));
+        return view('maintenance.jauge', compact(['jauges', 'buses', 'agents', 'pieces', 'typejauges', 'stations']));
     }
     public function check_jauge_date(Request $request)
     {
@@ -605,7 +605,7 @@ class maintenanceController extends Controller
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade', 'lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 157,
@@ -670,7 +670,7 @@ class maintenanceController extends Controller
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade', 'lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 161,
@@ -735,7 +735,7 @@ class maintenanceController extends Controller
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade', 'lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 158,
@@ -800,7 +800,7 @@ class maintenanceController extends Controller
             'brigade' => ['required'],
         ]);
 
-        $inputs = $request->except('_token', 'date', 'equipe', 'brigade','lieu');
+        $inputs = $request->except('_token', 'date', 'equipe', 'brigade', 'lieu');
         jaugesmodel::create([
             'date' => $request->date,
             'type_id' => 159,
@@ -1266,6 +1266,110 @@ class maintenanceController extends Controller
 
         // dd($groupedpannes);
         $html = view('maintenance.etatsuivijournaliere_pdf', compact('groupedtotal', 'monthName'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            // 'tempDir' => sys_get_temp_dir(),
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: right; font-size: 12px;'>
+            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+        </div>
+        ";
+        $nomfichier = 'Fiche suivi Journalière- ' . $monthName  . '.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        ini_set('pcre.backtrack_limit', 10000000);
+        ini_set('pcre.recursion_limit', 10000000);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function generate_grandtraveaux_pdf(Request $request)
+    {
+        $request->validate([
+            'datedu' => 'required|date',
+            'dateau' => 'required|date|after_or_equal:datedupdf',
+        ]);
+
+        $firstDay = $request->datedu;
+        $lastDay = $request->dateau;
+
+        $monthName = 'Du ' . $firstDay . ' Au ' . $lastDay;
+
+
+
+        $buses = Bus::with([
+            // 'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+            //     $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            // },
+            'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+                $query->where('grantraveaux', true);
+            }
+        ])->get();
+
+        $pannes = [];
+        $traveaux = [];
+        $total = [];
+
+        foreach ($buses as $bus) {
+            // $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+            // if ($fiches->isNotEmpty()) {
+            //     $pannes[] = $fiches;
+            // }
+
+            $trav = $bus->traveauxlibre->sortBy('date_resoudre');
+            if ($trav->isNotEmpty()) {
+                $traveaux[] = $trav;
+            }
+
+            // $total = array_merge($total, $fiches->map(function ($panne) use ($bus) {
+            //     return [
+            //         'name' => $panne->pannename->name,
+            //         'bus' => $bus->name,
+            //         'date' => $panne->date_resoudre,
+            //         'description' => $panne->description,
+            //         'used_pieces' => $panne->used_pieces,
+            //         'type' => $panne->pannename->type,
+            //         'equipe' => $panne->equipe,
+            //         'brigade' => $panne->brigade,
+            //         'lieu' => $panne->lieu_resoudre,
+            //         'item' => 'Panne',
+            //     ];
+            // })->toArray());
+
+            $total = array_merge($total, $trav->map(function ($panne) use ($bus) {
+                return [
+                    'name' => $panne->name,
+                    'bus' => $bus->name,
+                    'date' => $panne->date_resoudre,
+                    'description' => $panne->description,
+                    'used_pieces' => $panne->used_pieces,
+                    'type' => $panne->nature,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'lieu' => $panne->lieu_resoudre,
+                    'item' => 'T E',
+                ];
+            })->toArray());
+        }
+
+        $total = collect($total)->sortBy('date');
+        $groupedtotal = $total->groupBy(fn($panne) => \Carbon\Carbon::parse($panne['date'])->toDateString());
+
+        // dd($pannes, $traveaux, $total);
+
+        // dd($groupedpannes);
+        $html = view('maintenance.grandtraveaux_pdf', compact('groupedtotal', 'monthName'))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',
