@@ -222,13 +222,13 @@
                 <h5 class="mt-5">Selectionner la date pour les grand traveaux :</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.grandtraveaux_pdf') }}" method="post">
                     @csrf
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="form-floating">
                             <input name="datedu" type="date" required class="form-control">
                             <label for="datedu">Du</label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="form-floating">
                             <input name="dateau" type="date" required class="form-control">
                             <label for="dateau">Au</label>
