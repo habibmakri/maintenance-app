@@ -1,6 +1,6 @@
 @extends('base')
 
-@section('title', 'Pannes')
+@section('title', 'Extraire')
 
 @section('content')
     <style>

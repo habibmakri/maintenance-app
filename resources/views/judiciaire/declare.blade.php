@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', 'Gestion des comptes')
+@section('title', 'Déclaration Judiciare')
 @section('content')
     <style>
         label {

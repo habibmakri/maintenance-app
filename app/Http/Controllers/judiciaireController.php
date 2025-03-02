@@ -12,6 +12,7 @@ use App\Http\Requests\edit_ligne_request;
 use App\Http\Requests\edit_user_request;
 use App\Models\Bus;
 use App\Models\chauffeurs;
+use App\Models\commission_judiciaire;
 use App\Models\declaration_judiciaire;
 use App\Models\Ligne;
 use App\Models\Panne;
@@ -48,7 +49,7 @@ class judiciaireController extends Controller
             'adverse' => 'required|string',
             'description' => 'nullable|string',
             'pertes' => 'nullable|string',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif',//|max:4096',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif', //|max:4096',
         ]);
 
         try {
@@ -90,7 +91,7 @@ class judiciaireController extends Controller
     {
         $validatedData = $request->validate([
             'fichedeclaration_id' => 'required',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif',//|max:4096',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif', //|max:4096',
         ]);
 
         try {
@@ -153,10 +154,12 @@ class judiciaireController extends Controller
     }
     public function judiciaire_commission()
     {
-        $buses = Bus::all();
-        $chauffeurs = chauffeurs::all();
-        $lines = Ligne::all();
-        return view("judiciaire.declare", compact(['buses', 'chauffeurs', 'lines']));
+        $declarations = declaration_judiciaire::where('commission_id', null)->get();
+        $startOfYear = Carbon::now()->startOfYear();   
+        $endOfYear = Carbon::now()->endOfYear();   
+        $commissionsthisyear = commission_judiciaire::whereBetween('date', [$startOfYear, $endOfYear])->get();
+        $commissions = commission_judiciaire::all();
+        return view("judiciaire.commission", compact(['declarations', 'commissions','commissionsthisyear']));
     }
     public function etat_accident(Request $request)
     {
@@ -244,10 +247,10 @@ class judiciaireController extends Controller
         $monthName = 'سنة ' . $year;
 
         $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])
-        ->select('id_chauffeur', DB::raw('COUNT(*) as count_declarations'))
-        ->groupBy('id_chauffeur')
-        ->orderByDesc('count_declarations')
-        ->get();        
+            ->select('id_chauffeur', DB::raw('COUNT(*) as count_declarations'))
+            ->groupBy('id_chauffeur')
+            ->orderByDesc('count_declarations')
+            ->get();
         // dd($declarations);
         // $mpdf = new Mpdf([
         //     'format' => 'A4',
