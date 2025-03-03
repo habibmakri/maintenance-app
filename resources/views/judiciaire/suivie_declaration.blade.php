@@ -681,6 +681,7 @@
         });
 
         function compressImage(file) {
+            console.log("image compressed")
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
