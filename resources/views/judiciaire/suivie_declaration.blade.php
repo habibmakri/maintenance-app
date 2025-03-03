@@ -267,7 +267,7 @@
                                 @csrf
                                 <div class="col-md-12">
                                     <label for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
-                                    <input name="photos[]" class="form-control" type="file" id="formFile" accept=".png, .jpg, .jpeg"
+                                    <input name="photos[]" class="form-control" type="file" id="formFile2" accept=".png, .jpg, .jpeg"
                                         multiple>
                                 </div>
                         
@@ -662,7 +662,19 @@
                 compressedImages.push(compressedFile);
             }
 
-            // Remplace les fichiers originaux par les versions compressées
+            const dataTransfer = new DataTransfer();
+            compressedImages.forEach(file => dataTransfer.items.add(file));
+            event.target.files = dataTransfer.files;
+        });
+        document.getElementById("formFile2").addEventListener("change", async function(event) {
+            const files = event.target.files;
+            const compressedImages = [];
+
+            for (const file of files) {
+                const compressedFile = await compressImage(file);
+                compressedImages.push(compressedFile);
+            }
+
             const dataTransfer = new DataTransfer();
             compressedImages.forEach(file => dataTransfer.items.add(file));
             event.target.files = dataTransfer.files;
