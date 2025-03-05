@@ -55,7 +55,7 @@
         <p style="margin: 0px; font-size:18px;">الجمهورية الجزائرية الديمقراطية الشعبية</p>
         <p style="margin: 0px;font-size:18px;">وزارة النقل</p>
         <p style="margin: 0px;font-size:18px;">المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</p>
-        <p style="margin: 0px;font-size:18px;">الشؤون القانونية والإدارية</p>
+        <p style="margin: 0px;font-size:18px;">مكتب الشؤون القانونية والمنازعات</p>
         <p style="margin: 0px;font-size:28px;">حالة الحوادث</p>
         <h2 style="margin: 0px;font-size:28px;">{{ $monthName }}</h2>
     </div>

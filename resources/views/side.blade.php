@@ -206,7 +206,7 @@
       @if(in_array('judiciaire_in', $permissions)||in_array('judiciaire_commission', $permissions)||in_array('judiciaire_out', $permissions))
       <li class="nav-item ">
         <a class="nav-link collapsed" data-bs-target="#judiciaire-nav" data-bs-toggle="collapse" href="#">
-          <i class=" ri-auction-fill"></i><span>Judiciaire</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class=" ri-auction-fill"></i><span>Accidents</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="judiciaire-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           @if(in_array('judiciaire_in', $permissions))

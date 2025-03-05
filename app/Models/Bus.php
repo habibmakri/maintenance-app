@@ -15,7 +15,7 @@ class Bus extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
 
-    protected $fillable = ['name', 'type','kmactuelle','kmderniervidange','derniervidange' ,'derniervidangeboite','derniervidangepond','ligne_id'];
+    protected $fillable = ['name', 'type','kmactuelle','kmderniervidange','derniervidange' ,'derniervidangeboite','derniervidangepond','ligne_id','vidange_moteur_date','vidange_boite_date','vidange_pond_date'];
 
     public function ligne()
     {

@@ -58,7 +58,8 @@
             {{-- <th>#</th> --}}
             <th>Bus</th>
             <th>Kilométrage</th>
-            <th>Dernier vidange {{ $typevidange }}</th>
+            <th>Date Dernier vidange {{ $typevidange }}</th>
+            <th>Kilométrage Dernier vidange {{ $typevidange }}</th>
             <th>Diffirance</th>
         </tr>
         <tbody>
@@ -68,6 +69,15 @@
                         {{-- <td>{{ $index + 1 }}</td> --}}
                         <td>{{ $bus->name }}</td>
                         <td>{{ $bus->kmactuelle }}</td>
+                        <td>
+                            @if ($typevidange == 'moteur')
+                                {{ $bus->vidange_moteur_date ?? 0 }}
+                            @elseif($typevidange == 'boite')
+                                {{ $bus->vidange_boite_date ?? 0 }}
+                            @elseif($typevidange == 'pond')
+                                {{ $bus->vidange_pond_date ?? 0 }}
+                            @endif
+                        </td>
                         <td>
                             @if ($typevidange == 'moteur')
                                 {{ $bus->derniervidange ?? 0 }}
