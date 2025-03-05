@@ -68,7 +68,7 @@
         <table style="font-size:10px;">
             <thead>
                 <tr>
-                    <td style="font-weight: bold;width:10%">Date d2claration</td>
+                    <td style="font-weight: bold;width:10%">Date Déclaration</td>
                     <td style="font-weight: bold;width:10%">Date Résolution</td>
                     <td style="font-weight: bold;width:10%">chauffeur</td>
                     <td style="font-weight: bold;width:5%">Bus</td>
