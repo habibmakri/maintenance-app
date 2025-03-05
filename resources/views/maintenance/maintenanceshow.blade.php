@@ -448,6 +448,47 @@
                 </form>
             </div>
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner le mois pour l'extraction de l'état des date des panne déclarer:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.suividatepanne_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le mois et la piece pour l'extraction de l'état:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf

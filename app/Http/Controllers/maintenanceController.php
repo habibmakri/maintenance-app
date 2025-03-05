@@ -1293,6 +1293,107 @@ class maintenanceController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
     }
+    public function generate_suividatepanne_pdf(Request $request)
+    {
+        $request->validate([]);
+
+        if ($request->month && $year = $request->year) {
+            $month = $request->month;
+            $year = $request->year;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            $months_fr_array = [
+                1 => 'Janvier',
+                2 => 'Février',
+                3 => 'Mars',
+                4 => 'Avril',
+                5 => 'Mai',
+                6 => 'Juin',
+                7 => 'Juillet',
+                8 => 'Août',
+                9 => 'Septembre',
+                10 => 'Octobre',
+                11 => 'Novembre',
+                12 => 'Décembre'
+            ];
+            $monthName = $months_fr_array[$month] . $year;
+        } else {
+            $firstDay = $request->datedu;
+            $lastDay = $request->dateau;
+            $monthName = 'Du ' . $firstDay . ' Au ' . $lastDay;
+        }
+
+
+
+        $buses = Bus::with([
+            'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            }
+        ])->get();
+
+        $pannes = [];
+        $total = [];
+
+        foreach ($buses as $bus) {
+            $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+            if ($fiches->isNotEmpty()) {
+                $pannes[] = $fiches;
+            }
+
+            $total = array_merge($total, $fiches->map(function ($panne) use ($bus) {
+                if($panne->fichemaintenance->declaré == false){
+                    return null;
+                }
+                return [
+                    'name' => $panne->pannename->name,
+                    'bus' => $bus->name,
+                    'datedeclaration' => $panne->fichemaintenance->date_fiche,
+                    'date' => $panne->date_resoudre,
+                    'chauffeur' => $panne->fichemaintenance->chauffeur->fr_name,
+                    'type' => $panne->pannename->type,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'description' => $panne->description,
+                    'lieu' => $panne->lieu_resoudre,
+                    'used_pieces' => $panne->used_pieces,
+                    'item' => 'Panne',
+                ];
+            })->filter()->toArray());
+        }
+        $total = collect($total)->sortBy('date');
+        $groupedtotal = $total->groupBy(fn($panne) => \Carbon\Carbon::parse($panne['date'])->toDateString());
+
+        // dd($pannes, $traveaux, $total);
+
+        // dd($groupedpannes);
+        $html = view('maintenance.suividatepanne_pdf', compact('groupedtotal', 'monthName'))->render();
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            // 'tempDir' => sys_get_temp_dir(),
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: right; font-size: 12px;'>
+            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+        </div>
+        ";
+        $nomfichier = 'Fiche suivi Journalière- ' . $monthName  . '.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        ini_set('pcre.backtrack_limit', 10000000);
+        ini_set('pcre.recursion_limit', 10000000);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
     public function generate_grandtraveaux_pdf(Request $request)
     {
         $request->validate([
