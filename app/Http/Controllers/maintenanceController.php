@@ -409,12 +409,12 @@ class maintenanceController extends Controller
 
     public function traveaux_libre()
     {
-        $traveaux = traveauxlibre_model::all();
-        // dd($vidanges[0]);
-        $buses = Bus::all();
-        $agents = maintenance_agent::all();
-        $stations = Station::all();
-        $pieces = pieces_maintanance::all();
+        $traveaux = traveauxlibre_model::query()->whereBetween('date_resoudre', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->endOfMonth()])->get();
+        $agents = maintenance_agent::select('id', 'firstname','lastname')->get();
+        $stations = Station::select('id', 'name')->get();
+        $pieces = pieces_maintanance::select('id', 'name')->get();
+        $buses = Bus::select('id', 'name')->get();
+        $pannenames = Panne::select('id', 'name')->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.traveauxlibre', compact(['traveaux', 'stations', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
