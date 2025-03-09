@@ -140,22 +140,33 @@
                                 <h5 style="font-family: 'Tajwal'">الحوادث: <span style="font-weight: bold;"
                                         id="day"></span></h5>
                                 @foreach ($declarations as $declaration)
-                                    <input type="hidden" name="declaration_ids[]" value="{{ $declaration->id }}">
-                                    <div class="d-flex pb-2"
-                                        style="justify-content: space-around;align-items: center;border-bottom:solid black 1px">
-                                        <p>{{ $declaration->chauffeur->name }}</p>
-                                        <p>{{ $declaration->time_day }}</p>
-                                        <p>{{ $declaration->bus->name }}</p>
+                                    <div class="d-flex pb-2 align-items-center"
+                                        style="justify-content: space-around; border-bottom: solid black 1px">
+                                        <p class="mb-0">{{ $declaration->chauffeur->name }}</p>
+                                        <p class="mb-0">{{ $declaration->time_day }}</p>
+                                        <p class="mb-0">{{ $declaration->bus->name }}</p>
+
+                                        <div>
+                                            <label for="check_{{ $declaration->id }}">تفعيل </label>
+                                            <input type="checkbox" class="form-check-input toggle-fields"
+                                            data-id="{{ $declaration->id }}" id="check_{{ $declaration->id }}">
+                                        </div>
+                                        <input type="hidden" name="declaration_ids[]"
+                                            id="declaration_{{ $declaration->id }}" value="{{ $declaration->id }}"
+                                            disabled>
                                         <div class="form-floating">
-                                            <select class="form-select" name="responsability[]" required>
+                                            <select class="form-select responsability" name="responsability[]"
+                                                id="responsability_{{ $declaration->id }}" disabled>
                                                 <option value="" disabled selected>المسؤولية</option>
                                                 <option value="true"> من السائق </option>
                                                 <option value="false"> ليس من السائق </option>
                                             </select>
-                                            <label for="responsability">المسؤولية</label>
+                                            <label for="responsability_{{ $declaration->id }}">المسؤولية</label>
                                         </div>
+
                                         <div class="form-floating">
-                                            <select class="form-select" name="decision[]" required>
+                                            <select class="form-select decision" name="decision[]"
+                                                id="decision_{{ $declaration->id }}" disabled>
                                                 <option value="" disabled selected>إختر العقوبة</option>
                                                 <option value="للحفظ"> للحفظ</option>
                                                 <option value="إنذار كتابي"> إنذار كتابي</option>
@@ -166,10 +177,11 @@
                                                 <option value="إيقاف عن العمل مدة ثلاثة أيام"> إيقاف عن العمل مدة ثلاثة
                                                     أيام</option>
                                             </select>
-                                            <label for="decision">العقوبة</label>
+                                            <label for="decision_{{ $declaration->id }}">العقوبة</label>
                                         </div>
                                     </div>
                                 @endforeach
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
                                     <button type="submit" class="btn btn-primary">تأكيد</button>
@@ -319,6 +331,33 @@
             toolsSection.appendChild(toolDiv);
             deleteDiv.querySelector('.remove-member').addEventListener('click', function() {
                 toolDiv.remove();
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".toggle-fields").forEach(checkbox => {
+                checkbox.addEventListener("change", function() {
+                    let id = this.dataset.id;
+                    let hiddenInput = document.getElementById("declaration_" + id);
+                    let responsability = document.getElementById("responsability_" + id);
+                    let decision = document.getElementById("decision_" + id);
+
+                    if (this.checked) {
+                        hiddenInput.disabled = false;
+                        responsability.disabled = false;
+                        responsability.required = true;
+                        decision.disabled = false;
+                        decision.required = true;
+                    } else {
+                        hiddenInput.disabled = true;
+                        responsability.disabled = true;
+                        responsability.required = false;
+                        responsability.value = ""; 
+                        decision.disabled = true;
+                        decision.required = false;
+                        decision.value = ""; 
+                    }
+                });
             });
         });
     </script>
