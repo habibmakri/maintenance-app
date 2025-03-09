@@ -155,11 +155,51 @@ class judiciaireController extends Controller
     public function judiciaire_commission()
     {
         $declarations = declaration_judiciaire::where('commission_id', null)->get();
-        $startOfYear = Carbon::now()->startOfYear();   
-        $endOfYear = Carbon::now()->endOfYear();   
+        $startOfYear = Carbon::now()->startOfYear();
+        $endOfYear = Carbon::now()->endOfYear();
         $commissionsthisyear = commission_judiciaire::whereBetween('date', [$startOfYear, $endOfYear])->get();
         $commissions = commission_judiciaire::all();
-        return view("judiciaire.commission", compact(['declarations', 'commissions','commissionsthisyear']));
+        return view("judiciaire.commission", compact(['declarations', 'commissions', 'commissionsthisyear']));
+    }
+    public function add_judiciaire_commission(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'date'],
+            'time' => ['required'],
+            'number' => ['required'],
+        ]);
+        $members_roles = $request->input('members', []);
+        $members_names = $request->input('member_quantities', []);
+        $mergedmembers = [];
+        foreach ($members_names as $index => $pieceId) {
+            if (isset($members_roles[$index])) {
+                $mergedmembers[$pieceId] = $members_roles[$index];
+            }
+        }
+        // dd($request, $mergedmembers);
+        $commission = commission_judiciaire::create(
+            [
+                "date" => $request->date,
+                "time" => $request->time,
+                "number" => $request->number,
+                "members" => !empty($mergedmembers) ? strval(json_encode($mergedmembers, JSON_UNESCAPED_UNICODE)) : null,
+            ]
+        );
+        $declaration_ids = $request->input('declaration_ids', []);
+        $responsabilities = $request->input('responsability', []);
+        $decisions = $request->input('decision', []);
+        foreach ($declaration_ids as $index => $pieceId) {
+            $declaration = declaration_judiciaire::find($pieceId);
+            if ($responsabilities[$index] == "true") {
+                $declaration->responsability = true;
+            } else {
+                $declaration->responsability = false;
+            }
+            $declaration->decision = $decisions[$index];
+            $declaration->commission_id = $commission->id;
+            $declaration->save();
+        }
+        return redirect()->back()->with('success', 'Commision créé avec succes.');
     }
     public function etat_accident(Request $request)
     {

@@ -126,6 +126,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
         Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
         Route::get('judiciaire_commission','judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
+        Route::post('judiciaire_commission','add_judiciaire_commission')->middleware('rolesMiddleware:judiciaire_commission');
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
         Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');

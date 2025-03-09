@@ -53,29 +53,6 @@
     </ul>
     <div class="tab-content pt-2" id="borderedTabContent" style = "font-family: 'Tajwal';">
         <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab" dir="rtl">
-
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @elseif (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>{{ session('error') }}</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
             <div class="text-start">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#ExtralargeModal2">إضافة لجنة
@@ -85,8 +62,7 @@
                 <thead dir="rtl">
                     <tr>
                         <th style="text-align: right;">الرقم</th>
-                        <th style="text-align: right;">التاريخ</th>
-                        <th style="text-align: right;">الوقت</th>
+                        <th style="text-align: right;">التاريخ الوقت</th>
                         <th style="text-align: right;">الأعضاء</th>
                         <th style="text-align: left;">عمليات</th>
                     </tr>
@@ -95,11 +71,20 @@
                     @foreach ($commissionsthisyear as $commission)
                         <tr
                             @if ($commission->caat) style="border-color: green;" @else style="border-color: red;" @endif>
-                            <td>{{ date('Y', strtotime($commission->date_fiche)) }}/{{ $commission->number }}</td>
-                            <td>{{ $commission->date }}</td>
-                            <td>{{ $commission->time }}</td>
-                            <td>{{ $commission->date }}</td>
-                            <td>{{ $commission->members }}</td>
+                            <td>{{ date('Y', strtotime($commission->date)) }}/{{ $commission->number }}</td>
+                            <td>{{ $commission->date . ' - ' . $commission->time }}</td>
+                            <td>
+                                @php
+                                    $members = json_decode($commission->members, true);
+                                @endphp
+                                @if ($members)
+                                    @foreach ($members as $name => $role)
+                                        <strong>{{ $name }}</strong>: {{ $role }}<br>
+                                    @endforeach
+                                @else
+                                    No members
+                                @endif
+                            </td>
                             <td style="text-align:left ;">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
@@ -115,16 +100,15 @@
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
                             <h5 class="modal-title" id="modal_title">Nouvelle Commission D'accident</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form class="row g-3" action="" method="post">
                                 @csrf
                                 <div class="col-md-4">
                                     <div class="form-floating">
-                                        <input name="date" id="dateInput" type="date" required
-                                            class="form-control" style="text-align: end;" value="{{ old('date') }}">
+                                        <input name="date" id="dateInput" type="date" required class="form-control"
+                                            style="text-align: end;" value="{{ old('date') }}">
                                         <label for="date">اليوم</label>
                                     </div>
                                 </div>
@@ -153,36 +137,39 @@
                                         إضافة عضو
                                     </button>
                                 </div>
-                                <h5 style="font-family: 'Tajwal'">الحوادث: <span
-                                        style="font-weight: bold;" id="day"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">الحوادث: <span style="font-weight: bold;"
+                                        id="day"></span></h5>
                                 @foreach ($declarations as $declaration)
-                                    <div class="d-flex pb-2" style="justify-content: space-around;align-items: center;border-bottom:solid black 1px">
+                                    <input type="hidden" name="declaration_ids[]" value="{{ $declaration->id }}">
+                                    <div class="d-flex pb-2"
+                                        style="justify-content: space-around;align-items: center;border-bottom:solid black 1px">
                                         <p>{{ $declaration->chauffeur->name }}</p>
                                         <p>{{ $declaration->time_day }}</p>
                                         <p>{{ $declaration->bus->name }}</p>
                                         <div class="form-floating">
                                             <select class="form-select" name="responsability[]" required>
                                                 <option value="" disabled selected>المسؤولية</option>
-                                                <option value="رئيس اللجنة"> من السائق </option>
-                                                <option value="رئيس اللجنة"> ليس من السائق </option>
+                                                <option value="true"> من السائق </option>
+                                                <option value="false"> ليس من السائق </option>
                                             </select>
                                             <label for="responsability">المسؤولية</label>
                                         </div>
                                         <div class="form-floating">
                                             <select class="form-select" name="decision[]" required>
                                                 <option value="" disabled selected>إختر العقوبة</option>
-                                                <option value="رئيس اللجنة"> للحفظ </option>
-                                                <option value="رئيس اللجنة"> إنذار كتابي </option>
-                                                <option value="رئيس اللجنة"> إنذار كتابي + اقتطاع منحة الحوادث </option>
-                                                <option value="رئيس اللجنة"> إيقاف عن العمل مدة يوم </option>
-                                                <option value="رئيس اللجنة"> إيقاف عن العمل مدة يومين </option>
-                                                <option value="رئيس اللجنة"> إيقاف عن العمل مدة ثلاثة أيام </option>
+                                                <option value="للحفظ"> للحفظ</option>
+                                                <option value="إنذار كتابي"> إنذار كتابي</option>
+                                                <option value="إنذار كتابي + اقتطاع منحة الحوادث"> إنذار كتابي + اقتطاع
+                                                    منحة الحوادث</option>
+                                                <option value="إيقاف عن العمل مدة يوم"> إيقاف عن العمل مدة يوم</option>
+                                                <option value="إيقاف عن العمل مدة يومين"> إيقاف عن العمل مدة يومين</option>
+                                                <option value="إيقاف عن العمل مدة ثلاثة أيام"> إيقاف عن العمل مدة ثلاثة
+                                                    أيام</option>
                                             </select>
                                             <label for="decision">العقوبة</label>
                                         </div>
                                     </div>
                                 @endforeach
-                                <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
                                     <button type="submit" class="btn btn-primary">تأكيد</button>
@@ -191,7 +178,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
@@ -256,8 +242,7 @@
                 <thead dir="rtl">
                     <tr>
                         <th style="text-align: right;">الرقم</th>
-                        <th style="text-align: right;">التاريخ</th>
-                        <th style="text-align: right;">الوقت</th>
+                        <th style="text-align: right;">التاريخ الوقت</th>
                         <th style="text-align: right;">الأعضاء</th>
                         <th style="text-align: left;">عمليات</th>
                     </tr>
@@ -266,11 +251,20 @@
                     @foreach ($commissions as $commission)
                         <tr
                             @if ($commission->caat) style="border-color: green;" @else style="border-color: red;" @endif>
-                            <td>{{ date('Y', strtotime($commission->date_fiche)) }}/{{ $commission->number }}</td>
-                            <td>{{ $commission->date }}</td>
-                            <td>{{ $commission->time }}</td>
-                            <td>{{ $commission->date }}</td>
-                            <td>{{ $commission->members }}</td>
+                            <td>{{ date('Y', strtotime($commission->date)) }}/{{ $commission->number }}</td>
+                            <td>{{ $commission->date . ' - ' . $commission->time }}</td>
+                            <td>
+                                @php
+                                    $members = json_decode($commission->members, true);
+                                @endphp
+                                @if ($members)
+                                    @foreach ($members as $name => $role)
+                                        <strong>{{ $name }}</strong>: {{ $role }}<br>
+                                    @endforeach
+                                @else
+                                    No members
+                                @endif
+                            </td>
                             <td style="text-align:left ;">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
@@ -310,7 +304,7 @@
             numberDiv.classList.add('col-md-5');
             numberDiv.innerHTML = `
             <div class="form-floating">
-                <input type="number" class="form-control" name="member_quantities[]" min="1" required>
+                <input type="text" class="form-control" name="member_quantities[]" required>
                 <label for="member_quantities">الإسم واللقب</label>
             </div>
         `;
