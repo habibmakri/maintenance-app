@@ -482,7 +482,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90','Filtre à air'])->get();
+        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
@@ -550,11 +550,11 @@ class maintenanceController extends Controller
         $bus = Bus::find($request->bus);
         $typevidange = Panne::find($request->nomvidange);
         if ($typevidange->name == 'Vidange moteur') {
-            $bus->update(['derniervidange' => $request->kilometrage,'vidange_moteur_date' => $request->date]);
+            $bus->update(['derniervidange' => $request->kilometrage, 'vidange_moteur_date' => $request->date]);
         } elseif ($typevidange->name == 'Vidange boite vitesse') {
-            $bus->update(['derniervidangeboite' => $request->kilometrage,'vidange_boite_date' => $request->date]);
+            $bus->update(['derniervidangeboite' => $request->kilometrage, 'vidange_boite_date' => $request->date]);
         } elseif ($typevidange->name == 'Vidange pond') {
-            $bus->update(['derniervidangepond' => $request->kilometrage,'vidange_pond_date' => $request->date]);
+            $bus->update(['derniervidangepond' => $request->kilometrage, 'vidange_pond_date' => $request->date]);
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');
     }
@@ -949,13 +949,17 @@ class maintenanceController extends Controller
     public function maintenance_panne()
     {
         $pannes = fichepanne_model::where('solved', 0)->get();
-        $pannesresolue = fichepanne_model::where('solved', 1)->whereBetween('date_resoudre',[Carbon::now()->subMonth()->startOfMonth(),Carbon::now()->endOfMonth()])->with(['fichemaintenance.chauffeur'])->get();
-        $agents = maintenance_agent::all();
-        $stations = Station::all();
-        $pieces = pieces_maintanance::all();
-        $buses = Bus::all();
-        $pannenames = Panne::all();
-        // dd($pannesresolue[3]->fichemaintenance->chauffeur);
+        $pannesresolue = fichepanne_model::where('solved', 1)->whereBetween('date_resoudre', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->endOfMonth()])->with(['fichemaintenance.chauffeur'])->get();
+        // $agents = maintenance_agent::all();
+        // $stations = Station::all();
+        // $pieces = pieces_maintanance::all();
+        // $buses = Bus::all();
+        // $pannenames = Panne::all();
+        $agents = maintenance_agent::select('id', 'firstname','lastname')->get();
+        $stations = Station::select('id', 'name')->get();
+        $pieces = pieces_maintanance::select('id', 'name')->get();
+        $buses = Bus::select('id', 'name')->get();
+        $pannenames = Panne::select('id', 'name')->get();
         return view('maintenance.maintenancepanne', compact(['pannes', 'pannesresolue', 'agents', 'stations', 'pieces', 'buses', 'pannenames']));
     }
     public function ajouter_ndpanne(Request $request)
@@ -1341,7 +1345,7 @@ class maintenanceController extends Controller
             }
 
             $total = array_merge($total, $fiches->map(function ($panne) use ($bus) {
-                if($panne->fichemaintenance->declaré == false){
+                if ($panne->fichemaintenance->declaré == false) {
                     return null;
                 }
                 return [
