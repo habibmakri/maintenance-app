@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', 'Vidanges')
+@section('title', 'Traveaux libre')
 @section('content')
 
     <div class="pagetitle">
