@@ -75,6 +75,7 @@
                     <td style="font-weight: bold;width:15%">Date</td>
                     <td style="font-weight: bold;width:15%">Piece</td>
                     <td style="font-weight: bold;width:15%">Quantite</td>
+                    <td style="font-weight: bold;width:15%">Traveaux</td>
                     <td style="font-weight: bold;width:45%">Equipe</td>
                 </tr>
             </thead>
@@ -89,6 +90,9 @@
                             {{ $piece['quantite'] }}
                             @php $quantitetotale=$quantitetotale+$piece['quantite']; @endphp
                             @php $totalequantitetotale = $totalequantitetotale+$piece['quantite']; @endphp
+                        </td>
+                        <td>
+                            {{ $piece['panne'] }}
                         </td>
                         @if (!is_null($piece['equipe']))
                             <td style="text-align: left;">

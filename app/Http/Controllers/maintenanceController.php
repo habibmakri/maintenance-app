@@ -975,7 +975,7 @@ class maintenanceController extends Controller
             'panneelectrique' => !$ispannelectrique ? ['nullable'] :  'required|array',
             'pannetolle' => !$ispannetolle ? ['nullable'] :  'required|array',
         ]);
-
+        
         $ficheData = [
             'user_id' => Auth::user()->id,
             'date_fiche' => $request['date'],
@@ -993,7 +993,7 @@ class maintenanceController extends Controller
             'kmgobale' => "0",
             'kmcommerciale' => "0",
         ];
-
+        
         $fiche = fichemaintenance::create($ficheData);
         $panneTypes = ['pannemecanique', 'panneelectrique', 'pannetolle'];
         foreach ($panneTypes as $panneType) {
@@ -1036,25 +1036,29 @@ class maintenanceController extends Controller
                             'fichepanne_id' => $request->input('fichepanne_id'),
                             'piece_id' => $pieceId,
                             'quantité' => $quantity,
-                        ]
-                    );
+                            ]
+                        );
+                    }
                 }
             }
+            return redirect()->back()->with('success', 'Panne résolue avec succès.');
         }
-        return redirect()->back()->with('success', 'Panne résolue avec succès.');
-    }
-
-
-    // public function generate_suivijournaliere_pdf(Request $request)
-    // {
-    //     $request->validate([
-    //         'month' => 'required',
-    //         'year' => 'required',
-    //     ]);
-
-
-    //     $month = $request->month;
-    //     $year = $request->year;
+        
+        public function statistiques_maintenance()
+        {
+            return view('maintenance.statistiques_maintenance');
+        }
+        
+        // public function generate_suivijournaliere_pdf(Request $request)
+        // {
+            //     $request->validate([
+                //         'month' => 'required',
+                //         'year' => 'required',
+                //     ]);
+                
+                
+                //     $month = $request->month;
+                //     $year = $request->year;
 
 
     //     $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
@@ -2239,6 +2243,7 @@ class maintenanceController extends Controller
                     'date' => $piece->fichepanne->date_resoudre,
                     'bus' => $piece->fichepanne->fichemaintenance->bus->name,
                     'equipe' => $piece->fichepanne->equipe,
+                    'panne' => $piece->fichepanne->pannename->name
                 ];
             });
         $tlpieces = traveauxlibreusedpieces::query()
@@ -2255,6 +2260,101 @@ class maintenanceController extends Controller
                     'date' => $piece->traveauxlibre->date_resoudre,
                     'bus' => $piece->traveauxlibre->bus->name,
                     'equipe' => $piece->traveauxlibre->equipe,
+                    'panne' => $piece->traveauxlibre->name
+                ];
+            });
+
+        // dd($firstDay, $pieces, $tlpieces);
+        $mergedPieces = collect($pieces)->merge($tlpieces);
+        $groupedtotal = $mergedPieces->groupBy('bus');
+        // dd($groupedtotal);
+
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+
+        ]);
+        $imagePath = public_path('/LOGO ETUS.png');
+        $html = view('maintenance.etatpiecepdf', compact(['groupedtotal', 'monthName', 'piecename']))->render();
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 30, 10, 20, 20, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+                        <div style='text-align: right; font-size: 12px;'>
+                            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+                        </div>
+                        ";
+        $nomfichier = 'etat_' . $piecename . '_' . $monthName  . '.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function generate_etat_piece_sansvidange_pdf(Request $request)
+    {
+        $request->validate([
+            'month' => 'required',
+            'year' => 'required',
+            'piece' => 'required',
+        ]);
+
+        $month = $request->month;
+        $year = $request->year;
+        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+        $months_fr_array = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+        $monthName = $months_fr_array[$month] . ' ' . $request->year;
+        $piecename = pieces_maintanance::find($request->piece)->name;
+        $pieces = used_pieces::query()
+            ->where('piece_id', '=', $request->piece)
+            ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay])
+                ->whereNotIn('pannnename_id', [23, 24, 25]);
+            })
+            ->get()
+            ->map(function ($piece) {
+                return [
+                    'id' => $piece->id,
+                    'name' => $piece->piece->name,
+                    'quantite' => $piece->quantité,
+                    'date' => $piece->fichepanne->date_resoudre,
+                    'bus' => $piece->fichepanne->fichemaintenance->bus->name,
+                    'equipe' => $piece->fichepanne->equipe,
+                    'panne' => $piece->fichepanne->pannename->name
+                ];
+            });
+        $tlpieces = traveauxlibreusedpieces::query()
+            ->where('piece_id', '=', $request->piece)
+            ->whereHas('traveauxlibre', function ($query) use ($firstDay, $lastDay) {
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+            })
+            ->get()
+            ->map(function ($piece) {
+                return [
+                    'id' => $piece->id,
+                    'name' => $piece->piece->name,
+                    'quantite' => $piece->quantité,
+                    'date' => $piece->traveauxlibre->date_resoudre,
+                    'bus' => $piece->traveauxlibre->bus->name,
+                    'equipe' => $piece->traveauxlibre->equipe,
+                    'panne' => $piece->traveauxlibre->name
                 ];
             });
 

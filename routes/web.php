@@ -58,6 +58,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
         Route::post('maintenance/grandtraveaux_pdf', 'generate_grandtraveaux_pdf')->name('grandtraveaux_pdf');
         Route::post('maintenance/etat_piece_pdf', 'generate_etat_piece_pdf')->name('etat_piece_pdf');
+        Route::post('maintenance/etat_piece_sansvidange_pdf', 'generate_etat_piece_sansvidange_pdf')->name('etat_piece_sansvidange_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');
         Route::post('maintenance/etat_vidange_pdf', 'generate_etat_vidange_pdf')->name('etat_vidange_pdf');
         Route::post('maintenance/suividatepanne_pdf', 'generate_suividatepanne_pdf')->name('suividatepanne_pdf');
@@ -73,6 +74,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/ajouter_jauge_btv','ajouter_jauge_btv')->name('ajouter_jauge_btv');
         Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_tlibre');
         Route::post('traveaux_libre','ajouter_traveaux_libre');
+        Route::get('statistiques_miantenance','statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');

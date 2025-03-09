@@ -65,7 +65,7 @@
           @endif
           @if(in_array('statistiques_maintenance', $permissions))
             <li>
-              <a href="{{ route('app.maintenance.maintenance_show') }}">
+              <a href="{{ route('app.maintenance.statistiques') }}">
                 <i class="bi bi-circle"></i><span>Statistiques Maintenance</span>
               </a>
             </li>
