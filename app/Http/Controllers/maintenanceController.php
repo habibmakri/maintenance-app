@@ -949,7 +949,7 @@ class maintenanceController extends Controller
     public function maintenance_panne()
     {
         $pannes = fichepanne_model::where('solved', 0)->get();
-        $pannesresolue = fichepanne_model::where('solved', 1)->get();
+        $pannesresolue = fichepanne_model::where('solved', 1)->whereBetween('date_resoudre',[Carbon::now()->subMonth()->startOfMonth(),Carbon::now()->endOfMonth()])->get();
         $agents = maintenance_agent::all();
         $stations = Station::all();
         $pieces = pieces_maintanance::all();
