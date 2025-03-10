@@ -142,7 +142,8 @@
                                 @foreach ($declarations as $declaration)
                                     <div class="d-flex pb-2 align-items-center"
                                         style="justify-content: space-around; border-bottom: solid black 1px">
-                                        <p class="mb-0 w-15 text-truncate">{{ $declaration->chauffeur->name }}</p>
+                                        <p class="mb-0 w-15 text-truncate">{{ $declaration->chauffeur->name }} @if ($declaration->chauffeur->id == 80)
+                                            ({{ explode(':', $declaration->description)[0] }}) @endif</p>
                                         <p class="mb-0">{{ $declaration->time_day }}</p>
                                         <p class="mb-0">{{ $declaration->bus->name }}</p>
 
