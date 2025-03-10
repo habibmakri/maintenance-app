@@ -129,13 +129,13 @@
     <table style="font-size:10px;">
         <thead>
             <tr>
-                <th colspan="4">Nombre Totale des pannes</th>
+                <th colspan="3">Nombre Totale des pannes</th>
             </tr>
             <tr>
                 <th style="text-align: center;width:33%;">Mecanique</th>
                 <th style="text-align: center;width:33%;">Electrique</th>
                 <th style="text-align: center;width:33%;">Tolle</th>
-                <th style="text-align: center;width:33%;">Vidange</th>
+                {{-- <th style="text-align: center;width:33%;">Vidange</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -143,7 +143,7 @@
                 <td style="text-align: center;width:33%;">{{ $totals['M'] }}</td>
                 <td style="text-align: center;width:33%;">{{ $totals['E'] }}</td>
                 <td style="text-align: center;width:33%;">{{ $totals['T'] }}</td>
-                <td style="text-align: center;width:33%;">{{ $totals['V'] }}</td>
+                {{-- <td style="text-align: center;width:33%;">{{ $totals['V'] }}</td> --}}
             </tr>
         </tbody>
     </table>
