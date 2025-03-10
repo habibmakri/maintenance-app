@@ -8,7 +8,7 @@ class commission_judiciaire extends Model
 {
     protected $table = 'commission_judiciaire'; 
     
-    protected $fillable = ['date','time','number','members'];
+    protected $fillable = ['date','time','endtime','number','members'];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function used_pieces(){

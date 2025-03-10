@@ -112,11 +112,18 @@
                                         <label for="date">اليوم</label>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <input name="time" type="time" required class="form-control"
                                             style="text-align: end;" value="{{ old('date') }}">
-                                        <label for="date">الوقت</label>
+                                        <label for="date">وقت البداية</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-floating">
+                                        <input name="timeend" type="time" required class="form-control"
+                                            style="text-align: end;" value="{{ old('date') }}">
+                                        <label for="date">وقت النهاية</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4">

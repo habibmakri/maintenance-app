@@ -166,6 +166,7 @@ class judiciaireController extends Controller
         $request->validate([
             'date' => ['required', 'date'],
             'time' => ['required'],
+            'timeend' => ['required'],
             'number' => ['required'],
         ]);
         $members_roles = $request->input('members', []);
@@ -181,6 +182,7 @@ class judiciaireController extends Controller
             [
                 "date" => $request->date,
                 "time" => $request->time,
+                "endtime" => $request->timeend,
                 "number" => $request->number,
                 "members" => !empty($mergedmembers) ? strval(json_encode($mergedmembers, JSON_UNESCAPED_UNICODE)) : null,
             ]
