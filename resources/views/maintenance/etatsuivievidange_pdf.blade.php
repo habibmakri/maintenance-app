@@ -107,13 +107,13 @@
             </tbody>
         </table>
         @foreach ($pannes as $panne)
-            @if ($panne['type'] === 'Vidange moteur')
+            @if ($panne['name'] === 'Vidange moteur')
                 @php $totals['MOTEUR']++; @endphp
             @endif
-            @if ($panne['type'] === 'Vidange boite vitesse')
+            @if ($panne['name'] === 'Vidange boite vitesse')
                 @php $totals['BOITE']++; @endphp
             @endif
-            @if ($panne['type'] === 'Vidange pond')
+            @if ($panne['name'] === 'Vidange pond')
                 @php $totals['POND']++; @endphp
             @endif
         @endforeach
@@ -122,7 +122,7 @@
     <table style="font-size:10px;">
         <thead>
             <tr>
-                <th colspan="4">Nombre Totale des Vidange</th>
+                <th colspan="3">Nombre Totale des Vidange</th>
             </tr>
             <tr>
                 <th style="text-align: center;width:33%;">Moteur</th>
