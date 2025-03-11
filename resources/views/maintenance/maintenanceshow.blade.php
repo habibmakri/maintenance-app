@@ -373,6 +373,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
+            
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner le bus et le mois pour l'extraction de l'état Fiche de suivi mensuelle des
                     travaux reparés:</h5>
@@ -444,6 +445,26 @@
                         </div>
                     </div>
                     
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner la date pour l'extraction de l'état Fiche de suivi des Vidange:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.fiche_suivie_vidange_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="datedu" type="date" required class="form-control">
+                            <label for="datedu">Du</label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-floating">
+                            <input name="dateau" type="date" required class="form-control">
+                            <label for="dateau">Au</label>
+                        </div>
+                    </div>
+                  
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>

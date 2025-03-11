@@ -61,6 +61,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/etat_piece_sansvidange_pdf', 'generate_etat_piece_sansvidange_pdf')->name('etat_piece_sansvidange_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');
         Route::post('maintenance/etat_vidange_pdf', 'generate_etat_vidange_pdf')->name('etat_vidange_pdf');
+        Route::post('maintenance/fiche_suivie_vidange_pdf', 'generate_fiche_suivie_vidange_pdf')->name('fiche_suivie_vidange_pdf');
         Route::post('maintenance/suividatepanne_pdf', 'generate_suividatepanne_pdf')->name('suividatepanne_pdf');
         Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
         Route::get('maintenance_vidange','maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_vidange');
