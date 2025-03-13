@@ -1103,8 +1103,26 @@ class maintenanceController extends Controller
         ')
             ->groupBy('buses.id', 'buses.name')
             ->orderBy('buses.id');
-
-
+        $data = $query->get();
+        }elseif($piece == 'Gasoile/100'){
+            $query = bus::query()
+            ->whereIn('type', ['v8', 'l5'])
+            ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                    ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                    ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                    ->where('fiches_maintenance.declaré', '=', true)
+                    ->where(function ($q) {
+                        $q->where('fiches_maintenance.brigade', 'soir')
+                            ->orWhere('fiches_maintenance.brigade', 'matin');
+                    });
+            })
+            ->selectRaw('
+            buses.id as id_bus, 
+            (COALESCE(SUM(fiches_maintenance.gasoile), 0)*100)/COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
+        ')
+            ->groupBy('buses.id', 'buses.name')
+            ->orderBy('buses.id');
         $data = $query->get();
         }
         return response()->json($data);
