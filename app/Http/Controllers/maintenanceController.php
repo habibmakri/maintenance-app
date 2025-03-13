@@ -1099,7 +1099,7 @@ class maintenanceController extends Controller
             })
             ->selectRaw('
             buses.id as id_bus, 
-            COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_km
+            COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
             ->groupBy('buses.id', 'buses.name')
             ->orderBy('buses.id');
