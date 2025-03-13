@@ -1087,10 +1087,10 @@ class maintenanceController extends Controller
         }elseif($piece == 'Kilometrage'){
             $query = bus::query()
             ->whereIn('type', ['v8', 'l5'])
-            ->leftJoin('fiches_maintenance', function ($join) use ($request) {
+            ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
                 $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                    ->where('fiches_maintenance.date_fiche', '>=', Carbon::parse($request->datedupdf)->startOfDay())
-                    ->where('fiches_maintenance.date_fiche', '<=', Carbon::parse($request->dateaupdf)->endOfDay())
+                    ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                    ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
                     ->where('fiches_maintenance.declaré', '=', true)
                     ->where(function ($q) {
                         $q->where('fiches_maintenance.brigade', 'soir')
@@ -1099,7 +1099,7 @@ class maintenanceController extends Controller
             })
             ->selectRaw('
             buses.id as id_bus, 
-            COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
+            COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_km
         ')
             ->groupBy('buses.id', 'buses.name')
             ->orderBy('buses.id');
