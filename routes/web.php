@@ -76,6 +76,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_tlibre');
         Route::post('traveaux_libre','ajouter_traveaux_libre');
         Route::get('statistiques_miantenance','statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
+        Route::get('maintenance/statistiques_data',  'statistiques_data')->name('statistiques_data');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');

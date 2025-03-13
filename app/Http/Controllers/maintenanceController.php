@@ -410,7 +410,7 @@ class maintenanceController extends Controller
     public function traveaux_libre()
     {
         $traveaux = traveauxlibre_model::query()->whereBetween('date_resoudre', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->endOfMonth()])->get();
-        $agents = maintenance_agent::select('id', 'firstname','lastname')->get();
+        $agents = maintenance_agent::select('id', 'firstname', 'lastname')->get();
         $stations = Station::select('id', 'name')->get();
         $pieces = pieces_maintanance::select('id', 'name')->get();
         $buses = Bus::select('id', 'name')->get();
@@ -955,7 +955,7 @@ class maintenanceController extends Controller
         // $pieces = pieces_maintanance::all();
         // $buses = Bus::all();
         // $pannenames = Panne::all();
-        $agents = maintenance_agent::select('id', 'firstname','lastname')->get();
+        $agents = maintenance_agent::select('id', 'firstname', 'lastname')->get();
         $stations = Station::select('id', 'name')->get();
         $pieces = pieces_maintanance::select('id', 'name')->get();
         $buses = Bus::select('id', 'name')->get();
@@ -975,7 +975,7 @@ class maintenanceController extends Controller
             'panneelectrique' => !$ispannelectrique ? ['nullable'] :  'required|array',
             'pannetolle' => !$ispannetolle ? ['nullable'] :  'required|array',
         ]);
-        
+
         $ficheData = [
             'user_id' => Auth::user()->id,
             'date_fiche' => $request['date'],
@@ -993,7 +993,7 @@ class maintenanceController extends Controller
             'kmgobale' => "0",
             'kmcommerciale' => "0",
         ];
-        
+
         $fiche = fichemaintenance::create($ficheData);
         $panneTypes = ['pannemecanique', 'panneelectrique', 'pannetolle'];
         foreach ($panneTypes as $panneType) {
@@ -1036,150 +1036,80 @@ class maintenanceController extends Controller
                             'fichepanne_id' => $request->input('fichepanne_id'),
                             'piece_id' => $pieceId,
                             'quantité' => $quantity,
-                            ]
-                        );
-                    }
+                        ]
+                    );
                 }
             }
-            return redirect()->back()->with('success', 'Panne résolue avec succès.');
         }
-        
-        public function statistiques_maintenance()
-        {
-            return view('maintenance.statistiques_maintenance');
+        return redirect()->back()->with('success', 'Panne résolue avec succès.');
+    }
+
+    public function statistiques_maintenance()
+    {
+        return view('maintenance.statistiques_maintenance');
+    }
+
+    public function statistiques_data(Request $request)
+    {
+        $request->validate([
+            'month' => 'required',
+            'year' => 'required',
+            'piece' => 'required',
+        ]);
+        $month = $request->month;
+        $year = $request->year;
+        $piece = $request->piece;
+        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+        $data = [];
+        if ($piece == 'Gasoile') {
+            $query = bus::query()
+                ->whereIn('type', ['v8', 'l5'])
+                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                        ->where('fiches_maintenance.declaré', '=', true)
+                        ->where(function ($q) {
+                            $q->where('fiches_maintenance.brigade', 'soir')
+                                ->orWhere('fiches_maintenance.brigade', 'matin');
+                        });
+                })
+                ->selectRaw('
+            buses.id as id_bus, 
+            COALESCE(SUM(fiches_maintenance.gasoile), 0) as total_gasoile
+        ')
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+
+
+            $data = $query->get();
+        }elseif($piece == 'Kilometrage'){
+            $query = bus::query()
+            ->whereIn('type', ['v8', 'l5'])
+            ->leftJoin('fiches_maintenance', function ($join) use ($request) {
+                $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                    ->where('fiches_maintenance.date_fiche', '>=', Carbon::parse($request->datedupdf)->startOfDay())
+                    ->where('fiches_maintenance.date_fiche', '<=', Carbon::parse($request->dateaupdf)->endOfDay())
+                    ->where('fiches_maintenance.declaré', '=', true)
+                    ->where(function ($q) {
+                        $q->where('fiches_maintenance.brigade', 'soir')
+                            ->orWhere('fiches_maintenance.brigade', 'matin');
+                    });
+            })
+            ->selectRaw('
+            buses.id as id_bus, 
+            COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_km
+        ')
+            ->groupBy('buses.id', 'buses.name')
+            ->orderBy('buses.id');
+
+
+        $data = $query->get();
         }
-        
-        // public function generate_suivijournaliere_pdf(Request $request)
-        // {
-            //     $request->validate([
-                //         'month' => 'required',
-                //         'year' => 'required',
-                //     ]);
-                
-                
-                //     $month = $request->month;
-                //     $year = $request->year;
+        return response()->json($data);
+    }
 
-
-    //     $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
-    //     $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
-    //     $months_fr_array = [
-    //         1 => 'Janvier',
-    //         2 => 'Février',
-    //         3 => 'Mars',
-    //         4 => 'Avril',
-    //         5 => 'Mai',
-    //         6 => 'Juin',
-    //         7 => 'Juillet',
-    //         8 => 'Août',
-    //         9 => 'Septembre',
-    //         10 => 'Octobre',
-    //         11 => 'Novembre',
-    //         12 => 'Décembre'
-    //     ];
-    //     $monthName = $months_fr_array[$month] . $year;
-
-    //     $buses = Bus::all();
-    //     $pannes = [];
-
-    //     foreach ($buses as $bus) {
-    //         $fiches = $bus->maintenanceRecords()
-    //             ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
-    //                 $query->whereBetween('fichepanne.date_resoudre', [$firstDay, $lastDay]);
-    //             })
-    //             ->with(['fichepanne' => function ($query) use ($firstDay, $lastDay) {
-    //                 $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
-    //             }])
-    //             ->get();
-
-    //         if ($fiches->isNotEmpty()) {
-    //             $pannes[] = $fiches->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
-    //         }
-    //     }
-
-    //     // Flatten and sort the combined pannes list
-    //     $pannes = collect($pannes)->flatten()->sortBy('date_resoudre');
-
-    //     $groupedpannes = $pannes->groupBy(function ($panne) {
-    //         return \Carbon\Carbon::parse($panne->date_resoudre)->toDateString();
-    //     });
-    //     // dd($groupedpannes);
-    //     $html = view('maintenance.etatsuivijournaliere_pdf', compact('groupedpannes', 'monthName'))->render();
-
-    //     $mpdf = new Mpdf([
-    //         'format' => 'A4',
-    //         // 'tempDir' => sys_get_temp_dir(),
-    //     ]);
-    //     $imagePath = public_path('/LOGO ETUS.png');
-    //     $mpdf->AddPage();
-    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
-    //     $mpdf->SetY(10);
-    //     date_default_timezone_set('Africa/Algiers');
-    //     $currentdate = date('H:i:s d-m-Y');
-    //     $htmlFooter = "
-    //     <div style='text-align: right; font-size: 12px;'>
-    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
-    //     </div>
-    //     ";
-    //     $nomfichier = 'Fiche suivi Journalière- ' . $monthName  . '.pdf';
-
-    //     $mpdf->SetHTMLFooter($htmlFooter);
-    //     $mpdf->WriteHTML($html);
-    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
-    //         'Content-Type' => 'application/pdf',
-    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
-    //     ]);
-    // }
-
-    // public function generate_panneencour_pdf(Request $request)
-    // {
-    //     $request->validate([
-    //         'typepanne' => 'required',
-    //     ]);
-
-
-    //     $typepanne = $request->typepanne;
-
-    //     $fichepannes = fichepanne_model::query()
-    //         ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
-    //         ->where('fichepanne.solved', false)
-    //         ->orderBy('fiches_maintenance.date_fiche')
-    //         ->get();
-    //     if ($typepanne == "tous") {
-    //         $data = $fichepannes;
-    //     } else {
-    //         $data = $fichepannes->filter(function ($fichepanne) use ($typepanne) {
-    //             return $fichepanne->pannename->type == $typepanne;
-    //         });
-    //     }
-
-    //     // dd($data);
-    //     $html = view('maintenance.pannecour_pdf', compact('data'))->render();
-
-    //     $mpdf = new Mpdf([
-    //         'format' => 'A4',
-    //         // 'tempDir' => sys_get_temp_dir(),
-    //     ]);
-    //     $imagePath = public_path('/LOGO ETUS.png');
-    //     $mpdf->AddPage();
-    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
-    //     $mpdf->SetY(10);
-    //     date_default_timezone_set('Africa/Algiers');
-    //     $currentdate = date('H:i:s d-m-Y');
-    //     $htmlFooter = "
-    //     <div style='text-align: right; font-size: 12px;'>
-    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
-    //     </div>
-    //     ";
-    //     $nomfichier = 'Panne non résolue.pdf';
-
-    //     $mpdf->SetHTMLFooter($htmlFooter);
-    //     $mpdf->WriteHTML($html);
-    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
-    //         'Content-Type' => 'application/pdf',
-    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
-    //     ]);
-    // }
     public function generate_suivijournaliere_pdf(Request $request)
     {
         $request->validate([]);
@@ -1335,7 +1265,7 @@ class maintenanceController extends Controller
 
         $buses = Bus::with([
             'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
-                $query->whereBetween('date_resoudre', [$firstDay, $lastDay])->whereIn('pannnename_id',[23,24,25]);
+                $query->whereBetween('date_resoudre', [$firstDay, $lastDay])->whereIn('pannnename_id', [23, 24, 25]);
             }
         ])->get();
 
@@ -1364,7 +1294,6 @@ class maintenanceController extends Controller
                     'item' => 'Panne',
                 ];
             })->toArray());
-
         }
 
         $total = collect($total)->sortBy('date');
@@ -2426,7 +2355,7 @@ class maintenanceController extends Controller
             ->where('piece_id', '=', $request->piece)
             ->whereHas('fichepanne', function ($query) use ($firstDay, $lastDay) {
                 $query->whereBetween('date_resoudre', [$firstDay, $lastDay])
-                ->whereNotIn('pannnename_id', [23, 24, 25]);
+                    ->whereNotIn('pannnename_id', [23, 24, 25]);
             })
             ->get()
             ->map(function ($piece) {
