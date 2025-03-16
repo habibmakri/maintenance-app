@@ -26,6 +26,7 @@ class resoudre_panne_request extends FormRequest
             'dateresolu' => 'required|date',
             'lieuresolu' => 'required|string',
             'brigade' => 'required|string',
+            'duree' => 'required',
             'equipe' => 'nullable|array',
             // 'equipe.*' => 'exists:maintenance_agents,id',
             // 'description' => 'required|string',

@@ -425,6 +425,7 @@ class maintenanceController extends Controller
             'bus' => ['required', 'exists:buses,id'],
             'travaille' => 'required',
             'brigade' => ['required'],
+            'duree' => ['required'],
             'lieuresolu' => 'required',
             'typetravaille' => ['required'],
             'equipe' => 'required|array',
@@ -454,6 +455,7 @@ class maintenanceController extends Controller
             'lieu_resoudre' => $request->lieuresolu,
             'brigade' => $request->brigade,
             'equipe' => $request->equipe ? json_encode($request->equipe) : null,
+            'delai' => intval($request->duree),
             'grantraveaux' => $grantraveaux,
             'description' => $request->description,
         ];
@@ -1027,6 +1029,7 @@ class maintenanceController extends Controller
                 'lieu_resoudre' =>  $request->input('lieuresolu'),
                 'brigade' => $request->input('brigade'),
                 'equipe' => $request->input('equipe'),
+                'delai' => intval($request->duree),
                 'description' => $request->input('description'),
             ]);
             if ($mergedPieces) {
@@ -1084,46 +1087,46 @@ class maintenanceController extends Controller
 
 
             $data = $query->get();
-        }elseif($piece == 'Kilometrage'){
+        } elseif ($piece == 'Kilometrage') {
             $query = bus::query()
-            ->whereIn('type', ['v8', 'l5'])
-            ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
-                $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                    ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
-                    ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
-                    ->where('fiches_maintenance.declaré', '=', true)
-                    ->where(function ($q) {
-                        $q->where('fiches_maintenance.brigade', 'soir')
-                            ->orWhere('fiches_maintenance.brigade', 'matin');
-                    });
-            })
-            ->selectRaw('
+                ->whereIn('type', ['v8', 'l5'])
+                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                        ->where('fiches_maintenance.declaré', '=', true)
+                        ->where(function ($q) {
+                            $q->where('fiches_maintenance.brigade', 'soir')
+                                ->orWhere('fiches_maintenance.brigade', 'matin');
+                        });
+                })
+                ->selectRaw('
             buses.id as id_bus, 
             COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
-            ->groupBy('buses.id', 'buses.name')
-            ->orderBy('buses.id');
-        $data = $query->get();
-        }elseif($piece == 'Gasoile/100'){
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+            $data = $query->get();
+        } elseif ($piece == 'Gasoile/100') {
             $query = bus::query()
-            ->whereIn('type', ['v8', 'l5'])
-            ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
-                $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                    ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
-                    ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
-                    ->where('fiches_maintenance.declaré', '=', true)
-                    ->where(function ($q) {
-                        $q->where('fiches_maintenance.brigade', 'soir')
-                            ->orWhere('fiches_maintenance.brigade', 'matin');
-                    });
-            })
-            ->selectRaw('
+                ->whereIn('type', ['v8', 'l5'])
+                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                        ->where('fiches_maintenance.declaré', '=', true)
+                        ->where(function ($q) {
+                            $q->where('fiches_maintenance.brigade', 'soir')
+                                ->orWhere('fiches_maintenance.brigade', 'matin');
+                        });
+                })
+                ->selectRaw('
             buses.id as id_bus, 
             (COALESCE(SUM(fiches_maintenance.gasoile), 0)*100)/COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
-            ->groupBy('buses.id', 'buses.name')
-            ->orderBy('buses.id');
-        $data = $query->get();
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+            $data = $query->get();
         }
         return response()->json($data);
     }

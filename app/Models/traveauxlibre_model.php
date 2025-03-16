@@ -11,7 +11,7 @@ class traveauxlibre_model extends Model
 
     protected $table = 'traveauxlibre'; 
     
-    protected $fillable = ['name','id_bus','nature','date_resoudre','lieu_resoudre','brigade','grantraveaux','equipe','description'];
+    protected $fillable = ['name','id_bus','nature','date_resoudre','lieu_resoudre','brigade','grantraveaux','equipe','delai','description'];
     protected $hidden = ['created_at', 'updated_at'];
     public function bus()
     {

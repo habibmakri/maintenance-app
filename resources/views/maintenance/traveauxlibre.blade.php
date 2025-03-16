@@ -46,7 +46,7 @@
                                 <label for="bus">BUS</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <div class="form-floating">
                                 <select class="form-select" required name="brigade" id="brigade"
                                     aria-label="Floating label select example">
@@ -56,6 +56,20 @@
                                     <option value="soir">Soir</option>
                                 </select>
                                 <label for="brigade">Brigade</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-floating">
+                                <select class="form-select" required name="duree" id="duree"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled selected>selectionner Durée</option>
+                                    <option value="0" selected>Moin d'un jour</option>
+                                    <option value="1">Un jour</option>
+                                    <option value="2">Deux jour</option>
+                                    <option value="3">Trois jour</option>
+                                    <option value="4">Quatre jour</option>
+                                </select>
+                                <label for="duree">Durée</label>
                             </div>
                         </div>
                         <div class="col-md-4">
