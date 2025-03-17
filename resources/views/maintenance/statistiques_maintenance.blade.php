@@ -263,7 +263,7 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        const xLabels = data.map(item => `A${item.id_bus.toString().padStart(2, '0')}`);
+                        const xLabels = data.map(item => `${item.name_bus}`);
                         const yValues = data.map(item => item.total_gasoile);
                         const meanValue = yValues.reduce((sum, val) => sum + val, 0) / yValues.length;
                         const barData = yValues.map(value => ({

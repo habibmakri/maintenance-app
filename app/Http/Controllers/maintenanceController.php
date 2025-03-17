@@ -1080,6 +1080,7 @@ class maintenanceController extends Controller
                 })
                 ->selectRaw('
             buses.id as id_bus, 
+            buses.name as name_bus, 
             COALESCE(SUM(fiches_maintenance.gasoile), 0) as total_gasoile
         ')
                 ->groupBy('buses.id', 'buses.name')
@@ -1102,6 +1103,7 @@ class maintenanceController extends Controller
                 })
                 ->selectRaw('
             buses.id as id_bus, 
+            buses.name as name_bus, 
             COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
                 ->groupBy('buses.id', 'buses.name')
@@ -1122,6 +1124,7 @@ class maintenanceController extends Controller
                 })
                 ->selectRaw('
             buses.id as id_bus, 
+            buses.name as name_bus, 
             (COALESCE(SUM(fiches_maintenance.gasoile), 0)*100)/COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
                 ->groupBy('buses.id', 'buses.name')
@@ -1148,6 +1151,7 @@ class maintenanceController extends Controller
 
                 ->selectRaw('
                     buses.id as id_bus, 
+                    buses.name as name_bus, 
                     COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
                 ')
                 ->groupBy('buses.id', 'buses.name')
@@ -1155,7 +1159,7 @@ class maintenanceController extends Controller
 
             $data = $query->get();
             // dd($data);
-        }elseif ($piece == 'Huile 15w40/Sans vidange') {
+        } elseif ($piece == 'Huile 15w40/Sans vidange') {
             $query = bus::query()
                 ->whereIn('type', ['v8', 'l5'])
                 // ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
@@ -1177,6 +1181,7 @@ class maintenanceController extends Controller
 
                 ->selectRaw('
                     buses.id as id_bus, 
+                    buses.name as name_bus, 
                     COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
                 ')
                 ->groupBy('buses.id', 'buses.name')
