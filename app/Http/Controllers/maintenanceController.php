@@ -1178,6 +1178,7 @@ class maintenanceController extends Controller
                 })
                 ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
                 ->where('used_pieces.piece_id', '=', 2)
+                ->whereNull('used_pieces.deleted_at')
 
                 ->selectRaw('
                     buses.id as id_bus, 
