@@ -1209,6 +1209,7 @@ class maintenanceController extends Controller
                 ')
                 ->groupBy('buses.id', 'buses.name')
                 ->orderBy('buses.id');
+            $data = $query->get();
             $query2 = bus::query()
                 ->whereIn('type', ['v8', 'l5'])
                 ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
