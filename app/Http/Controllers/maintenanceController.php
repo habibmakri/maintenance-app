@@ -1155,6 +1155,35 @@ class maintenanceController extends Controller
 
             $data = $query->get();
             // dd($data);
+        }elseif ($piece == 'Huile 15w40/Sans vidange') {
+            $query = bus::query()
+                ->whereIn('type', ['v8', 'l5'])
+                // ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                //     $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                //         ->where(function ($q) {
+                //             $q->where('fiches_maintenance.brigade', 'soir')
+                //                 ->orWhere('fiches_maintenance.brigade', 'matin');
+                //         });
+                // })
+                ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
+                        ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                        ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                        ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
+                })
+                ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
+                ->where('used_pieces.piece_id', '=', 2)
+
+                ->selectRaw('
+                    buses.id as id_bus, 
+                    COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
+                ')
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+
+            $data = $query->get();
+            // dd($data);
         }
         return response()->json($data);
     }

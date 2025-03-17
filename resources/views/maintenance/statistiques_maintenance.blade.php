@@ -76,6 +76,7 @@
                                 <option value="Kilometrage">Kilometrage</option>
                                 <option value="Gasoile/100">Gasoile/100</option>
                                 <option value="Huile 15w40">Huile 15w40</option>
+                                <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
                                 <option value="Glaciole">Glaciole</option>
                             </select>
                             <label for="piece">Piece</label>
