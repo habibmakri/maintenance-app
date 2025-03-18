@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                            font-family: 'lateef';
-                                            src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                            font-weight: normal;
-                                            font-style: normal;
-                                        } */
+                                                font-family: 'lateef';
+                                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                                font-weight: normal;
+                                                font-style: normal;
+                                            } */
         label {
             inset-inline-end: auto !important;
         }
@@ -282,12 +282,15 @@
                         const barData = yValues.map(value => ({
                             value,
                             itemStyle: {
-                                color: value > meanValue ? '#FFD700' : '#1f78b4'
+                                // color: value > meanValue ? '#FFD700' : '#1f78b4'
+                                color: value > 2 * meanValue ? '#FF0000' : (value > meanValue ? '#FFD700' : '#1f78b4')
                             }
                         }));
                         chart.setOption({
                             title: {
-                                text: piece+' Du '+monthInput[month].text+' '+year,
+                                text: piece + ' Du ' + monthInput[month].text + ' ' + year,
+                                left: 'center',
+                                textAlign: 'center',
                             },
                             xAxis: {
                                 type: 'category',
