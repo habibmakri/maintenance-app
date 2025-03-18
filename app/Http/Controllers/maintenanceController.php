@@ -1169,8 +1169,21 @@ class maintenanceController extends Controller
                 ->orderBy('buses.id');
 
             $data2 = $query2->get();
+            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                    id as id_bus, 
+                    name as name_bus, 
+                    0 as total_gasoile')->get();
+            
             $mergedData = collect();
-
+            
+            foreach ($allbuses as $item) {
+                $id = $item->id_bus;
+                if ($mergedData->has($id)) {
+                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                } else {
+                    $mergedData[$id] = $item;
+                }
+            }
             foreach ($data as $item) {
                 $id = $item->id_bus;
                 if ($mergedData->has($id)) {
@@ -1228,8 +1241,94 @@ class maintenanceController extends Controller
                 ->orderBy('buses.id');
 
             $data2 = $query2->get();
+            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                    id as id_bus, 
+                    name as name_bus, 
+                    0 as total_gasoile')->get();
+            
             $mergedData = collect();
+            
+            foreach ($allbuses as $item) {
+                $id = $item->id_bus;
+                if ($mergedData->has($id)) {
+                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                } else {
+                    $mergedData[$id] = $item;
+                }
+            }
+            foreach ($data as $item) {
+                $id = $item->id_bus;
+                if ($mergedData->has($id)) {
+                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                } else {
+                    $mergedData[$id] = $item;
+                }
+            }
+            foreach ($data2 as $item) {
+                $id = $item->id_bus;
+                if ($mergedData->has($id)) {
+                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                } else {
+                    $mergedData[$id] = $item;
+                }
+            }
+            $data = $mergedData->sortBy('id_bus')->values();
+        }
+        elseif ($piece == 'Glaciole') {
+            $query = bus::query()
+                ->whereIn('type', ['v8', 'l5'])
+                ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
+                        ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                        ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                        ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
+                })
+                ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
+                ->where('used_pieces.piece_id', '=', 9)
+                ->whereNull('used_pieces.deleted_at')
 
+                ->selectRaw('
+                    buses.id as id_bus, 
+                    buses.name as name_bus, 
+                    COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
+                ')
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+            $data = $query->get();
+            $query2 = bus::query()
+                ->whereIn('type', ['v8', 'l5'])
+                ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
+                    $join->on('traveauxlibre.id_bus', '=', 'buses.id')
+                        ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                        ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
+                })
+                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
+                ->where('traveauxlibreusedpieces.piece_id', '=', 9)
+                ->selectRaw('
+                    buses.id as id_bus, 
+                    buses.name as name_bus, 
+                    COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total_gasoile
+                ')
+                ->groupBy('buses.id', 'buses.name')
+                ->orderBy('buses.id');
+
+            $data2 = $query2->get();
+            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                    id as id_bus, 
+                    name as name_bus, 
+                    0 as total_gasoile')->get();
+            
+            $mergedData = collect();
+            
+            foreach ($allbuses as $item) {
+                $id = $item->id_bus;
+                if ($mergedData->has($id)) {
+                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                } else {
+                    $mergedData[$id] = $item;
+                }
+            }
             foreach ($data as $item) {
                 $id = $item->id_bus;
                 if ($mergedData->has($id)) {
