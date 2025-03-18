@@ -278,7 +278,11 @@
                         console.log(data);
                         const xLabels = data.map(item => `${item.name_bus}`);
                         const yValues = data.map(item => item.total_gasoile);
-                        const meanValue = yValues.reduce((sum, val) => sum + val, 0) / yValues.length;
+                        // const meanValue = yValues.reduce((sum, val) => sum + val, 0) / yValues.length;
+                        const filteredValues = yValues.filter(val => val > 0);
+                        const meanValue = filteredValues.length > 0 
+                            ? filteredValues.reduce((sum, val) => sum + val, 0) / filteredValues.length 
+                            : 0; 
                         const barData = yValues.map(value => ({
                             value,
                             itemStyle: {
