@@ -288,7 +288,7 @@
                         }));
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + monthInput[month].text + ' ' + year +'- Valeur moyenne '+meanValue ,
+                                text: piece + ' Du ' + monthInput[month].text + ' ' + year +'- Valeur moyenne '+meanValue.toFixed(2) ,
                                 left: 'center',
                                 textAlign: 'center',
                             },
