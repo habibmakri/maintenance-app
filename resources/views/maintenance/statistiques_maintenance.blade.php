@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                font-family: 'lateef';
-                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                font-weight: normal;
-                                font-style: normal;
-                            } */
+                                            font-family: 'lateef';
+                                            src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                            font-weight: normal;
+                                            font-style: normal;
+                                        } */
         label {
             inset-inline-end: auto !important;
         }
@@ -63,7 +63,7 @@
     </ul>
     <div class="tab-content pt-2" id="borderedTabContent" style = "font-family: 'Tajwal';">
         <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
-            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
                 <h5 class="mt-5">Sélectionner le mois et la piece pour l'extraction de l'état:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
@@ -122,6 +122,19 @@
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
                     echarts.init(document.querySelector("#barChart")).setOption({
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        legend: {},
                         xAxis: {
                             type: 'category',
                             data: [
@@ -246,19 +259,19 @@
         });
     </script> --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const chart = echarts.init(document.querySelector("#barChart"));
             const monthInput = document.getElementById("month");
             const pieceInput = document.getElementById("piece");
             const yearInput = document.getElementById("year");
-    
+
             function fetchData() {
                 const month = monthInput.value;
                 const year = yearInput.value;
                 const piece = pieceInput.value;
-    
+
                 if (!month || !year || !piece) return;
-    
+
                 fetch(`/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}`)
                     .then(response => response.json())
                     .then(data => {
@@ -273,14 +286,26 @@
                             }
                         }));
                         chart.setOption({
-                            xAxis: { type: 'category', data: xLabels },
-                            yAxis: { type: 'value' },
-                            series: [{ data: barData, type: 'bar' }]
+                            title: {
+                                text: piece+' Du '+monthInput[month].text+' '+year,
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: xLabels
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                // name:piece,
+                                data: barData,
+                                type: 'bar'
+                            }]
                         });
                     })
                     .catch(error => console.error('Erreur lors de la récupération des données:', error));
             }
-    
+
             monthInput.addEventListener('change', fetchData);
             pieceInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
