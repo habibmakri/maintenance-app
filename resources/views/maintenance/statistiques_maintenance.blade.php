@@ -82,7 +82,7 @@
                             <label for="piece">Piece</label>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <select class="form-select" required name="month" id="month"
                                 aria-label="Floating label select example">
@@ -103,7 +103,7 @@
                             <label for="month">Mois</label>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-floating">
                             <select class="form-select" required name="year" id="year"
                                 aria-label="Floating label select example">
