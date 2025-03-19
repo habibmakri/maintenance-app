@@ -88,7 +88,7 @@
                             <td style="text-align:left ;">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
-                                    onclick="handleresoudreclick({{ $commission }},{{ $commission->ligne }})">تقرير</button>
+                                    onclick="handleresoudreclick({{ $commission }},{{ $commission->declarations }})">تقرير</button>
                             </td>
                         </tr>
                     @endforeach
@@ -149,15 +149,18 @@
                                 @foreach ($declarations as $declaration)
                                     <div class="d-flex pb-2 align-items-center"
                                         style="justify-content: space-around; border-bottom: solid black 1px">
-                                        <p class="mb-0 w-15 text-truncate"> @if ($declaration->chauffeur->id == 80)
-                                        {{ explode(':', $declaration->description)[0]." - " }} @endif {{ $declaration->chauffeur->name }}</p>
+                                        <p class="mb-0 w-15 text-truncate">
+                                            @if ($declaration->chauffeur->id == 80)
+                                                {{ explode(':', $declaration->description)[0] . ' - ' }}
+                                            @endif {{ $declaration->chauffeur->name }}
+                                        </p>
                                         <p class="mb-0">{{ $declaration->time_day }}</p>
                                         <p class="mb-0">{{ $declaration->bus->name }}</p>
 
                                         <div>
                                             <label for="check_{{ $declaration->id }}">تفعيل </label>
                                             <input type="checkbox" class="form-check-input toggle-fields"
-                                            data-id="{{ $declaration->id }}" id="check_{{ $declaration->id }}">
+                                                data-id="{{ $declaration->id }}" id="check_{{ $declaration->id }}">
                                         </div>
                                         <input type="hidden" name="declaration_ids[]"
                                             id="declaration_{{ $declaration->id }}" value="{{ $declaration->id }}"
@@ -203,103 +206,150 @@
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
-                            <h5 class="modal-title" id="modal_title"> </h5>
+                            <h5 class="modal-title" id="modal_title_rapport"> </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <h5 style="font-family: 'Tajwal'">سيدي بلعباس يوم: <span style="font-weight: bold;"
-                                    id="declaration_date"></span></h5>
                             <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
-                                <h5 style="font-family: 'Tajwal'">الحافلة: <span style="font-weight: bold;"
-                                        id="bus"></span></h5>
-                                <h5 style="font-family: 'Tajwal'">السائق: <span style="font-weight: bold;"
-                                        id="chauffeur"></span></h5>
-                                <h5 style="font-family: 'Tajwal'">الخط: <span style="font-weight: bold;"
-                                        id="ligne"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">رقم: <span style="font-weight: bold;"
+                                        id="declaration_number"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">سيدي بلعباس يوم: <span style="font-weight: bold;"
+                                        id="declaration_date"></span></h5>
                             </div>
                             <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
-                                <h5 style="font-family: 'Tajwal'">الوقت: <span style="font-weight: bold;"
-                                        id="time"></span></h5>
-                                <h5 style="font-family: 'Tajwal'">اليوم: <span style="font-weight: bold;"
-                                        id="day"></span></h5>
-                                <h5 style="font-family: 'Tajwal'">المكان: <span style="font-weight: bold;"
-                                        id="place"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">وقت البداية: <span style="font-weight: bold;"
+                                        id="begintime"></span></h5>
+                                <h5 style="font-family: 'Tajwal'">وقت النهاية: <span style="font-weight: bold;"
+                                        id="endtime"></span></h5>
                             </div>
-                            <div class="d-flex" style="flex-direction: row;justify-content: space-around;">
-                                <h5 style="font-family: 'Tajwal'">تصريح لدى CAAT: <span style="font-weight: bold;"
-                                        id="caat"></span></h5>
-                                <h5 style="font-family: 'Tajwal'">مصاريف: <span style="font-weight: bold;"
-                                        id="paye"></span></h5>
-                            </div>
+                            <h4 class="text-center" style="font-family: 'Tajwal';font-weight: bold;">الأعضاء</h4>
 
-                            <h5 style="font-family: 'Tajwal'">الوصف: <br><span style="font-weight: bold;"
-                                    id="description"></span></h5>
-                            <h5 style="font-family: 'Tajwal'">الخسائر: <br><span style="font-weight: bold;"
-                                    id="pertes"></span></h5>
-                            <div id="photos" style="font-family: 'Tajwal';font-weight: bold;">
+                            <div class="d-flex"
+                                id="members_container"style="flex-direction: row;justify-content: space-around;">
 
                             </div>
-
-
-                            <form class="row g-3" action="" method="post">
-                                @csrf
-                                <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
-                                    <button type="submit" class="btn btn-primary">طباعة</button>
-                                </div>
-                            </form>
                         </div>
+                        <h4 class="text-center" style="font-family: 'Tajwal';font-weight: bold;">الحوادث</h4>
+
+                        <div class="d-flex" id="accidents_container" style="flex-direction: column;">
+
+                        </div>
+
+                        <form class="row g-3" action="" method="post">
+                            @csrf
+                            <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
+                                <button type="submit" class="btn btn-primary">طباعة</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
             </div>
-        </div>
 
-        <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab" dir="rtl">
-            <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
-                <thead dir="rtl">
-                    <tr>
-                        <th style="text-align: right;">الرقم</th>
-                        <th style="text-align: right;">التاريخ الوقت</th>
-                        <th style="text-align: right;">الأعضاء</th>
-                        <th style="text-align: left;">عمليات</th>
-                    </tr>
-                </thead>
-                <tbody dir="rtl">
-                    @foreach ($commissions as $commission)
-                        <tr
-                            @if ($commission->caat) style="border-color: green;" @else style="border-color: red;" @endif>
-                            <td>{{ date('Y', strtotime($commission->date)) }}/{{ $commission->number }}</td>
-                            <td>{{ $commission->date . ' - ' . $commission->time }}</td>
-                            <td>
-                                @php
-                                    $members = json_decode($commission->members, true);
-                                @endphp
-                                @if ($members)
-                                    @foreach ($members as $name => $role)
-                                        <strong>{{ $name }}</strong>: {{ $role }}<br>
-                                    @endforeach
-                                @else
-                                    No members
-                                @endif
-                            </td>
-                            <td style="text-align:left ;">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#ExtralargeModal1"
-                                    onclick="handleresoudreclick({{ $commission }},{{ $commission->ligne }})">تقرير</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
+    </div>
+
+    <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab" dir="rtl">
+        <table class="table datatable mt-1" dir="rtl" style="text-align: right;">
+            <thead dir="rtl">
+                <tr>
+                    <th style="text-align: right;">الرقم</th>
+                    <th style="text-align: right;">التاريخ الوقت</th>
+                    <th style="text-align: right;">الأعضاء</th>
+                    <th style="text-align: left;">عمليات</th>
+                </tr>
+            </thead>
+            <tbody dir="rtl">
+                @foreach ($commissions as $commission)
+                    <tr
+                        @if ($commission->caat) style="border-color: green;" @else style="border-color: red;" @endif>
+                        <td>{{ date('Y', strtotime($commission->date)) }}/{{ $commission->number }}</td>
+                        <td>{{ $commission->date . ' - ' . $commission->time }}</td>
+                        <td>
+                            @php
+                                $members = json_decode($commission->members, true);
+                            @endphp
+                            @if ($members)
+                                @foreach ($members as $name => $role)
+                                    <strong>{{ $name }}</strong>: {{ $role }}<br>
+                                @endforeach
+                            @else
+                                No members
+                            @endif
+                        </td>
+                        <td style="text-align:left ;">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#ExtralargeModal1"
+                                onclick="handleresoudreclick2({{ $commission }},{{ $commission->ligne }})">تقرير</button>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     </div>
 
 
     <script>
+        function handleresoudreclick(declaration, judiciairedeclarations) {
+            console.log(declaration);
+            const modal_title = document.getElementById('modal_title_rapport');
+            const declarationdate = document.getElementById('declaration_date');
+            const declarationIdInput = document.getElementById('fichedeclaration_id');
+            const declarationnumber = document.getElementById('declaration_number');
+            const memberscontainer = document.getElementById('members_container');
+            const accidentscontainer = document.getElementById('accidents_container');
+            const begintime = document.getElementById('begintime');
+            const endtime = document.getElementById('endtime');
+            const dateObj = new Date(declaration.date);
+            const formattedDate =
+                `${String(dateObj.getDate()).padStart(2, '0')}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${dateObj.getFullYear()}`;
+            const bus = document.getElementById('bus');
+            modal_title.innerHTML = '';
+            declarationdate.innerHTML = '';
+            declarationnumber.innerHTML = '';
+            memberscontainer.innerHTML = '';
+            accidentscontainer.innerHTML = '';
+            begintime.innerHTML = '';
+            endtime.innerHTML = '';
+            modal_title.innerHTML = 'Commission D\'accident n°' + declaration.number + '-' +
+            dateObj.getFullYear() + ' le ' + declaration.date;
+            declarationIdInput.value = declaration.id;
+            declarationnumber.innerHTML = declaration.number + '-' + dateObj.getFullYear();
+            declarationdate.innerHTML = formattedDate;
+            begintime.innerHTML = declaration.time;
+            endtime.innerHTML = declaration.endtime;
+            let members = JSON.parse(declaration.members);
+
+            Object.entries(members).forEach(([name, role]) => {
+                const div = document.createElement("div");
+                div.innerHTML = `<strong>${name}</strong>: ${role}`;
+                div.classList.add("mb-2");
+                memberscontainer.appendChild(div);
+            });
+            judiciairedeclarations.forEach(e => {
+                const div = document.createElement("div");
+                const responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
+                div.innerHTML = `
+        <div class="d-flex flex-row justify-content-around align-items-center w-100">
+            <strong>${e.chauffeur.name}</strong>
+            <span>${e.bus.name}</span>
+            <span>${responsabilite}</span>
+            <span>${e.decision}</span>
+        </div>
+    `;
+                div.classList.add("mb-2", "p-3");
+                accidentscontainer.appendChild(div);
+            });
+
+        }
+
+
+
+
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("dateInput").value = new Date().toISOString().split('T')[0];
         });
@@ -360,10 +410,10 @@
                         hiddenInput.disabled = true;
                         responsability.disabled = true;
                         responsability.required = false;
-                        responsability.value = ""; 
+                        responsability.value = "";
                         decision.disabled = true;
                         decision.required = false;
-                        decision.value = ""; 
+                        decision.value = "";
                     }
                 });
             });

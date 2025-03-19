@@ -11,7 +11,7 @@ class commission_judiciaire extends Model
     protected $fillable = ['date','time','endtime','number','members'];
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function used_pieces(){
+    public function declarations(){
         return $this->hasMany(declaration_judiciaire::class,'commission_id');
     }
     

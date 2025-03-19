@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                                font-family: 'lateef';
-                                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                                font-weight: normal;
-                                                font-style: normal;
-                                            } */
+                                                    font-family: 'lateef';
+                                                    src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                                    font-weight: normal;
+                                                    font-style: normal;
+                                                } */
         label {
             inset-inline-end: auto !important;
         }
@@ -64,7 +64,7 @@
     <div class="tab-content pt-2" id="borderedTabContent" style = "font-family: 'Tajwal';">
         <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
-                <h5 class="mt-5">Sélectionner le mois et la piece pour l'extraction de l'état:</h5>
+                <h5 class="mt-5">Sélectionner le mois et la piece pour la récupération des données:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
                     <div class="col-md-4">
@@ -149,53 +149,59 @@
                         },
                         series: [{
                             data: [
-                                0,
-                                {
-                                    value: 0,
-                                    itemStyle: {
-                                        color: '#a90000'
-                                    }
-                                },
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0
+
                             ],
                             type: 'bar'
                         }]
                     });
                 });
             </script>
+        </div>
+        <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
+            <h5 class="mt-5">Sélectionner le Bus et la piece et l'année pour la récupuration des données:</h5>
+            <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
+                @csrf
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" required name="bus" id="bus"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner le Bus</option>
+                            @foreach ($buses as $bus)
+                                <option value="{{$bus->id}}">{{$bus->name}}</option>
+                            @endforeach
 
-
+                        </select>
+                        <label for="bus">Bus</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" required name="piece" id="piece"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner la piece</option>
+                            <option value="Gasoile">Gasoile</option>
+                            <option value="Kilometrage">Kilometrage</option>
+                            <option value="Gasoile/100">Gasoile/100</option>
+                            <option value="Huile 15w40">Huile 15w40</option>
+                            <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
+                            <option value="Glaciole">Glaciole</option>
+                        </select>
+                        <label for="piece">Piece</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        <select class="form-select" required name="year" id="year"
+                            aria-label="Floating label select example">
+                            <option value="" disabled selected>Sélectionner l'année</option>
+                            @for ($i = date('Y'); $i >= 2024; $i--)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <label for="year">Année</label>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div class="tab-pane fade" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
@@ -280,19 +286,21 @@
                         const yValues = data.map(item => item.total_gasoile);
                         // const meanValue = yValues.reduce((sum, val) => sum + val, 0) / yValues.length;
                         const filteredValues = yValues.filter(val => val > 0);
-                        const meanValue = filteredValues.length > 0 
-                            ? filteredValues.reduce((sum, val) => sum + val, 0) / filteredValues.length 
-                            : 0; 
+                        const meanValue = filteredValues.length > 0 ?
+                            filteredValues.reduce((sum, val) => sum + val, 0) / filteredValues.length :
+                            0;
                         const barData = yValues.map(value => ({
                             value,
                             itemStyle: {
                                 // color: value > meanValue ? '#FFD700' : '#1f78b4'
-                                color: value > 2 * meanValue ? '#FF0000' : (value > meanValue ? '#FFD700' : '#1f78b4')
+                                color: value > 2 * meanValue ? '#FF0000' : (value > meanValue ?
+                                    '#FFD700' : '#1f78b4')
                             }
                         }));
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + monthInput[month].text + ' ' + year +'- Valeur moyenne '+meanValue.toFixed(2) ,
+                                text: piece + ' Du ' + monthInput[month].text + ' ' + year +
+                                    '- Valeur moyenne ' + meanValue.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',
                             },

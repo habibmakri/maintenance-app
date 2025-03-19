@@ -157,8 +157,8 @@ class judiciaireController extends Controller
         $declarations = declaration_judiciaire::where('commission_id', null)->get();
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
-        $commissionsthisyear = commission_judiciaire::whereBetween('date', [$startOfYear, $endOfYear])->get();
-        $commissions = commission_judiciaire::all();
+        $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur','declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->get();
+        $commissions = commission_judiciaire::with(['declarations.chauffeur','declarations.bus'])->get();
         return view("judiciaire.commission", compact(['declarations', 'commissions', 'commissionsthisyear']));
     }
     public function add_judiciaire_commission(Request $request)

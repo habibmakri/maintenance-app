@@ -1049,7 +1049,8 @@ class maintenanceController extends Controller
 
     public function statistiques_maintenance()
     {
-        return view('maintenance.statistiques_maintenance');
+        $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
+        return view('maintenance.statistiques_maintenance',compact('buses'));
     }
 
     public function statistiques_data(Request $request)
