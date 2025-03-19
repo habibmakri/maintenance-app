@@ -334,11 +334,11 @@
                 const div = document.createElement("div");
                 let responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
                 let chauffeurName = e.chauffeur.name;
-                let role = "سائق";
+                let role = ":السائق";
                 if (e.id_chauffeur == 80 && e.description) {
                     chauffeurName = e.description.split(':')[0] + ' - ' + chauffeurName;
                     responsabilite = e.responsability ? "من عامل" : "ليس من العامل";
-                    role = "عامل";
+                    role = ":العامل";
                 }
                 div.innerHTML = `
         <div class="d-flex flex-row justify-content-around align-items-center w-100">
