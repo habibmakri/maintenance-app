@@ -334,7 +334,7 @@
                 const div = document.createElement("div");
                 let responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
                 let chauffeurName = e.chauffeur.name;
-                let role = "سائق"
+                let role = "سائق";
                 if (e.id_chauffeur == 80 && e.description) {
                     chauffeurName = e.description.split(':')[0] + ' - ' + chauffeurName;
                     responsabilite = e.responsability ? "من عامل" : "ليس من العامل";
@@ -342,7 +342,7 @@
                 }
                 div.innerHTML = `
         <div class="d-flex flex-row justify-content-around align-items-center w-100">
-            <span><strong>${{role}}</strong> ${chauffeurName}</span>
+            <span><strong>${role}</strong> ${chauffeurName}</span>
             <span><strong>الحافلة:</strong> ${e.bus.name}</span>
             <span><strong>المسؤولية:</strong> ${responsabilite}</span>
             <span><strong>قرار الجنة:</strong> ${e.decision}</span>
