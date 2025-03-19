@@ -335,10 +335,10 @@
                 const responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
                 div.innerHTML = `
         <div class="d-flex flex-row justify-content-around align-items-center w-100">
-            <strong>${e.chauffeur.name}</strong>
-            <span>${e.bus.name}</span>
-            <span>${responsabilite}</span>
-            <span>${e.decision}</span>
+            <span><strong>السائق:</strong> ${e.chauffeur.name}</span>
+            <span><strong>الحافلة:</strong> ${e.bus.name}</span>
+            <span><strong>المسؤولية:</strong> ${responsabilite}</span>
+            <span><strong>قرار الجنة:</strong> ${e.decision}</span>
         </div>
     `;
                 div.classList.add("mb-2", "p-3");
