@@ -332,7 +332,7 @@
             });
             judiciairedeclarations.forEach(e => {
                 const div = document.createElement("div");
-                const responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
+                let responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
                 let chauffeurName = e.chauffeur.name;
                 if (e.id_chauffeur == 80 && e.description) {
                     chauffeurName = e.description.split(':')[0] + ' - ' + chauffeurName;
