@@ -316,7 +316,7 @@
             begintime.innerHTML = '';
             endtime.innerHTML = '';
             modal_title.innerHTML = 'Commission D\'accident n°' + declaration.number + '-' +
-            dateObj.getFullYear() + ' le ' + declaration.date;
+                dateObj.getFullYear() + ' le ' + declaration.date;
             declarationIdInput.value = declaration.id;
             declarationnumber.innerHTML = declaration.number + '-' + dateObj.getFullYear();
             declarationdate.innerHTML = formattedDate;
@@ -333,9 +333,14 @@
             judiciairedeclarations.forEach(e => {
                 const div = document.createElement("div");
                 const responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
+                let chauffeurName = e.chauffeur.name;
+                if (e.id_chauffeur == 80 && e.description) {
+                    chauffeurName = e.description.split(':')[0] + ' - ' + chauffeurName;
+                    responsabilite = e.responsability ? "من عامل" : "ليس من العامل";
+                }
                 div.innerHTML = `
         <div class="d-flex flex-row justify-content-around align-items-center w-100">
-            <span><strong>السائق:</strong> ${e.chauffeur.name}</span>
+            <span><strong>السائق:</strong> ${chauffeurName}</span>
             <span><strong>الحافلة:</strong> ${e.bus.name}</span>
             <span><strong>المسؤولية:</strong> ${responsabilite}</span>
             <span><strong>قرار الجنة:</strong> ${e.decision}</span>
