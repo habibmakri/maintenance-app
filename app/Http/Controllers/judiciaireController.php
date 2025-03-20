@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Mpdf\Mpdf;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class judiciaireController extends Controller
 {
@@ -157,8 +159,8 @@ class judiciaireController extends Controller
         $declarations = declaration_judiciaire::where('commission_id', null)->get();
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
-        $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur','declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->get();
-        $commissions = commission_judiciaire::with(['declarations.chauffeur','declarations.bus'])->get();
+        $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->get();
+        $commissions = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->get();
         return view("judiciaire.commission", compact(['declarations', 'commissions', 'commissionsthisyear']));
     }
     public function add_judiciaire_commission(Request $request)
@@ -202,6 +204,263 @@ class judiciaireController extends Controller
             $declaration->save();
         }
         return redirect()->back()->with('success', 'Commision créé avec succes.');
+    }
+    function numberToArabicWords($number)
+    {
+        $units = [
+            0 => 'صفر',
+            1 => 'واحد',
+            2 => 'اثنان',
+            3 => 'ثلاثة',
+            4 => 'أربعة',
+            5 => 'خمسة',
+            6 => 'ستة',
+            7 => 'سبعة',
+            8 => 'ثمانية',
+            9 => 'تسعة'
+        ];
+    
+        $tens = [
+            10 => 'عشرة',
+            20 => 'عشرون',
+            30 => 'ثلاثون',
+            40 => 'أربعون',
+            50 => 'خمسون',
+            60 => 'ستون',
+            70 => 'سبعون',
+            80 => 'ثمانون',
+            90 => 'تسعون'
+        ];
+    
+        $exceptions = [
+            11 => 'أحد عشر',
+            12 => 'اثنا عشر',
+            13 => 'ثلاثة عشر',
+            14 => 'أربعة عشر',
+            15 => 'خمسة عشر',
+            16 => 'ستة عشر',
+            17 => 'سبعة عشر',
+            18 => 'ثمانية عشر',
+            19 => 'تسعة عشر'
+        ];
+    
+        if ($number <= 9) {
+            return $units[$number];
+        } elseif (isset($exceptions[$number])) {
+            return $exceptions[$number];
+        } elseif ($number % 10 == 0) {
+            return $tens[$number];
+        } else {
+            $tensPart = intval($number / 10) * 10;
+            $unitsPart = $number % 10;
+    
+            return $units[$unitsPart] . ' و ' . $tens[$tensPart];
+        }
+    }
+    function numberToArabicYear($year)
+    {
+        $units = [
+            0 => 'صفر',
+            1 => 'واحد',
+            2 => 'اثنان',
+            3 => 'ثلاثة',
+            4 => 'أربعة',
+            5 => 'خمسة',
+            6 => 'ستة',
+            7 => 'سبعة',
+            8 => 'ثمانية',
+            9 => 'تسعة'
+        ];
+
+        $tens = [
+            10 => 'عشرة',
+            20 => 'عشرون',
+            30 => 'ثلاثون',
+            40 => 'أربعون',
+            50 => 'خمسون',
+            60 => 'ستون',
+            70 => 'سبعون',
+            80 => 'ثمانون',
+            90 => 'تسعون'
+        ];
+
+        $exceptions = [
+            11 => 'أحد عشر',
+            12 => 'اثنا عشر',
+            13 => 'ثلاثة عشر',
+            14 => 'أربعة عشر',
+            15 => 'خمسة عشر',
+            16 => 'ستة عشر',
+            17 => 'سبعة عشر',
+            18 => 'ثمانية عشر',
+            19 => 'تسعة عشر'
+        ];
+
+        if ($year >= 2000 && $year <= 2099) {
+            $remaining = $year - 2000;
+
+            if ($remaining == 0) {
+                return 'ألفان';
+            } elseif (isset($exceptions[$remaining])) {
+                return 'ألفان و ' . $exceptions[$remaining];
+            } elseif ($remaining < 10) {
+                return 'ألفان و ' . $units[$remaining];
+            } else {
+                $tensPart = intval($remaining / 10) * 10;
+                $unitsPart = $remaining % 10;
+
+                if ($unitsPart == 0) {
+                    return 'ألفان و ' . $tens[$tensPart];
+                } else {
+                    return 'ألفان و ' . $units[$unitsPart] . ' و ' . $tens[$tensPart];
+                }
+            }
+        }
+
+        return (string) $year;
+    }
+    function numberToOrdinalArabic($number)
+    {
+        $ordinalNumbers = [
+            1 => 'الأول',
+            2 => 'الثاني',
+            3 => 'الثالث',
+            4 => 'الرابع',
+            5 => 'الخامس',
+            6 => 'السادس',
+            7 => 'السابع',
+            8 => 'الثامن',
+            9 => 'التاسع',
+            10 => 'العاشر',
+            11 => 'الحادي عشر',
+            12 => 'الثاني عشر',
+            13 => 'الثالث عشر',
+            14 => 'الرابع عشر',
+            15 => 'الخامس عشر',
+            16 => 'السادس عشر',
+            17 => 'السابع عشر',
+            18 => 'الثامن عشر',
+            19 => 'التاسع عشر',
+            20 => 'العشرون',
+            21 => 'الحادي والعشرون',
+            22 => 'الثاني والعشرون',
+            23 => 'الثالث والعشرون',
+            24 => 'الرابع والعشرون',
+            25 => 'الخامس والعشرون',
+            26 => 'السادس والعشرون',
+            27 => 'السابع والعشرون',
+            28 => 'الثامن والعشرون',
+            29 => 'التاسع والعشرون',
+            30 => 'الثلاثون',
+            31 => 'الحادي والثلاثون'
+        ];
+
+        return $ordinalNumbers[$number] ?? $number;
+    }
+    function dateToArabicLetters($date)
+    {
+        $months = [
+            'January' => 'يناير',
+            'February' => 'فبراير',
+            'March' => 'مارس',
+            'April' => 'أبريل',
+            'May' => 'مايو',
+            'June' => 'يونيو',
+            'July' => 'يوليو',
+            'August' => 'أغسطس',
+            'September' => 'سبتمبر',
+            'October' => 'أكتوبر',
+            'November' => 'نوفمبر',
+            'December' => 'ديسمبر'
+        ];
+
+        $carbonDate = Carbon::parse($date);
+        $day = self::numberToOrdinalArabic($carbonDate->day); // Numéro du jour en arabe ordinal
+        $month = $months[$carbonDate->format('F')];
+        $year = self::numberToArabicYear($carbonDate->year); // Année en lettres arabes
+
+        return "$day $month $year";
+    }
+    public function generate_commission_word(Request $request)
+    {
+        // $request->validate([
+        //     'commision_id' => 'required',
+        // ]);
+        $commission = commission_judiciaire::find($request['commission_id']);
+        $accidents = $commission->declarations;
+        $templatePath = storage_path('app/public/word/Template_commission.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+        $templateProcessor->setValue('number', $commission->number . '-' . date('Y', strtotime($commission->date)));
+        $templateProcessor->setValue('date', $commission->date);
+        $templateProcessor->setValue('year', self::dateToArabicLetters($commission->date));
+        $templateProcessor->setValue('time', date('H:i', strtotime($commission->time)));
+        $members = json_decode($commission->members, true);
+        $president = array_search('رئيس اللجنة', $members);
+        $templateProcessor->setValue('president', $president);
+        $membersList = [];
+        // $gap = '- ';
+        foreach ($members as $name => $role) {
+            $membersList[] = $name . ': ' . $role;
+            // $gap = '   - ';
+        }
+        $templateProcessor->setValue('members', implode("\n", $membersList));
+        $firstdate = $accidents[0]->date_fiche;
+        $lastdate = $accidents[0]->date_fiche;
+        foreach($accidents as $accident){
+            if($accident->date_fiche >= $lastdate){
+                $lastdate = $accident->date_fiche;
+            }
+            if($accident->date_fiche <= $firstdate){
+                $firstdate = $accident->date_fiche;
+            }
+        }
+        $templateProcessor->setValue('firstaccident', $firstdate);
+        $templateProcessor->setValue('lastaccident', $lastdate);
+        $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
+        $tableData = [];
+        foreach ($accidents as $accident) {
+            $tableData[] = [
+                'numberac'  => $accident->number.'-'. date('Y', strtotime($accident->time_day)),
+                'dateac' => date('d/m/Y', strtotime($accident->time_day)),
+                'bus' => $accident->bus->name,
+                'chauffeur' => $accident->chauffeur->name,
+                'pertes' => $accident->pertes,
+                'responsabilite' => $accident->responsability?'من اسائق':'ليس من السائق',
+                'decision' => $accident->decision,
+            ];
+        }
+    
+        $templateProcessor->cloneRowAndSetValues('numberac', $tableData);
+        $templateProcessor->setValue('endtime', date('H:i', strtotime($commission->endtime)));
+    
+        $membersList = [];
+        $row = [];
+        $count = 0;
+        foreach ($members as $name => $role) {
+            $row[] = "$name: $role";
+            $count++;
+            if ($count % 3 == 0) {
+                $membersList[] = implode('                                 ', $row); 
+                $row = [];
+            }
+        }
+        if (!empty($row)) {
+            $membersList[] = implode('                                 ', $row);
+        }
+        $formattedMembers = implode("\n\n", $membersList);
+        $templateProcessor->setValue('memberswithpresident', $formattedMembers);
+    
+    
+    
+        $fileName = "Rapport_Mensuel_{}.docx";
+        $fileName = "Rapport_Mensuel_" . date('Y-m-d') . ".docx";
+        $tempFile = tempnam(sys_get_temp_dir(), 'word') . '.docx';
+        $templateProcessor->saveAs($tempFile);
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+        // $tempFile = tempnam(sys_get_temp_dir(), 'word');
+        // $objWriter = IOFactory::createWriter($templateProcessor, 'Word2007');
+        // $objWriter->save($tempFile);
+        // return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
     public function etat_accident(Request $request)
     {

@@ -236,9 +236,9 @@
 
                         </div>
 
-                        <form class="row g-3" action="" method="post">
+                        <form class="row g-3" action="{{route('app.judiciaire.commission_word')}}" method="post">
                             @csrf
-                            <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_id">
+                            <input type="hidden" name="commission_id" id="commission_id">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
                                 <button type="submit" class="btn btn-primary">طباعة</button>
@@ -298,7 +298,7 @@
             console.log(declaration);
             const modal_title = document.getElementById('modal_title_rapport');
             const declarationdate = document.getElementById('declaration_date');
-            const declarationIdInput = document.getElementById('fichedeclaration_id');
+            const declarationIdInput = document.getElementById('commission_id');
             const declarationnumber = document.getElementById('declaration_number');
             const memberscontainer = document.getElementById('members_container');
             const accidentscontainer = document.getElementById('accidents_container');
@@ -353,9 +353,6 @@
             });
 
         }
-
-
-
 
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("dateInput").value = new Date().toISOString().split('T')[0];
