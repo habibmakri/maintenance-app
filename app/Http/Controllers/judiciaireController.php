@@ -390,7 +390,7 @@ class judiciaireController extends Controller
         $accidents = $commission->declarations;
         $templatePath = storage_path('app/public/word/Template_commission.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
-        $templateProcessor->setValue('number', $commission->number . '-' . date('Y', strtotime($commission->date)));
+        $templateProcessor->setValue('number',  date('Y', strtotime($commission->date)) . '-' .$commission->number);
         $templateProcessor->setValue('date', $commission->date);
         $templateProcessor->setValue('year', self::dateToArabicLetters($commission->date));
         $templateProcessor->setValue('time', date('H:i', strtotime($commission->time)));
@@ -440,20 +440,20 @@ class judiciaireController extends Controller
             $row[] = "$name: $role";
             $count++;
             if ($count % 3 == 0) {
-                $membersList[] = implode('                                 ', $row); 
+                $membersList[] = implode('                      ', $row); 
                 $row = [];
             }
         }
         if (!empty($row)) {
-            $membersList[] = implode('                                 ', $row);
+            $membersList[] = implode('                      ', $row);
         }
         $formattedMembers = implode("\n\n", $membersList);
         $templateProcessor->setValue('memberswithpresident', $formattedMembers);
     
     
     
-        $fileName = "Rapport_Mensuel_{}.docx";
-        $fileName = "Rapport_Mensuel_" . date('Y-m-d') . ".docx";
+        $fileName = "محظر إجتماع لجنة الحوادث_{}.docx";
+        $fileName = "محظر إجتماع لجنة الحوادث" . $accident->number.'-'. date('Y', strtotime($accident->time_day)) . ".docx";
         $tempFile = tempnam(sys_get_temp_dir(), 'word') . '.docx';
         $templateProcessor->saveAs($tempFile);
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
