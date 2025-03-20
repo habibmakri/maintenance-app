@@ -447,7 +447,7 @@ class judiciaireController extends Controller
         if (!empty($row)) {
             $membersList[] = implode('                        ', $row);
         }
-        $formattedMembers = implode("\n\n", $membersList);
+        $formattedMembers = implode("\n\n\n", $membersList);
         $templateProcessor->setValue('memberswithpresident', $formattedMembers);
     
     
@@ -457,10 +457,6 @@ class judiciaireController extends Controller
         $tempFile = tempnam(sys_get_temp_dir(), 'word') . '.docx';
         $templateProcessor->saveAs($tempFile);
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
-        // $tempFile = tempnam(sys_get_temp_dir(), 'word');
-        // $objWriter = IOFactory::createWriter($templateProcessor, 'Word2007');
-        // $objWriter->save($tempFile);
-        // return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
     public function etat_accident(Request $request)
     {
