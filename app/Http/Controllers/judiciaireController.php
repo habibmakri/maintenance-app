@@ -439,13 +439,13 @@ class judiciaireController extends Controller
         foreach ($members as $name => $role) {
             $row[] = "$name: $role";
             $count++;
-            if ($count % 3 == 0) {
-                $membersList[] = implode('                      ', $row); 
+            if ($count % 2 == 0) {
+                $membersList[] = implode('                        ', $row); 
                 $row = [];
             }
         }
         if (!empty($row)) {
-            $membersList[] = implode('                      ', $row);
+            $membersList[] = implode('                        ', $row);
         }
         $formattedMembers = implode("\n\n", $membersList);
         $templateProcessor->setValue('memberswithpresident', $formattedMembers);
