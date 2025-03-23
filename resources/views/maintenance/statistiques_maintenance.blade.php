@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                                                font-family: 'lateef';
-                                                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                                                font-weight: normal;
-                                                                font-style: normal;
-                                                            } */
+                                                                    font-family: 'lateef';
+                                                                    src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                                                    font-weight: normal;
+                                                                    font-style: normal;
+                                                                } */
         label {
             inset-inline-end: auto !important;
         }
@@ -324,6 +324,8 @@
                     )
                     .then(response => response.json())
                     .then(data => {
+                        const selectedBusOption = busInput.querySelector(`option[value="${busInput.value}"]`);
+                        const selectedBusText = selectedBusOption ? selectedBusOption.textContent : '';
                         console.log(data);
                         const yValues = Array(12).fill(0);
                         data.forEach(item => {
@@ -334,7 +336,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + busInput[busInput.value].text + ' ' + year,
+                                text: piece + ' Du ' + selectedBusText + ' ' + year,
                                 left: 'center',
                                 textAlign: 'center',
                             },
