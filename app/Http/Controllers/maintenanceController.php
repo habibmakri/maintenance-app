@@ -1050,13 +1050,14 @@ class maintenanceController extends Controller
     public function statistiques_maintenance()
     {
         $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
-        return view('maintenance.statistiques_maintenance',compact('buses'));
+        return view('maintenance.statistiques_maintenance', compact('buses'));
     }
 
     public function statistiques_data(Request $request)
     {
         $request->validate([
-            'month' => 'required',
+            'data_type' => 'required',
+            // 'month' => 'required',
             'year' => 'required',
             'piece' => 'required',
         ]);
@@ -1066,287 +1067,302 @@ class maintenanceController extends Controller
         $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
         $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
         $data = [];
-        if ($piece == 'Gasoile') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
-                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
-                        ->where('fiches_maintenance.declaré', '=', true)
-                        ->where(function ($q) {
-                            $q->where('fiches_maintenance.brigade', 'soir')
-                                ->orWhere('fiches_maintenance.brigade', 'matin');
-                        });
-                })
-                ->selectRaw('
+        if ($request->data_type == 'simple_parbus') {
+            if ($piece == 'Gasoile') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                            ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                            ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                            ->where('fiches_maintenance.declaré', '=', true)
+                            ->where(function ($q) {
+                                $q->where('fiches_maintenance.brigade', 'soir')
+                                    ->orWhere('fiches_maintenance.brigade', 'matin');
+                            });
+                    })
+                    ->selectRaw('
             buses.id as id_bus, 
             buses.name as name_bus, 
             COALESCE(SUM(fiches_maintenance.gasoile), 0) as total_gasoile
         ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
 
 
-            $data = $query->get();
-        } elseif ($piece == 'Kilometrage') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
-                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
-                        ->where('fiches_maintenance.declaré', '=', true)
-                        ->where(function ($q) {
-                            $q->where('fiches_maintenance.brigade', 'soir')
-                                ->orWhere('fiches_maintenance.brigade', 'matin');
-                        });
-                })
-                ->selectRaw('
+                $data = $query->get();
+            } elseif ($piece == 'Kilometrage') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                            ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                            ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                            ->where('fiches_maintenance.declaré', '=', true)
+                            ->where(function ($q) {
+                                $q->where('fiches_maintenance.brigade', 'soir')
+                                    ->orWhere('fiches_maintenance.brigade', 'matin');
+                            });
+                    })
+                    ->selectRaw('
             buses.id as id_bus, 
             buses.name as name_bus, 
             COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
-            $data = $query->get();
-        } elseif ($piece == 'Gasoile/100') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
-                        ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
-                        ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
-                        ->where('fiches_maintenance.declaré', '=', true)
-                        ->where(function ($q) {
-                            $q->where('fiches_maintenance.brigade', 'soir')
-                                ->orWhere('fiches_maintenance.brigade', 'matin');
-                        });
-                })
-                ->selectRaw('
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
+            } elseif ($piece == 'Gasoile/100') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                            ->where('fiches_maintenance.date_fiche', '>=', $firstDay)
+                            ->where('fiches_maintenance.date_fiche', '<=', $lastDay)
+                            ->where('fiches_maintenance.declaré', '=', true)
+                            ->where(function ($q) {
+                                $q->where('fiches_maintenance.brigade', 'soir')
+                                    ->orWhere('fiches_maintenance.brigade', 'matin');
+                            });
+                    })
+                    ->selectRaw('
             buses.id as id_bus, 
             buses.name as name_bus, 
             (COALESCE(SUM(fiches_maintenance.gasoile), 0)*100)/COALESCE(SUM(fiches_maintenance.kmgobale), 0) as total_gasoile
         ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
-            $data = $query->get();
-        } elseif ($piece == 'Huile 15w40') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
-                ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
-                        ->where('fichepanne.date_resoudre', '>=', $firstDay)
-                        ->where('fichepanne.date_resoudre', '<=', $lastDay);
-                })
-                ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
-                ->where('used_pieces.piece_id', '=', 2)
-                ->whereNull('used_pieces.deleted_at')
-                ->selectRaw('
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
+            } elseif ($piece == 'Huile 15w40') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
+                            ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                            ->where('fichepanne.date_resoudre', '<=', $lastDay);
+                    })
+                    ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
+                    ->where('used_pieces.piece_id', '=', 2)
+                    ->whereNull('used_pieces.deleted_at')
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
 
-            $data = $query->get();
-            $query2 = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('traveauxlibre.id_bus', '=', 'buses.id')
-                        ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                        ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
-                })
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
-                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
-                ->selectRaw('
+                $data = $query->get();
+                $query2 = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('traveauxlibre.id_bus', '=', 'buses.id')
+                            ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                            ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
+                    })
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
 
-            $data2 = $query2->get();
-            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                $data2 = $query2->get();
+                $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
                     id as id_bus, 
                     name as name_bus, 
                     0 as total_gasoile')->get();
-            
-            $mergedData = collect();
-            
-            foreach ($allbuses as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            foreach ($data as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            foreach ($data2 as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            $data = $mergedData->sortBy('id_bus')->values();
-        } elseif ($piece == 'Huile 15w40/Sans vidange') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
-                ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
-                        ->where('fichepanne.date_resoudre', '>=', $firstDay)
-                        ->where('fichepanne.date_resoudre', '<=', $lastDay)
-                        ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
-                })
-                ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
-                ->where('used_pieces.piece_id', '=', 2)
-                ->whereNull('used_pieces.deleted_at')
 
-                ->selectRaw('
+                $mergedData = collect();
+
+                foreach ($allbuses as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                $data = $mergedData->sortBy('id_bus')->values();
+            } elseif ($piece == 'Huile 15w40/Sans vidange') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
+                            ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                            ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                            ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
+                    })
+                    ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
+                    ->where('used_pieces.piece_id', '=', 2)
+                    ->whereNull('used_pieces.deleted_at')
+
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
-            $data = $query->get();
-            $query2 = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('traveauxlibre.id_bus', '=', 'buses.id')
-                        ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                        ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
-                })
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
-                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
-                ->selectRaw('
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
+                $query2 = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('traveauxlibre.id_bus', '=', 'buses.id')
+                            ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                            ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
+                    })
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
 
-            $data2 = $query2->get();
-            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                $data2 = $query2->get();
+                $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
                     id as id_bus, 
                     name as name_bus, 
                     0 as total_gasoile')->get();
-            
-            $mergedData = collect();
-            
-            foreach ($allbuses as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            foreach ($data as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            foreach ($data2 as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
-                }
-            }
-            $data = $mergedData->sortBy('id_bus')->values();
-        }
-        elseif ($piece == 'Glaciole') {
-            $query = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
-                ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
-                        ->where('fichepanne.date_resoudre', '>=', $firstDay)
-                        ->where('fichepanne.date_resoudre', '<=', $lastDay)
-                        ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
-                })
-                ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
-                ->where('used_pieces.piece_id', '=', 9)
-                ->whereNull('used_pieces.deleted_at')
 
-                ->selectRaw('
+                $mergedData = collect();
+
+                foreach ($allbuses as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                $data = $mergedData->sortBy('id_bus')->values();
+            } elseif ($piece == 'Glaciole') {
+                $query = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
+                            ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                            ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                            ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25]);
+                    })
+                    ->leftJoin('used_pieces', 'fichepanne.id', '=', 'used_pieces.fichepanne_id')
+                    ->where('used_pieces.piece_id', '=', 9)
+                    ->whereNull('used_pieces.deleted_at')
+
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(used_pieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
-            $data = $query->get();
-            $query2 = bus::query()
-                ->whereIn('type', ['v8', 'l5'])
-                ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
-                    $join->on('traveauxlibre.id_bus', '=', 'buses.id')
-                        ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                        ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
-                })
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
-                ->where('traveauxlibreusedpieces.piece_id', '=', 9)
-                ->selectRaw('
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
+                $query2 = bus::query()
+                    ->whereIn('type', ['v8', 'l5'])
+                    ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('traveauxlibre.id_bus', '=', 'buses.id')
+                            ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                            ->where('traveauxlibre.date_resoudre', '<=', $lastDay);
+                    })
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibre.id', '=', 'traveauxlibreusedpieces.traveauxlibre_id')
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 9)
+                    ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
                     COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total_gasoile
                 ')
-                ->groupBy('buses.id', 'buses.name')
-                ->orderBy('buses.id');
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
 
-            $data2 = $query2->get();
-            $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                $data2 = $query2->get();
+                $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
                     id as id_bus, 
                     name as name_bus, 
                     0 as total_gasoile')->get();
-            
-            $mergedData = collect();
-            
-            foreach ($allbuses as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
+
+                $mergedData = collect();
+
+                foreach ($allbuses as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
                 }
-            }
-            foreach ($data as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
                 }
-            }
-            foreach ($data2 as $item) {
-                $id = $item->id_bus;
-                if ($mergedData->has($id)) {
-                    $mergedData[$id]->total_gasoile += $item->total_gasoile;
-                } else {
-                    $mergedData[$id] = $item;
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
                 }
+                $data = $mergedData->sortBy('id_bus')->values();
             }
-            $data = $mergedData->sortBy('id_bus')->values();
+        } elseif ($request->data_type == 'ligne_bus_mois') {
+            if ($piece == 'Kilometrage') {
+                $query = fichemaintenance::selectRaw("
+                DATE_FORMAT(date_fiche, '%Y-%m') as month, 
+                SUM(kmgobale) as total
+                ")
+                    ->where('id_bus', $request->bus)
+                    ->where('declaré', true)
+                    ->whereYear('date_fiche', $year)
+                    ->groupBy('month')
+                    ->orderBy('month', 'asc');
+
+                $data = $query->get();
+            }
         }
         return response()->json($data);
     }

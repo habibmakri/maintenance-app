@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                                    font-family: 'lateef';
-                                                    src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                                    font-weight: normal;
-                                                    font-style: normal;
-                                                } */
+                                                                font-family: 'lateef';
+                                                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                                                font-weight: normal;
+                                                                font-style: normal;
+                                                            } */
         label {
             inset-inline-end: auto !important;
         }
@@ -161,13 +161,14 @@
             <h5 class="mt-5">Sélectionner le Bus et la piece et l'année pour la récupuration des données:</h5>
             <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                 @csrf
+                <input type="hidden" name="data_type" id="data_type" value="ligne_bus_mois">
                 <div class="col-md-4">
                     <div class="form-floating">
                         <select class="form-select" required name="bus" id="bus"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner le Bus</option>
                             @foreach ($buses as $bus)
-                                <option value="{{$bus->id}}">{{$bus->name}}</option>
+                                <option value="{{ $bus->id }}">{{ $bus->name }}</option>
                             @endforeach
 
                         </select>
@@ -176,7 +177,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <select class="form-select" required name="piece" id="piece"
+                        <select class="form-select" required name="piece2" id="piece2"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner la piece</option>
                             <option value="Gasoile">Gasoile</option>
@@ -191,7 +192,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <select class="form-select" required name="year" id="year"
+                        <select class="form-select" required name="year2" id="year2"
                             aria-label="Floating label select example">
                             <option value="" disabled selected>Sélectionner l'année</option>
                             @for ($i = date('Y'); $i >= 2024; $i--)
@@ -203,7 +204,28 @@
                 </div>
             </form>
         </div>
+        <div id="lineChart" style="min-height: 400px;" class="echart"></div>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                echarts.init(document.querySelector("#lineChart")).setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+                            'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                        ]
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [],
+                        type: 'line',
+                        // smooth: true
+                    }]
+                });
+            });
+        </script>
         <div class="tab-pane fade" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
 
         </div>
@@ -214,56 +236,6 @@
 
     </div>
 
-
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const chart = echarts.init(document.querySelector("#barChart"));
-            const monthInput = document.getElementById("month");
-            const pieceInput = document.getElementById("piece");
-            const yearInput = document.getElementById("year");
-
-            function fetchData() {
-                const month = monthInput.value;
-                const year = yearInput.value;
-                const piece = pieceInput.value;
-
-                if (!month || !year || !piece) return;
-
-                fetch(`/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-
-                        const xLabels = data.map(item => `A${item.id_bus.toString().padStart(2, '0')}`);
-                        const yValues = data.map(item => item.total_gasoile);
-
-                        chart.setOption({
-                            xAxis: {
-                                type: 'category',
-                                data: xLabels
-                            },
-                            yAxis: {
-                                type: 'value'
-                            },
-                            series: [{
-                                data: yValues.map((value, index) => ({
-                                    value,
-                                    itemStyle: value === 0 ? {
-                                        color: '#a90000'
-                                    } : {}
-                                })),
-                                type: 'bar'
-                            }]
-                        });
-                    })
-                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
-            }
-
-            monthInput.addEventListener('change', fetchData);
-            pieceInput.addEventListener('change', fetchData);
-            yearInput.addEventListener('change', fetchData);
-        });
-    </script> --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const chart = echarts.init(document.querySelector("#barChart"));
@@ -275,10 +247,13 @@
                 const month = monthInput.value;
                 const year = yearInput.value;
                 const piece = pieceInput.value;
+                const data_type = pieceInput.value;
 
                 if (!month || !year || !piece) return;
 
-                fetch(`/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}`)
+                fetch(
+                        `/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}&data_type=simple_parbus`
+                    )
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
@@ -304,6 +279,12 @@
                                 left: 'center',
                                 textAlign: 'center',
                             },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    return `${params[0].axisValue} : <strong>${params[0].data}</strong>`;
+                                }
+                            },
                             xAxis: {
                                 type: 'category',
                                 data: xLabels
@@ -322,6 +303,68 @@
             }
 
             monthInput.addEventListener('change', fetchData);
+            pieceInput.addEventListener('change', fetchData);
+            yearInput.addEventListener('change', fetchData);
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const chart = echarts.init(document.querySelector("#lineChart"));
+            const busInput = document.getElementById("bus");
+            const pieceInput = document.getElementById("piece2");
+            const yearInput = document.getElementById("year2");
+
+            function fetchData() {
+                const year = yearInput.value;
+                const piece = pieceInput.value;
+                const data_type = pieceInput.value;
+
+                if (!month || !year || !piece || !busInput) return;
+
+                fetch(
+                        `/app/maintenance/statistiques_data?month=0&year=${year}&piece=${piece}&data_type=ligne_bus_mois&bus=${busInput.value}`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const yValues = Array(12).fill(0);
+                        data.forEach(item => {
+                            let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
+                            yValues[monthIndex] = item.total;
+                        });
+
+
+                        chart.setOption({
+                            title: {
+                                text: piece + ' Du ' + busInput[busInput.value].text + ' ' + year,
+                                left: 'center',
+                                textAlign: 'center',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    return `${params[0].axisValue} : <strong>${params[0].data}</strong>`;
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+                                    'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                                ]
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                // name:piece,
+                                data: yValues,
+                                type: 'line',
+                                // smooth: true
+                            }]
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+            }
+
+            busInput.addEventListener('change', fetchData);
             pieceInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
         });
