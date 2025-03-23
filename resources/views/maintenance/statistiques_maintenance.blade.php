@@ -336,7 +336,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + selectedBusText + ' ' + year,
+                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year,
                                 left: 'center',
                                 textAlign: 'center',
                             },

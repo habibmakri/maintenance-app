@@ -1362,6 +1362,29 @@ class maintenanceController extends Controller
                     ->orderBy('month', 'asc');
 
                 $data = $query->get();
+            } elseif ($piece == 'Gasoile') {
+                $query = fichemaintenance::selectRaw("
+                DATE_FORMAT(date_fiche, '%Y-%m') as month, 
+                SUM(gasoile) as total
+                ")
+                    ->where('id_bus', $request->bus)
+                    ->where('declaré', true)
+                    ->whereYear('date_fiche', $year)
+                    ->groupBy('month')
+                    ->orderBy('month', 'asc');
+
+                $data = $query->get();
+            } elseif ($piece == 'Gasoile/100') {
+                $query = fichemaintenance::selectRaw("
+                    DATE_FORMAT(date_fiche, '%Y-%m') as month, 
+                    COALESCE((SUM(gasoile) * 100) / NULLIF(SUM(kmgobale), 0), 0) as total
+                ")
+                    ->where('id_bus', $request->bus)
+                    ->where('declaré', true)
+                    ->whereYear('date_fiche', $year)
+                    ->groupBy('month')
+                    ->orderBy('month', 'asc');
+                $data = $query->get();
             }
         }
         return response()->json($data);
