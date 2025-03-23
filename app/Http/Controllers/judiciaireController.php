@@ -219,7 +219,7 @@ class judiciaireController extends Controller
             8 => 'ثمانية',
             9 => 'تسعة'
         ];
-    
+
         $tens = [
             10 => 'عشرة',
             20 => 'عشرون',
@@ -231,7 +231,7 @@ class judiciaireController extends Controller
             80 => 'ثمانون',
             90 => 'تسعون'
         ];
-    
+
         $exceptions = [
             11 => 'أحد عشر',
             12 => 'اثنا عشر',
@@ -243,7 +243,7 @@ class judiciaireController extends Controller
             18 => 'ثمانية عشر',
             19 => 'تسعة عشر'
         ];
-    
+
         if ($number <= 9) {
             return $units[$number];
         } elseif (isset($exceptions[$number])) {
@@ -253,7 +253,7 @@ class judiciaireController extends Controller
         } else {
             $tensPart = intval($number / 10) * 10;
             $unitsPart = $number % 10;
-    
+
             return $units[$unitsPart] . ' و ' . $tens[$tensPart];
         }
     }
@@ -390,7 +390,7 @@ class judiciaireController extends Controller
         $accidents = $commission->declarations;
         $templatePath = storage_path('app/public/word/Template_commission.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
-        $templateProcessor->setValue('number',  date('Y', strtotime($commission->date)) . '-' .$commission->number);
+        $templateProcessor->setValue('number',  date('Y', strtotime($commission->date)) . '-' . $commission->number);
         $templateProcessor->setValue('date', $commission->date);
         $templateProcessor->setValue('year', self::dateToArabicLetters($commission->date));
         $templateProcessor->setValue('time', date('H:i', strtotime($commission->time)));
@@ -398,19 +398,19 @@ class judiciaireController extends Controller
         $president = array_search('رئيس اللجنة', $members);
         $templateProcessor->setValue('president', $president);
         $membersList = [];
-        // $gap = '- ';
         foreach ($members as $name => $role) {
-            $membersList[] = $name . ': ' . $role;
-            // $gap = '   - ';
+            $membersList[] = [
+                'members' =>  $name . ': ' . $role
+            ];
         }
-        $templateProcessor->setValue('members', implode("\n", $membersList));
+        $templateProcessor->cloneRowAndSetValues('members', $membersList);
         $firstdate = $accidents[0]->date_fiche;
         $lastdate = $accidents[0]->date_fiche;
-        foreach($accidents as $accident){
-            if($accident->date_fiche >= $lastdate){
+        foreach ($accidents as $accident) {
+            if ($accident->date_fiche >= $lastdate) {
                 $lastdate = $accident->date_fiche;
             }
-            if($accident->date_fiche <= $firstdate){
+            if ($accident->date_fiche <= $firstdate) {
                 $firstdate = $accident->date_fiche;
             }
         }
@@ -420,40 +420,47 @@ class judiciaireController extends Controller
         $tableData = [];
         foreach ($accidents as $accident) {
             $tableData[] = [
-                'numberac'  => $accident->number.'-'. date('Y', strtotime($accident->time_day)),
+                'numberac'  => $accident->number . '-' . date('Y', strtotime($accident->time_day)),
                 'dateac' => date('d/m/Y', strtotime($accident->time_day)),
                 'bus' => $accident->bus->name,
                 'chauffeur' => $accident->chauffeur->name,
                 'pertes' => $accident->pertes,
-                'responsabilite' => $accident->responsability?'من اسائق':'ليس من السائق',
+                'responsabilite' => $accident->responsability ? 'من اسائق' : 'ليس من السائق',
                 'decision' => $accident->decision,
             ];
         }
-    
+
         $templateProcessor->cloneRowAndSetValues('numberac', $tableData);
         $templateProcessor->setValue('endtime', date('H:i', strtotime($commission->endtime)));
-    
+
         $membersList = [];
-        $row = [];
+        $pairList = [];
+        $impairList = [];
         $count = 0;
         foreach ($members as $name => $role) {
-            $row[] = "$name: $role";
-            $count++;
             if ($count % 2 == 0) {
-                $membersList[] = implode('                        ', $row); 
-                $row = [];
+                $pairList[] = $name . ': ' . $role;
+            } else {
+                $impairList[] = $name . ': ' . $role;
             }
+            $count++;
         }
-        if (!empty($row)) {
-            $membersList[] = implode('                        ', $row);
+        $maxCount = max(count($pairList), count($impairList));
+        $pairList = array_pad($pairList, $maxCount, '');
+        $impairList = array_pad($impairList, $maxCount, '');
+        
+        for ($i = 0; $i < $maxCount; $i++) {
+            $membersList[] = [
+                "pair" => $pairList[$i],
+                "impair" => $impairList[$i]
+            ];
         }
-        $formattedMembers = implode("\n\n\n", $membersList);
-        $templateProcessor->setValue('memberswithpresident', $formattedMembers);
-    
-    
-    
+        
+        $templateProcessor->cloneRowAndSetValues('pair', $membersList);
+
+
         $fileName = "محظر إجتماع لجنة الحوادث_{}.docx";
-        $fileName = "محظر إجتماع لجنة الحوادث" . $accident->number.'-'. date('Y', strtotime($accident->time_day)) . ".docx";
+        $fileName = "محظر إجتماع لجنة الحوادث" . $accident->number . '-' . date('Y', strtotime($accident->time_day)) . ".docx";
         $tempFile = tempnam(sys_get_temp_dir(), 'word') . '.docx';
         $templateProcessor->saveAs($tempFile);
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
