@@ -419,13 +419,18 @@ class judiciaireController extends Controller
         $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
         $tableData = [];
         foreach ($accidents as $accident) {
+            if($accident->id_chauffeur == 80 ){
+                $resposablity = $accident->responsability ? 'من العامل' : 'ليس من العامل';
+            }else{
+                $resposablity = $accident->responsability ? 'من اسائق' : 'ليس من السائق';
+            }
             $tableData[] = [
                 'numberac'  => $accident->number . '-' . date('Y', strtotime($accident->time_day)),
                 'dateac' => date('d/m/Y', strtotime($accident->time_day)),
                 'bus' => $accident->bus->name,
                 'chauffeur' => $accident->chauffeur->name,
                 'pertes' => $accident->pertes,
-                'responsabilite' => $accident->responsability ? 'من اسائق' : 'ليس من السائق',
+                'responsabilite' => $resposablity,
                 'decision' => $accident->decision,
             ];
         }
