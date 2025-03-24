@@ -339,7 +339,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year + ' Total: '+total,
+                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year + ' Total: '+total.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',
                             },
