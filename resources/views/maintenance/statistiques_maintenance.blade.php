@@ -346,7 +346,7 @@
                             tooltip: {
                                 trigger: 'axis',
                                 formatter: function(params) {
-                                    return `${params[0].axisValue} : <strong>${params[0].data}</strong>`;
+                                    return `${params[0].axisValue} : <strong>${params[0].data.toFixed(2)}</strong>`;
                                 }
                             },
                             xAxis: {
