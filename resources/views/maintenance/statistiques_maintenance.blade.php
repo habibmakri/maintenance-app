@@ -343,7 +343,7 @@
                                 trigger: 'axis',
                                 formatter: function(params) {
                                     const dataValue = params[0].data.value;
-                                    return `${params[0].axisValue} : <strong>${dataValue}</strong>`;
+                                    return `${params[0].axisValue} : <strong>${dataValue.toFixed(2)}</strong>`;
                                 }
                             },
                             xAxis: {
