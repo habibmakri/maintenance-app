@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                                                        font-family: 'lateef';
-                                                                        src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                                                        font-weight: normal;
-                                                                        font-style: normal;
-                                                                    } */
+                font-family: 'lateef';
+                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            } */
         label {
             inset-inline-end: auto !important;
         }
@@ -53,7 +53,7 @@
                 type="button" role="tab" aria-controls="home" aria-selected="true">BUS</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button"
+            <button class="nav-link" id="piece-tab" data-bs-toggle="tab" data-bs-target="#bordered-piece" type="button"
                 role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Pieces</button>
         </li>
         <li class="nav-item" role="presentation">
@@ -185,7 +185,7 @@
                                 <option value="Gasoile/100">Gasoile/100</option>
                                 <option value="Huile 15w40">Huile 15w40</option>
                                 <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
-                                <option value="Glaciole">Glaciole</option>
+                                <option value="Glaciole">Glaciole/Sans vidange</option>
                             </select>
                             <label for="piece">Piece</label>
                         </div>
@@ -227,7 +227,66 @@
                 });
             </script>
         </div>
-        <div class="tab-pane fade" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade" id="bordered-piece" role="tabpanel" aria-labelledby="piece-tab">
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
+                <h5 class="mt-5">Sélectionner la piece et l'année pour la récupuration des données:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="data_type" id="data_type" value="ligne_bus_mois">
+                    <div class="col-md-8">
+                        <div class="form-floating">
+                            <select class="form-select" required name="piece3" id="piece3"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner la piece</option>
+                                <option value="Gasoile">Gasoile</option>
+                                <option value="Kilometrage">Kilometrage</option>
+                                <option value="Gasoile/100">Gasoile/100</option>
+                                <option value="Huile 15w40">Huile 15w40</option>
+                                <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
+                                <option value="Glaciole">Glaciole/Sans vidange</option>
+                                @foreach ($pieces as $piece)
+                                <option value="{{$piece->id}}">{{$piece->name}}</option>
+                                @endforeach
+                            </select>
+                            <label for="piece">Piece</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year3" id="year3"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="lineChartpiece" style="min-height: 400px;" class="echart"></div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#lineChartpiece")).setOption({
+                        xAxis: {
+                            type: 'category',
+                            data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+                                'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                            ]
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: [],
+                            type: 'line',
+                            // smooth: true
+                        }]
+                    });
+                });
+            </script>
 
         </div>
         <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -323,6 +382,70 @@
 
                 fetch(
                         `/app/maintenance/statistiques_data?month=0&year=${year}&piece=${piece}&data_type=ligne_bus_mois&bus=${busInput.value}`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        const selectedBusOption = busInput.querySelector(`option[value="${busInput.value}"]`);
+                        const selectedBusText = selectedBusOption ? selectedBusOption.textContent : '';
+                        console.log(data);
+                        const yValues = Array(12).fill(0);
+                        data.forEach(item => {
+                            let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
+                            yValues[monthIndex] = item.total;
+                        });
+                        const totalvals = data.map(item => item.total_gasoile);
+                        const total = yValues.reduce((sum, val) => sum + val, 0);
+
+                        chart.setOption({
+                            title: {
+                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year + ' Total: '+total.toFixed(2),
+                                left: 'center',
+                                textAlign: 'center',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    return `${params[0].axisValue} : <strong>${params[0].data.toFixed(2)}</strong>`;
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+                                    'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                                ]
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                // name:piece,
+                                data: yValues,
+                                type: 'line',
+                                // smooth: true
+                            }]
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+            }
+
+            busInput.addEventListener('change', fetchData);
+            pieceInput.addEventListener('change', fetchData);
+            yearInput.addEventListener('change', fetchData);
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const chart = echarts.init(document.querySelector("#lineChartpiece"));
+            const pieceInput = document.getElementById("piece3");
+            const yearInput = document.getElementById("year3");
+
+            function fetchData() {
+                const year = yearInput.value;
+                const piece = pieceInput.value;
+                const data_type = pieceInput.value;
+
+                if (!month || !year || !piece || !busInput) return;
+
+                fetch(
+                        `/app/maintenance/statistiques_data?year=${year}&piece=${piece}&data_type=ligne_piece_mois`
                     )
                     .then(response => response.json())
                     .then(data => {

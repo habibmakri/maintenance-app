@@ -1050,7 +1050,8 @@ class maintenanceController extends Controller
     public function statistiques_maintenance()
     {
         $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
-        return view('maintenance.statistiques_maintenance', compact('buses'));
+        $pieces = pieces_maintanance::all();
+        return view('maintenance.statistiques_maintenance', compact(['buses', 'pieces']));
     }
 
     public function statistiques_data(Request $request)
@@ -1385,7 +1386,176 @@ class maintenanceController extends Controller
                     ->groupBy('month')
                     ->orderBy('month', 'asc');
                 $data = $query->get();
+            } elseif ($piece == 'Huile 15w40') {
+                $month = $request->month;
+                $year = $request->year;
+                $piece = $request->piece;
+                $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
+                $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
+                $query = bus::query()
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+                    ->leftJoin('used_pieces', 'used_pieces.fichepanne_id', '=', 'fichepanne.id')
+                    ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                    ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                    ->whereNull('used_pieces.deleted_at')
+                    ->where('used_pieces.piece_id', '=', 2)
+                    ->selectRaw("
+                        DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
+                        COALESCE(SUM(used_pieces.quantité), 0) as total
+                    ")
+                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->orderBy('month', 'asc');
+                $data = $query->get();
+                $query2 = bus::query()
+                ->where('buses.id', $request->bus)
+                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                ->selectRaw("
+                DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
+                COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
+                ")
+                ->groupBy('month', 'buses.id', 'buses.name') 
+                ->orderBy('month', 'asc');
+                $data2 = $query2->get();
+                $mergedData = collect();
+
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                $data = $mergedData->sortBy('id_bus')->values();
+            }elseif ($piece == 'Huile 15w40/Sans vidange') {
+                $month = $request->month;
+                $year = $request->year;
+                $piece = $request->piece;
+                $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
+                $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
+                $query = bus::query()
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+                    ->leftJoin('used_pieces', 'used_pieces.fichepanne_id', '=', 'fichepanne.id')
+                    ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                    ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                    ->whereNull('used_pieces.deleted_at')
+                    ->where('used_pieces.piece_id', '=', 2)
+                    ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25])
+                    ->selectRaw("
+                        DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
+                        COALESCE(SUM(used_pieces.quantité), 0) as total
+                    ")
+                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->orderBy('month', 'asc');
+                $data = $query->get();
+                $query2 = bus::query()
+                ->where('buses.id', $request->bus)
+                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                ->selectRaw("
+                DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
+                COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
+                ")
+                ->groupBy('month', 'buses.id', 'buses.name') 
+                ->orderBy('month', 'asc');
+                $data2 = $query2->get();
+                $mergedData = collect();
+
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                $data = $mergedData->sortBy('id_bus')->values();
+            }elseif ($piece == 'Glaciole') {
+                $month = $request->month;
+                $year = $request->year;
+                $piece = $request->piece;
+                $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
+                $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
+                $query = bus::query()
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
+                    ->leftJoin('fichepanne', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+                    ->leftJoin('used_pieces', 'used_pieces.fichepanne_id', '=', 'fichepanne.id')
+                    ->where('fichepanne.date_resoudre', '>=', $firstDay)
+                    ->where('fichepanne.date_resoudre', '<=', $lastDay)
+                    ->whereNull('used_pieces.deleted_at')
+                    ->where('used_pieces.piece_id', '=', 9)
+                    ->whereNotIn('fichepanne.pannnename_id', [23, 24, 25])
+                    ->selectRaw("
+                        DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
+                        COALESCE(SUM(used_pieces.quantité), 0) as total
+                    ")
+                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->orderBy('month', 'asc');
+                $data = $query->get();
+                $query2 = bus::query()
+                ->where('buses.id', $request->bus)
+                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                ->where('traveauxlibreusedpieces.piece_id', '=', 9)
+                ->selectRaw("
+                DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
+                COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
+                ")
+                ->groupBy('month', 'buses.id', 'buses.name') 
+                ->orderBy('month', 'asc');
+                $data2 = $query2->get();
+                $mergedData = collect();
+
+                foreach ($data as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                foreach ($data2 as $item) {
+                    $id = $item->id_bus;
+                    if ($mergedData->has($id)) {
+                        $mergedData[$id]->total_gasoile += $item->total_gasoile;
+                    } else {
+                        $mergedData[$id] = $item;
+                    }
+                }
+                $data = $mergedData->sortBy('id_bus')->values();
             }
+        } elseif ($request->data_type == 'ligne_piece_mois') {
+            return 0;
         }
         return response()->json($data);
     }
