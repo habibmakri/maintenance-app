@@ -1349,6 +1349,27 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->sortBy('id_bus')->values();
+            } elseif ($piece == 'pdéclarer') {
+                $query = bus::query()
+                    ->whereIn('buses.type', ['v8', 'l5'])
+                    ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('buses.id', '=', 'fiches_maintenance.id_bus')
+                            ->whereBetween('fiches_maintenance.date_fiche', [$firstDay, $lastDay])
+                            ->where('fiches_maintenance.declaré', true);
+                    })
+                    ->leftjoin('fichepanne', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
+                    ->whereNull('fichepanne.deleted_at')
+                    ->leftjoin('pannenames', 'fichepanne.pannnename_id', '=', 'pannenames.id')
+                    ->selectRaw('
+                    buses.id as id_bus, 
+                    buses.name as name_bus, 
+                    COUNT(CASE WHEN pannenames.type = "electrique" THEN 1 END) as total_electrique,
+                    COUNT(CASE WHEN pannenames.type = "tolle" THEN 1 END) as total_tolle,
+                    COUNT(CASE WHEN pannenames.type = "mecanique" THEN 1 END) as total_moteur
+                ')
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
             }
         } elseif ($request->data_type == 'ligne_bus_mois') {
             if ($piece == 'Kilometrage') {
@@ -1405,22 +1426,22 @@ class maintenanceController extends Controller
                         DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
                         COALESCE(SUM(used_pieces.quantité), 0) as total
                     ")
-                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->groupBy('month', 'buses.id', 'buses.name')
                     ->orderBy('month', 'asc');
                 $data = $query->get();
                 $query2 = bus::query()
-                ->where('buses.id', $request->bus)
-                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
-                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
-                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
-                ->selectRaw("
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                    ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                    ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                    ->selectRaw("
                 DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
                 COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
                 ")
-                ->groupBy('month', 'buses.id', 'buses.name') 
-                ->orderBy('month', 'asc');
+                    ->groupBy('month', 'buses.id', 'buses.name')
+                    ->orderBy('month', 'asc');
                 $data2 = $query2->get();
                 $mergedData = collect();
 
@@ -1441,7 +1462,7 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->sortBy('id_bus')->values();
-            }elseif ($piece == 'Huile 15w40/Sans vidange') {
+            } elseif ($piece == 'Huile 15w40/Sans vidange') {
                 $month = $request->month;
                 $year = $request->year;
                 $piece = $request->piece;
@@ -1461,22 +1482,22 @@ class maintenanceController extends Controller
                         DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
                         COALESCE(SUM(used_pieces.quantité), 0) as total
                     ")
-                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->groupBy('month', 'buses.id', 'buses.name')
                     ->orderBy('month', 'asc');
                 $data = $query->get();
                 $query2 = bus::query()
-                ->where('buses.id', $request->bus)
-                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
-                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
-                ->where('traveauxlibreusedpieces.piece_id', '=', 2)
-                ->selectRaw("
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                    ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                    ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 2)
+                    ->selectRaw("
                 DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
                 COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
                 ")
-                ->groupBy('month', 'buses.id', 'buses.name') 
-                ->orderBy('month', 'asc');
+                    ->groupBy('month', 'buses.id', 'buses.name')
+                    ->orderBy('month', 'asc');
                 $data2 = $query2->get();
                 $mergedData = collect();
 
@@ -1497,7 +1518,7 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->sortBy('id_bus')->values();
-            }elseif ($piece == 'Glaciole') {
+            } elseif ($piece == 'Glaciole') {
                 $month = $request->month;
                 $year = $request->year;
                 $piece = $request->piece;
@@ -1517,22 +1538,22 @@ class maintenanceController extends Controller
                         DATE_FORMAT(fichepanne.date_resoudre, '%Y-%m') as month,
                         COALESCE(SUM(used_pieces.quantité), 0) as total
                     ")
-                    ->groupBy('month', 'buses.id', 'buses.name') 
+                    ->groupBy('month', 'buses.id', 'buses.name')
                     ->orderBy('month', 'asc');
                 $data = $query->get();
                 $query2 = bus::query()
-                ->where('buses.id', $request->bus)
-                ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
-                ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
-                ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
-                ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
-                ->where('traveauxlibreusedpieces.piece_id', '=', 9)
-                ->selectRaw("
+                    ->where('buses.id', $request->bus)
+                    ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                    ->leftJoin('traveauxlibreusedpieces', 'traveauxlibreusedpieces.traveauxlibre_id', '=', 'traveauxlibre.id')
+                    ->where('traveauxlibre.date_resoudre', '>=', $firstDay)
+                    ->where('traveauxlibre.date_resoudre', '<=', $lastDay)
+                    ->where('traveauxlibreusedpieces.piece_id', '=', 9)
+                    ->selectRaw("
                 DATE_FORMAT(traveauxlibre.date_resoudre, '%Y-%m') as month,
                 COALESCE(SUM(traveauxlibreusedpieces.quantité), 0) as total
                 ")
-                ->groupBy('month', 'buses.id', 'buses.name') 
-                ->orderBy('month', 'asc');
+                    ->groupBy('month', 'buses.id', 'buses.name')
+                    ->orderBy('month', 'asc');
                 $data2 = $query2->get();
                 $mergedData = collect();
 
