@@ -414,7 +414,7 @@
             modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
                 .time_day + ' signaler le ' +
                 declaration.date_fiche;
-            declarationIdInput.value = declaration.id;
+            declarationIdInput.value = declaration.id; 
         }
         function handleimagesclick2(declaration) {
             const modal_title = document.getElementById('modal_title_images2');
