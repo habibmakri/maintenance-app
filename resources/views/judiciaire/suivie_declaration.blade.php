@@ -102,7 +102,7 @@
                                     data-bs-toggle="modal" onclick="handlecaatclick({{ $declaration->id }})">CAAT</button>
                                 <button type="button"
                                     @if ($declaration->paye == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
-                                    data-bs-toggle="modal" onclick="handlepayeclick({{ $declaration->id }})">أموال</button>
+                                    data-bs-toggle="modal" onclick="handlepayeclick({{ $declaration->id }})">تعويض</button>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
                                     onclick="handleresoudreclick({{ $declaration }},{{ $declaration->ligne }})">تقرير</button>
@@ -245,7 +245,7 @@
                                 <button type="button"
                                     @if ($declaration->paye == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
                                     data-bs-toggle="modal"
-                                    onclick="handlepayeclick({{ $declaration->id }})">أموال</button>
+                                    onclick="handlepayeclick({{ $declaration->id }})">تعويض</button>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal2"
                                     onclick="handleresoudreclick2({{ $declaration }},{{ $declaration->ligne }})">تقرير</button>
