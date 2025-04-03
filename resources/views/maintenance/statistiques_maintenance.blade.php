@@ -433,9 +433,15 @@
                             },
                             tooltip: {
                                 trigger: 'axis',
-                                formatter: function(params) {
-                                    const dataValue = params[0].data.value;
-                                    return `${params[0].axisValue} : <strong>${dataValue.toFixed(2)}</strong>`;
+                                // formatter: function(params) {
+                                //     const dataValue = params[0].data.value;
+                                //     return `${params[0].axisValue} : <strong>${dataValue.toFixed(2)}</strong>`;
+                                // }
+                                formatter: function(params) { 
+                                    if (!params[0].data || params[0].data.value == null) {
+                                        return `${params[0].axisValue} : <strong>${params[0].data.value}</strong>`;
+                                    }
+                                    return `${params[0].axisValue} : <strong>${params[0].data.value.toFixed(2)}</strong>`;
                                 }
                             },
                             xAxis: {
