@@ -1375,7 +1375,10 @@ class maintenanceController extends Controller
             }elseif($piece == 'tlibre'){
                 $query = bus::query()
                     ->whereIn('buses.type', ['v8', 'l5'])
-                    ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                    ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
+                        $join->on('traveauxlibre.id_bus', '=', 'buses.id')
+                             ->whereBetween('traveauxlibre.date_resoudre', [$firstDay, $lastDay]);
+                    })
                     ->selectRaw('
                     buses.id as id_bus, 
                     buses.name as name_bus, 
