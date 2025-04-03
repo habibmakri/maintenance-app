@@ -519,7 +519,7 @@
                                     data: tolleValues
                                 },
                                 {
-                                    name: 'Moteur',
+                                    name: 'Mecanique',
                                     type: 'bar',
                                     stack: 'total',
                                     data: moteurValues
