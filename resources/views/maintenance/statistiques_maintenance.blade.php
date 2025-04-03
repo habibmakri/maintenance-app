@@ -236,13 +236,14 @@
                 <h5 class="mt-5">Sélectionner la piece et l'année pour la récupuration des données:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
-                    <input type="hidden" name="data_type" id="data_type" value="ligne_bus_mois">
+                    <input type="hidden" name="data_type" id="data_type" value="traveaux_bus_mois">
                     <div class="col-md-4">
                         <div class="form-floating">
                             <select class="form-select" required name="piecepanne" id="piecepanne"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner la piece</option>
-                                <option value="pdéclarer">Panne Déclarer</option>
+                                <option value="pdéclarer">Pannes Déclarés</option>
+                                <option value="tlibre">Traveaux libre</option>
                             </select>
                             <label for="piecepanne">Type</label>
                         </div>
@@ -478,7 +479,7 @@
                 if (!month || !year || !piece) return;
 
                 fetch(
-                        `/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}&data_type=simple_parbus`
+                        `/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=${piece}&data_type=traveaux_bus_mois`
                     )
                     .then(response => response.json())
                     .then(data => {

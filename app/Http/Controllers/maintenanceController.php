@@ -1349,7 +1349,9 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->sortBy('id_bus')->values();
-            } elseif ($piece == 'pdéclarer') {
+            } 
+        } elseif($request->data_type == 'traveaux_bus_mois'){
+            if ($piece == 'pdéclarer') {
                 $query = bus::query()
                     ->whereIn('buses.type', ['v8', 'l5'])
                     ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
@@ -1366,6 +1368,20 @@ class maintenanceController extends Controller
                     COUNT(CASE WHEN pannenames.type = "electrique" THEN 1 END) as total_electrique,
                     COUNT(CASE WHEN pannenames.type = "tolle" THEN 1 END) as total_tolle,
                     COUNT(CASE WHEN pannenames.type = "mecanique" THEN 1 END) as total_moteur
+                ')
+                    ->groupBy('buses.id', 'buses.name')
+                    ->orderBy('buses.id');
+                $data = $query->get();
+            }elseif($piece == 'tlibre'){
+                $query = bus::query()
+                    ->whereIn('buses.type', ['v8', 'l5'])
+                    ->leftJoin('traveauxlibre', 'traveauxlibre.id_bus', '=', 'buses.id')
+                    ->selectRaw('
+                    buses.id as id_bus, 
+                    buses.name as name_bus, 
+                    COUNT(CASE WHEN traveauxlibre.nature = "electrique" THEN 1 END) as total_electrique,
+                    COUNT(CASE WHEN traveauxlibre.nature = "tolle" THEN 1 END) as total_tolle,
+                    COUNT(CASE WHEN traveauxlibre.nature = "mecanique" THEN 1 END) as total_moteur
                 ')
                     ->groupBy('buses.id', 'buses.name')
                     ->orderBy('buses.id');
