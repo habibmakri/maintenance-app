@@ -242,8 +242,8 @@
                             <select class="form-select" required name="piecepanne" id="piecepanne"
                                 aria-label="Floating label select example">
                                 <option value="" disabled selected>Sélectionner la piece</option>
-                                <option value="pdéclarer">Pannes Déclarés</option>
-                                <option value="tlibre">Traveaux libre</option>
+                                <option value="Pannes Déclarés">Pannes Déclarés</option>
+                                <option value="Traveaux libre">Traveaux libre</option>
                             </select>
                             <label for="piecepanne">Type</label>
                         </div>

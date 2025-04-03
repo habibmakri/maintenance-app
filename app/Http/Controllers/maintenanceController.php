@@ -1351,7 +1351,7 @@ class maintenanceController extends Controller
                 $data = $mergedData->sortBy('id_bus')->values();
             } 
         } elseif($request->data_type == 'traveaux_bus_mois'){
-            if ($piece == 'pdéclarer') {
+            if ($piece == 'Pannes Déclarés') {
                 $query = bus::query()
                     ->whereIn('buses.type', ['v8', 'l5'])
                     ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {
@@ -1372,7 +1372,7 @@ class maintenanceController extends Controller
                     ->groupBy('buses.id', 'buses.name')
                     ->orderBy('buses.id');
                 $data = $query->get();
-            }elseif($piece == 'tlibre'){
+            }elseif($piece == 'Traveaux libre'){
                 $query = bus::query()
                     ->whereIn('buses.type', ['v8', 'l5'])
                     ->leftJoin('traveauxlibre', function ($join) use ($firstDay, $lastDay) {
