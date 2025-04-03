@@ -493,7 +493,7 @@
 
                         chart.setOption({
                             title: {
-                                text: `Pannes par Bus - ${monthInput.options[monthInput.selectedIndex].text} ${year}`,
+                                text: `${piece} par Bus - ${monthInput.options[monthInput.selectedIndex].text} ${year}`,
                                 // left: 'center',
                             },
                             tooltip: {
