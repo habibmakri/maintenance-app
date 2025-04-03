@@ -439,7 +439,7 @@
                                 // }
                                 formatter: function(params) { 
                                     if (!params[0].data || params[0].data.value == null) {
-                                        return `${params[0].axisValue} : <strong>${params[0].data.value}</strong>`;
+                                        return `${params[0].axisValue} : <strong> 0 </strong>`;
                                     }
                                     return `${params[0].axisValue} : <strong>${params[0].data.value.toFixed(2)}</strong>`;
                                 }
