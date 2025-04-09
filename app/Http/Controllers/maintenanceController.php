@@ -1051,7 +1051,25 @@ class maintenanceController extends Controller
     {
         $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
         $pieces = pieces_maintanance::all();
-        return view('maintenance.statistiques_maintenance', compact(['buses', 'pieces']));
+        $pannes = fichepanne_model::get(['equipe', 'date_resoudre']);
+        $traveaux = traveauxlibre_model::get(['equipe', 'date_resoudre']);
+        $equipes = $pannes->pluck('equipe');
+        $equipesTraveaux = $traveaux->pluck('equipe');
+        $equipesFusionnees = $equipes->merge($equipesTraveaux);
+        $equipesUniques = $equipesFusionnees
+            ->filter()
+            ->map(function ($equipe) {
+                $decoded = json_decode($equipe, true);
+                if (is_array($decoded)) {
+                    sort($decoded);
+                    return json_encode($decoded);
+                }
+                return null;
+            })
+            ->filter()
+            ->unique()
+            ->values();
+        return view('maintenance.statistiques_maintenance', compact(['buses', 'pieces', 'equipesUniques']));
     }
 
     public function statistiques_data(Request $request)
@@ -1349,7 +1367,7 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->sortBy('id_bus')->values();
-            }elseif (filter_var($piece, FILTER_VALIDATE_INT) !== false) {
+            } elseif (filter_var($piece, FILTER_VALIDATE_INT) !== false) {
                 $query = bus::query()
                     ->whereIn('type', ['v8', 'l5'])
                     ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
@@ -1796,7 +1814,7 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->values();
-            }elseif ($piece == 'Glaciole') {
+            } elseif ($piece == 'Glaciole') {
                 $month = $request->month;
                 $year = $request->year;
                 $piece = $request->piece;
@@ -1848,7 +1866,7 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->values();
-            }elseif (filter_var($piece, FILTER_VALIDATE_INT) !== false) {
+            } elseif (filter_var($piece, FILTER_VALIDATE_INT) !== false) {
                 $month = $request->month;
                 $year = $request->year;
                 $piece = $request->piece;
@@ -1899,6 +1917,69 @@ class maintenanceController extends Controller
                     }
                 }
                 $data = $mergedData->values();
+            }
+        } elseif ($request->data_type == 'ligne_equipe_mois') {
+
+            $year = $request->year;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear();
+            $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear();
+            $equipeInput = json_decode($request->piece);
+            sort($equipeInput);
+            $equipeKey = json_encode($equipeInput);
+
+            // Retrieve pannes and traveaux
+            $pannes = fichepanne_model::query()
+                ->whereBetween('date_resoudre', [$firstDay->format('Y-m-d'), $lastDay->format('Y-m-d')])
+                ->whereNotNull('equipe')
+                ->get(['date_resoudre', 'equipe']);
+
+            $traveaux = traveauxlibre_model::query()
+                ->whereBetween('date_resoudre', [$firstDay->format('Y-m-d'), $lastDay->format('Y-m-d')])
+                ->whereNotNull('equipe')
+                ->get(['date_resoudre', 'equipe']);
+
+            // Initialize counts for each month
+            $counts = [];
+            for ($month = 1; $month <= 12; $month++) {
+                $monthFormatted = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
+                $counts[$monthFormatted] = 0;
+            }
+
+            // Process pannes
+            foreach ($pannes as $panne) {
+                $tmpeqp = json_decode($panne->equipe);
+                if (is_array($tmpeqp)) {
+                    sort($tmpeqp);
+                    if (json_encode($tmpeqp) === $equipeKey) {
+                        $month = \Carbon\Carbon::parse($panne->date_resoudre)->format('Y-m');
+                        if (isset($counts[$month])) {
+                            $counts[$month]++;
+                        }
+                    }
+                }
+            }
+
+            // Process traveaux
+            foreach ($traveaux as $travaux) {
+                $tmpeqp = json_decode($travaux->equipe);
+                if (is_array($tmpeqp)) {
+                    sort($tmpeqp);
+                    if (json_encode($tmpeqp) === $equipeKey) {
+                        $month = \Carbon\Carbon::parse($travaux->date_resoudre)->format('Y-m');
+                        if (isset($counts[$month])) {
+                            $counts[$month]++;
+                        }
+                    }
+                }
+            }
+
+            // Prepare the response data
+            $data = [];
+            foreach ($counts as $month => $total) {
+                $data[] = [
+                    'month' => $month,
+                    'total' => $total,
+                ];
             }
         }
         return response()->json($data);

@@ -61,8 +61,8 @@
                 role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Pieces</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button"
-                role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Agents</button>
+            <button class="nav-link" id="equipe-tab" data-bs-toggle="tab" data-bs-target="#bordered-equipe" type="button"
+                role="tab" aria-controls="equipe" aria-selected="false" tabindex="-1">Agents</button>
         </li>
     </ul>
     <div class="tab-content pt-2" id="borderedTabContent" style = "font-family: 'Tajwal';">
@@ -387,10 +387,60 @@
                     });
                 });
             </script>
-
         </div>
-        <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="bordered-equipe" role="tabpanel" aria-labelledby="equipe-tab">
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
+                <h5 class="mt-5">Sélectionner l'equipe et l'année pour la récupuration des données:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="data_type" id="data_type" value="ligne_bus_mois">
+                    <div class="col-md-8">
+                        <div class="form-floating">
+                            <select class="form-select" required name="equipe" id="equipe"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'equipe</option>
+                                @foreach ($equipesUniques as $equipe)
+                                    <option value="{{ $equipe }}">{{ $equipe }}</option>
+                                @endforeach
+                            </select>
+                            <label for="equipe">Equipe</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year4" id="year4"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="lineChartequipe" style="min-height: 400px;" class="echart"></div>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#lineChartequipe")).setOption({
+                        xAxis: {
+                            type: 'category',
+                            data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+                                'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                            ]
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: [],
+                            type: 'line',
+                        }]
+                    });
+                });
+            </script>
 
         </div>
 
@@ -657,6 +707,66 @@
                                 data: yValues,
                                 type: 'line',
                                 // smooth: true
+                            }]
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+            }
+
+            pieceInput.addEventListener('change', fetchData);
+            yearInput.addEventListener('change', fetchData);
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const chart = echarts.init(document.querySelector("#lineChartequipe"));
+            const pieceInput = document.getElementById("equipe");
+            const yearInput = document.getElementById("year4");
+
+            function fetchData() {
+                const year = yearInput.value;
+                const piece = pieceInput.value;
+                const data_type = pieceInput.value;
+
+                if (!month || !year || !piece ) return;
+
+                fetch(
+                        `/app/maintenance/statistiques_data?month=1&year=${year}&piece=${piece}&data_type=ligne_equipe_mois`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const yValues = Array(12).fill(0);
+                        data.forEach(item => {
+                            let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
+                            yValues[monthIndex] = item.total;
+                        });
+                        const totalvals = data.map(item => item.total_gasoile);
+                        const total = yValues.reduce((sum, val) => sum + val, 0);
+
+                        chart.setOption({
+                            title: {
+                                text: piece + 'l\'Année ' + year +
+                                    ' Total: ' + total.toFixed(2),
+                                left: 'center',
+                                textAlign: 'center',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    return `${params[0].axisValue} : <strong>${params[0].data.toFixed(2)}</strong>`;
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+                                    'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                                ]
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                data: yValues,
+                                type: 'line',
                             }]
                         });
                     })
