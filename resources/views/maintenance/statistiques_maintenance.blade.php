@@ -342,8 +342,6 @@
                                 <option value="" disabled selected>Sélectionner la piece</option>
                                 <option value="Gasoile">Gasoile</option>
                                 <option value="Kilometrage">Kilometrage</option>
-                                <option value="Gasoile/100">Gasoile/100</option>
-                                <option value="Huile 15w40">Huile 15w40</option>
                                 <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
                                 <option value="Glaciole">Glaciole/Sans vidange</option>
                                 @foreach ($pieces as $piece)
@@ -606,7 +604,7 @@
             pieceInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
         });
-        /*document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const chart = echarts.init(document.querySelector("#lineChartpiece"));
             const pieceInput = document.getElementById("piece3");
             const yearInput = document.getElementById("year3");
@@ -616,15 +614,13 @@
                 const piece = pieceInput.value;
                 const data_type = pieceInput.value;
 
-                if (!month || !year || !piece || !busInput) return;
+                if (!month || !year || !piece ) return;
 
                 fetch(
-                        `/app/maintenance/statistiques_data?year=${year}&piece=${piece}&data_type=ligne_piece_mois`
+                        `/app/maintenance/statistiques_data?month=1&year=${year}&piece=${piece}&data_type=ligne_piece_mois`
                     )
                     .then(response => response.json())
                     .then(data => {
-                        const selectedBusOption = busInput.querySelector(`option[value="${busInput.value}"]`);
-                        const selectedBusText = selectedBusOption ? selectedBusOption.textContent : '';
                         console.log(data);
                         const yValues = Array(12).fill(0);
                         data.forEach(item => {
@@ -636,7 +632,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year +
+                                text: piece + 'l\'Année ' + year +
                                     ' Total: ' + total.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',
@@ -667,9 +663,8 @@
                     .catch(error => console.error('Erreur lors de la récupération des données:', error));
             }
 
-            busInput.addEventListener('change', fetchData);
             pieceInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
-        });*/
+        });
     </script>
 @endsection
