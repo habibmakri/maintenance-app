@@ -79,9 +79,12 @@
                                 <option value="Gasoile">Gasoile</option>
                                 <option value="Kilometrage">Kilometrage</option>
                                 <option value="Gasoile/100">Gasoile/100</option>
-                                <option value="Huile 15w40">Huile 15w40</option>
+                                {{-- <option value="Huile 15w40">Huile 15w40</option> --}}
                                 <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
                                 <option value="Glaciole">Glaciole</option>
+                                @foreach ($pieces as $piece)
+                                    <option value="{{ $piece->id }}">{{ $piece->name }}</option>
+                                @endforeach
                             </select>
                             <label for="piece">Piece</label>
                         </div>
@@ -187,9 +190,12 @@
                                 <option value="Gasoile">Gasoile</option>
                                 <option value="Kilometrage">Kilometrage</option>
                                 <option value="Gasoile/100">Gasoile/100</option>
-                                <option value="Huile 15w40">Huile 15w40</option>
+                                {{-- <option value="Huile 15w40">Huile 15w40</option> --}}
                                 <option value="Huile 15w40/Sans vidange">Huile 15w40/Sans vidange</option>
                                 <option value="Glaciole">Glaciole/Sans vidange</option>
+                                @foreach ($pieces as $piece)
+                                    <option value="{{ $piece->id }}">{{ $piece->name }}</option>
+                                @endforeach
                             </select>
                             <label for="piece">Piece</label>
                         </div>
