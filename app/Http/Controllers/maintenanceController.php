@@ -1053,6 +1053,7 @@ class maintenanceController extends Controller
         $pieces = pieces_maintanance::all();
         $pannes = fichepanne_model::get(['equipe', 'date_resoudre']);
         $traveaux = traveauxlibre_model::get(['equipe', 'date_resoudre']);
+        $agents = maintenance_agent::all();
         $equipes = $pannes->pluck('equipe');
         $equipesTraveaux = $traveaux->pluck('equipe');
         $equipesFusionnees = $equipes->merge($equipesTraveaux);
@@ -1069,7 +1070,7 @@ class maintenanceController extends Controller
             ->filter()
             ->unique()
             ->values();
-        return view('maintenance.statistiques_maintenance', compact(['buses', 'pieces', 'equipesUniques']));
+        return view('maintenance.statistiques_maintenance', compact(['buses', 'pieces', 'equipesUniques', 'agents']));
     }
 
     public function statistiques_data(Request $request)
@@ -1918,16 +1919,67 @@ class maintenanceController extends Controller
                 }
                 $data = $mergedData->values();
             }
+        } elseif ($request->data_type == 'bar_agents_mois') {
+            $month = $request->month;
+            $year = $request->year;
+            $piece = $request->piece;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            $agents = maintenance_agent::all();
+            $pannesEquipes = fichepanne_model::query()
+                ->whereBetween('date_resoudre', [$firstDay, $lastDay])
+                ->whereNotNull('equipe')
+                ->get(['equipe']);
+            $travauxEquipes = traveauxlibre_model::query()
+                ->whereBetween('date_resoudre', [$firstDay, $lastDay])
+                ->whereNotNull('equipe')
+                ->get(['equipe']);
+            $panneNames = [];
+            foreach ($pannesEquipes as $json) {
+                $decoded = json_decode($json, true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $name) {
+                        $panneNames[] = strtolower(trim($name));
+                    }
+                }
+            }
+            $travauxNames = [];
+            foreach ($travauxEquipes as $json) {
+                $decoded = json_decode($json, true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $name) {
+                        $travauxNames[] = strtolower(trim($name));
+                    }
+                }
+            }
+            // dd($panneNames);
+            $data = [];
+            foreach ($agents as $agent) {
+                $fullname = strtolower(trim($agent->firstname . ' ' . $agent->lastname));
+            
+                $panneCount = collect($panneNames)->filter(function ($name) use ($fullname) {
+                    return str_contains($name, $fullname) || str_contains($fullname, $name);
+                })->count();
+            
+                $travauxCount = collect($travauxNames)->filter(function ($name) use ($fullname) {
+                    return str_contains($name, $fullname) || str_contains($fullname, $name);
+                })->count();
+            
+                $data[] = [
+                    'agent' => $agent->firstname . ' ' . $agent->lastname,
+                    // 'pannes' => $panneCount,
+                    // 'travaux' => $travauxCount,
+                    'total' => $panneCount + $travauxCount,
+                ];
+            }
+            // usort($data, fn($a, $b) => $b['total'] <=> $a['total']);
         } elseif ($request->data_type == 'ligne_equipe_mois') {
-
             $year = $request->year;
             $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear();
             $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear();
             $equipeInput = json_decode($request->piece);
             sort($equipeInput);
             $equipeKey = json_encode($equipeInput);
-
-            // Retrieve pannes and traveaux
             $pannes = fichepanne_model::query()
                 ->whereBetween('date_resoudre', [$firstDay->format('Y-m-d'), $lastDay->format('Y-m-d')])
                 ->whereNotNull('equipe')
@@ -1937,15 +1989,11 @@ class maintenanceController extends Controller
                 ->whereBetween('date_resoudre', [$firstDay->format('Y-m-d'), $lastDay->format('Y-m-d')])
                 ->whereNotNull('equipe')
                 ->get(['date_resoudre', 'equipe']);
-
-            // Initialize counts for each month
             $counts = [];
             for ($month = 1; $month <= 12; $month++) {
                 $monthFormatted = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
                 $counts[$monthFormatted] = 0;
             }
-
-            // Process pannes
             foreach ($pannes as $panne) {
                 $tmpeqp = json_decode($panne->equipe);
                 if (is_array($tmpeqp)) {
@@ -1958,8 +2006,6 @@ class maintenanceController extends Controller
                     }
                 }
             }
-
-            // Process traveaux
             foreach ($traveaux as $travaux) {
                 $tmpeqp = json_decode($travaux->equipe);
                 if (is_array($tmpeqp)) {
@@ -1972,8 +2018,6 @@ class maintenanceController extends Controller
                     }
                 }
             }
-
-            // Prepare the response data
             $data = [];
             foreach ($counts as $month => $total) {
                 $data[] = [

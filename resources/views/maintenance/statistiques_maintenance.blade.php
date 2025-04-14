@@ -5,11 +5,11 @@
 @section('content')
     <style>
         /* @font-face {
-                                                font-family: 'lateef';
-                                                src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
-                                                font-weight: normal;
-                                                font-style: normal;
-                                            } */
+                                                            font-family: 'lateef';
+                                                            src: url('{{ asset('theme/fonts/lateef/Lateef-Regular.ttf') }}') format('truetype');
+                                                            font-weight: normal;
+                                                            font-style: normal;
+                                                        } */
         label {
             inset-inline-end: auto !important;
         }
@@ -390,6 +390,84 @@
         </div>
         <div class="tab-pane fade" id="bordered-equipe" role="tabpanel" aria-labelledby="equipe-tab">
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
+                <h5 class="mt-5">Sélectionner le mois pour la récupuration des données:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="data_type" id="data_type" value="ligne_bus_mois">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select" required name="monthagent" id="monthagent"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="monthagent">Mois</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year5" id="year5"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="barmoisagent" style="min-height: 400px;" class="echart"></div>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const agents = @json($agents);
+                    const agentNames = agents.map(agent => agent.firstname + ' ' + agent.lastname);
+                    echarts.init(document.querySelector("#barmoisagent")).setOption({
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        legend: {},
+                        xAxis: {
+                            type: 'category',
+                            data: agentNames,
+                            axisLabel: {
+                                    rotate: 45, 
+                                    fontSize: 10
+                                }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            
+                            type: 'bar'
+                        }]
+                    });
+                });
+            </script>
+
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
                 <h5 class="mt-5">Sélectionner l'equipe et l'année pour la récupuration des données:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
@@ -492,7 +570,7 @@
                                 //     const dataValue = params[0].data.value;
                                 //     return `${params[0].axisValue} : <strong>${dataValue.toFixed(2)}</strong>`;
                                 // }
-                                formatter: function(params) { 
+                                formatter: function(params) {
                                     if (!params[0].data || params[0].data.value == null) {
                                         return `${params[0].axisValue} : <strong> 0 </strong>`;
                                     }
@@ -664,7 +742,7 @@
                 const piece = pieceInput.value;
                 const data_type = pieceInput.value;
 
-                if (!month || !year || !piece ) return;
+                if (!month || !year || !piece) return;
 
                 fetch(
                         `/app/maintenance/statistiques_data?month=1&year=${year}&piece=${piece}&data_type=ligne_piece_mois`
@@ -717,6 +795,74 @@
             yearInput.addEventListener('change', fetchData);
         });
         document.addEventListener("DOMContentLoaded", function() {
+            const chart = echarts.init(document.querySelector("#barmoisagent"));
+            const monthInput = document.getElementById("monthagent");
+            const yearInput = document.getElementById("year5");
+
+            function fetchData() {
+                const month = monthInput.value;
+                const year = yearInput.value;
+
+                if (!month || !year) return;
+
+                fetch(
+                        `/app/maintenance/statistiques_data?month=${month}&year=${year}&piece=0&data_type=bar_agents_mois`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        // const yValues = Array(12).fill(0);
+                        // data.forEach(item => {
+                        //     let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
+                        //     yValues[monthIndex] = item.total;
+                        // });
+                        // const totalvals = data.map(item => item.total_gasoile);
+                        // const total = yValues.reduce((sum, val) => sum + val, 0);
+
+                        const agentNames = data.map(item => item.agent);
+                        const totalValues = data.map(item => item.total);
+
+                        chart.setOption({
+                            title: {
+                                text: piece + 'l\'Année ' + year +
+                                    ' Total: ',
+                                left: 'center',
+                                textAlign: 'center',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'shadow'
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: agentNames,
+                                axisLabel: {
+                                    rotate: 45, 
+                                    fontSize: 10
+                                }
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                data: totalValues,
+                                type: 'bar',
+                                itemStyle: {
+                                    color: '#007bff'
+                                }
+                            }]
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+            }
+
+            monthInput.addEventListener('change', fetchData);
+            yearInput.addEventListener('change', fetchData);
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
             const chart = echarts.init(document.querySelector("#lineChartequipe"));
             const pieceInput = document.getElementById("equipe");
             const yearInput = document.getElementById("year4");
@@ -726,7 +872,7 @@
                 const piece = pieceInput.value;
                 const data_type = pieceInput.value;
 
-                if (!month || !year || !piece ) return;
+                if (!month || !year || !piece) return;
 
                 fetch(
                         `/app/maintenance/statistiques_data?month=1&year=${year}&piece=${piece}&data_type=ligne_equipe_mois`
