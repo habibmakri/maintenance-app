@@ -749,7 +749,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + ' Du ' + selectedBusText + ' l\'Année ' + year +
+                                text: pieceInput.options[pieceInput.selectedIndex].text + ' Du ' + selectedBusText + ' l\'Année ' + year +
                                     ' Total: ' + total.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',
@@ -941,7 +941,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + 'l\'Année ' + year +
+                                text: pieceInput.options[pieceInput.selectedIndex].text+ ' l\'Année ' + year +
                                     ' Total: ' + total.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',
@@ -1002,7 +1002,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + 'l\'Année ' + year +
+                                text: pieceInput.options[pieceInput.selectedIndex].text + ' l\'Année ' + year +
                                     ' Total: ' + total.toFixed(2),
                                 left: 'center',
                                 textAlign: 'center',

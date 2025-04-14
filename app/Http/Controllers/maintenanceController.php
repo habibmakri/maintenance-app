@@ -1061,7 +1061,7 @@ class maintenanceController extends Controller
             ->filter()
             ->map(function ($equipe) {
                 $decoded = json_decode($equipe, true);
-                if (is_array($decoded)) {
+                if (is_array($decoded) && count($decoded) > 1) {
                     sort($decoded);
                     return json_encode($decoded);
                 }
