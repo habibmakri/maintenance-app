@@ -468,6 +468,58 @@
             </script>
 
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
+                <h5 class="mt-5">Sélectionner l'agent et l'année pour la récupuration des données:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="data_type" id="data_type" value="ligne_agent_mois">
+                    <div class="col-md-8">
+                        <div class="form-floating">
+                            <select class="form-select" required name="agent" id="agent"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'Agent</option>
+                                @foreach ($agents as $agent)
+                                    <option value="{{ $agent->id }}">{{ $agent->firstname}} {{$agent->lastname }}</option>
+                                @endforeach
+                            </select>
+                            <label for="agent">Agent</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year6" id="year6"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="lineChartagent" style="min-height: 400px;" class="echart"></div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    echarts.init(document.querySelector("#lineChartagent")).setOption({
+                        xAxis: {
+                            type: 'category',
+                            data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+                                'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                            ]
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: [],
+                            type: 'line',
+                        }]
+                    });
+                });
+            </script>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;margin-bottom:15px;">
                 <h5 class="mt-5">Sélectionner l'equipe et l'année pour la récupuration des données:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_pdf') }}" method="post">
                     @csrf
@@ -858,6 +910,67 @@
             }
 
             monthInput.addEventListener('change', fetchData);
+            yearInput.addEventListener('change', fetchData);
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const chart = echarts.init(document.querySelector("#lineChartagent"));
+            const pieceInput = document.getElementById("agent");
+            const yearInput = document.getElementById("year6");
+
+            function fetchData() {
+                const year = yearInput.value;
+                const piece = pieceInput.value;
+                const data_type = pieceInput.value;
+
+                if (!year || !piece) return;
+
+                fetch(
+                        `/app/maintenance/statistiques_data?month=1&year=${year}&piece=${piece}&data_type=ligne_agent_mois`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const yValues = Array(12).fill(0);
+                        data.forEach(item => {
+                            let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
+                            yValues[monthIndex] = item.total;
+                        });
+                        const totalvals = data.map(item => item.total_gasoile);
+                        const total = yValues.reduce((sum, val) => sum + val, 0);
+
+                        chart.setOption({
+                            title: {
+                                text: piece + 'l\'Année ' + year +
+                                    ' Total: ' + total.toFixed(2),
+                                left: 'center',
+                                textAlign: 'center',
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function(params) {
+                                    return `${params[0].axisValue} : <strong>${params[0].data.toFixed(2)}</strong>`;
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+                                    'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+                                ]
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                data: yValues,
+                                type: 'line',
+                            }]
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+            }
+
+            pieceInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
         });
 

@@ -1952,19 +1952,18 @@ class maintenanceController extends Controller
                     }
                 }
             }
-            // dd($panneNames);
             $data = [];
             foreach ($agents as $agent) {
                 $fullname = strtolower(trim($agent->firstname . ' ' . $agent->lastname));
-            
+
                 $panneCount = collect($panneNames)->filter(function ($name) use ($fullname) {
                     return str_contains($name, $fullname) || str_contains($fullname, $name);
                 })->count();
-            
+
                 $travauxCount = collect($travauxNames)->filter(function ($name) use ($fullname) {
                     return str_contains($name, $fullname) || str_contains($fullname, $name);
                 })->count();
-            
+
                 $data[] = [
                     'agent' => $agent->firstname . ' ' . $agent->lastname,
                     // 'pannes' => $panneCount,
@@ -1973,6 +1972,75 @@ class maintenanceController extends Controller
                 ];
             }
             // usort($data, fn($a, $b) => $b['total'] <=> $a['total']);
+        } elseif ($request->data_type == 'ligne_agent_mois') {
+            $agentitem = maintenance_agent::find($request->piece);
+            $agent = strtolower(trim($agentitem->firstname . ' ' . $agentitem->lastname));
+            $year = $request->year;
+
+            $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear();
+            $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear();
+
+            $pannesEquipes = fichepanne_model::query()
+                ->whereBetween('date_resoudre', [$firstDay, $lastDay])
+                ->whereNotNull('equipe')
+                ->get(['date_resoudre', 'equipe']);
+
+            $travauxEquipes = traveauxlibre_model::query()
+                ->whereBetween('date_resoudre', [$firstDay, $lastDay])
+                ->whereNotNull('equipe')
+                ->get(['date_resoudre', 'equipe']);
+
+            $data = array_fill(1, 12, 0);
+
+            foreach ($pannesEquipes as $item) {
+                $decoded = json_decode($item->equipe, true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $name) {
+                        if (is_string($name)) {
+                            $member = strtolower(trim($name));
+                        } elseif (is_array($name) && isset($name['name'])) {
+                            $member = strtolower(trim($name['name']));
+                        } else {
+                            continue;
+                        }
+
+                        if (str_contains($member, $agent) || str_contains($agent, $member)) {
+                            $month = \Carbon\Carbon::parse($item->date_resoudre)->month;
+                            $data[$month]++;
+                            break;
+                        }
+                    }
+                }
+            }
+            foreach ($travauxEquipes as $item) {
+                $decoded = json_decode($item->equipe, true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $name) {
+                        if (is_string($name)) {
+                            $member = strtolower(trim($name));
+                        } elseif (is_array($name) && isset($name['name'])) {
+                            $member = strtolower(trim($name['name']));
+                        } else {
+                            continue;
+                        }
+
+                        if (str_contains($member, $agent) || str_contains($agent, $member)) {
+                            $month = \Carbon\Carbon::parse($item->date_resoudre)->month;
+                            $data[$month]++;
+                            break;
+                        }
+                    }
+                }
+            }
+            $result = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $monthFormatted = sprintf('%02d', $i);
+                $result[] = [
+                    'month' => "{$year}-{$monthFormatted}",
+                    'total' => $data[$i],
+                ];
+            }
+            $data = $result;
         } elseif ($request->data_type == 'ligne_equipe_mois') {
             $year = $request->year;
             $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear();
