@@ -824,8 +824,7 @@
 
                         chart.setOption({
                             title: {
-                                text: piece + 'l\'Année ' + year +
-                                    ' Total: ',
+                                text: `Nombre de traveaux par agent - ${monthInput.options[monthInput.selectedIndex].text} ${year}`,
                                 left: 'center',
                                 textAlign: 'center',
                             },
