@@ -106,6 +106,12 @@
                                 <option value="10">Octobre</option>
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
+                                <option value="1tri">1er Trimestre</option>
+                                <option value="2tri">2eme Trimestre</option>
+                                <option value="3tri">3eme Trimestre</option>
+                                <option value="4tri">4eme Trimestre</option>
+                                <option value="1sem">1er Semestre</option>
+                                <option value="2sem">2eme Semestre</option>
                             </select>
                             <label for="month">Mois</label>
                         </div>
@@ -271,6 +277,12 @@
                                 <option value="10">Octobre</option>
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
+                                <option value="1tri">1er Trimestre</option>
+                                <option value="2tri">2eme Trimestre</option>
+                                <option value="3tri">3eme Trimestre</option>
+                                <option value="4tri">4eme Trimestre</option>
+                                <option value="1sem">1er Semestre</option>
+                                <option value="2sem">2eme Semestre</option>
                             </select>
                             <label for="monthpanne">Mois</label>
                         </div>
@@ -411,6 +423,12 @@
                                 <option value="10">Octobre</option>
                                 <option value="11">Novembre</option>
                                 <option value="12">Décembre</option>
+                                <option value="1tri">1er Trimestre</option>
+                                <option value="2tri">2eme Trimestre</option>
+                                <option value="3tri">3eme Trimestre</option>
+                                <option value="4tri">4eme Trimestre</option>
+                                <option value="1sem">1er Semestre</option>
+                                <option value="2sem">2eme Semestre</option>
                             </select>
                             <label for="monthagent">Mois</label>
                         </div>

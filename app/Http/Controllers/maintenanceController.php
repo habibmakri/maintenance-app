@@ -1084,8 +1084,48 @@ class maintenanceController extends Controller
         $month = $request->month;
         $year = $request->year;
         $piece = $request->piece;
-        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
-        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+        if (is_numeric($month)) {
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+        } elseif (is_string($month)) {
+            $month = strtolower($month);
+
+            switch ($month) {
+                case '1tri':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 1, 1)->format('Y-m-d');  
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 3, 31)->format('Y-m-d');  
+                    break;
+
+                case '2tri':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 4, 1)->format('Y-m-d');  
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 6, 30)->format('Y-m-d');  
+                    break;
+
+                case '3tri':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 7, 1)->format('Y-m-d');  
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 9, 30)->format('Y-m-d');  
+                    break;
+
+                case '4tri':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 10, 1)->format('Y-m-d'); 
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 12, 31)->format('Y-m-d'); 
+                    break;
+
+                case '1sem':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 1, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 6, 30)->format('Y-m-d');
+                    break;
+
+                case '2sem':
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 7, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 12, 31)->format('Y-m-d');
+                    break;
+
+                default:
+                    $firstDay = null;
+                    $lastDay = null;
+            }
+        }
         $data = [];
         if ($request->data_type == 'simple_parbus') {
             if ($piece == 'Gasoile') {
@@ -1520,8 +1560,8 @@ class maintenanceController extends Controller
                 $month = $request->month;
                 $year = $request->year;
                 $piece = $request->piece;
-                $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
-                $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
+                // $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
+                // $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
                 $query = bus::query()
                     ->where('buses.id', $request->bus)
                     ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
@@ -1923,8 +1963,8 @@ class maintenanceController extends Controller
             $month = $request->month;
             $year = $request->year;
             $piece = $request->piece;
-            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
-            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            // $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            // $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
             $agents = maintenance_agent::all();
             $pannesEquipes = fichepanne_model::query()
                 ->whereBetween('date_resoudre', [$firstDay, $lastDay])
