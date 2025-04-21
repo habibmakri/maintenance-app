@@ -404,18 +404,18 @@ class judiciaireController extends Controller
             ];
         }
         $templateProcessor->cloneRowAndSetValues('members', $membersList);
-        $firstdate = $accidents[0]->date_fiche;
-        $lastdate = $accidents[0]->date_fiche;
+        $firstdate = $accidents[0]->time_day;
+        $lastdate = $accidents[0]->time_day;
         foreach ($accidents as $accident) {
-            if ($accident->date_fiche >= $lastdate) {
-                $lastdate = $accident->date_fiche;
+            if ($accident->time_day >= $lastdate) {
+                $lastdate = $accident->time_day;
             }
-            if ($accident->date_fiche <= $firstdate) {
-                $firstdate = $accident->date_fiche;
+            if ($accident->time_day <= $firstdate) {
+                $firstdate = $accident->time_day;
             }
         }
-        $templateProcessor->setValue('firstaccident', $firstdate);
-        $templateProcessor->setValue('lastaccident', $lastdate);
+        $templateProcessor->setValue('firstaccident', $firstdate->format('Y-m-d'));
+        $templateProcessor->setValue('lastaccident', $lastdate->format('Y-m-d'));
         $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
         $tableData = [];
         foreach ($accidents as $accident) {
