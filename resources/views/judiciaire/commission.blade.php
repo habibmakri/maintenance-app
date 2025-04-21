@@ -187,6 +187,7 @@
                                                 <option value="إيقاف عن العمل مدة يومين"> إيقاف عن العمل مدة يومين</option>
                                                 <option value="إيقاف عن العمل مدة ثلاثة أيام"> إيقاف عن العمل مدة ثلاثة
                                                     أيام</option>
+                                                <option value="إيحال إلى اللجنةالتأديبية"> إيحال إلى اللجنةالتأديبية</option>
                                             </select>
                                             <label for="decision_{{ $declaration->id }}">العقوبة</label>
                                         </div>
@@ -236,7 +237,7 @@
 
                         </div>
 
-                        <form class="row g-3" action="{{route('app.judiciaire.commission_word')}}" method="post">
+                        <form class="row g-3" action="{{ route('app.judiciaire.commission_word') }}" method="post">
                             @csrf
                             <input type="hidden" name="commission_id" id="commission_id">
                             <div class="modal-footer">
