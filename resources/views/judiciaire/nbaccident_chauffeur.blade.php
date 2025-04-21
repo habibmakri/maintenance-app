@@ -60,7 +60,7 @@
         <h2 style="margin: 0px;font-size:28px;">{{ $monthName }}</h2>
     </div>
 
-    <table style="font-size:10px;">
+    <table style="font-size:14px;">
         <thead>
             <tr>
                 <td style="font-weight: bold">الرقم</td>
