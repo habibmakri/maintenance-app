@@ -414,8 +414,8 @@ class judiciaireController extends Controller
                 $firstdate = $accident->time_day;
             }
         }
-        $templateProcessor->setValue('firstaccident', $firstdate->format('Y-m-d'));
-        $templateProcessor->setValue('lastaccident', $lastdate->format('Y-m-d'));
+        $templateProcessor->setValue('firstaccident', Carbon::parse($firstdate)->format('Y-m-d'));
+        $templateProcessor->setValue('lastaccident', Carbon::parse($lastdate)->format('Y-m-d'));
         $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
         $tableData = [];
         foreach ($accidents as $accident) {
