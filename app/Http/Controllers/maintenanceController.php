@@ -1338,7 +1338,7 @@ class maintenanceController extends Controller
                 $data = $mergedData->sortBy('id_bus')->values();
             } elseif ($piece == 'Glaciole') {
                 $query = bus::query()
-                    ->whereIn('type', ['v8', 'l5'])
+                    ->whereIn('type', ['l5'])
                     ->leftJoin('fiches_maintenance', 'fiches_maintenance.id_bus', '=', 'buses.id')
                     ->leftJoin('fichepanne', function ($join) use ($firstDay, $lastDay) {
                         $join->on('fiches_maintenance.id', '=', 'fichepanne.fichemaintenance_id')
@@ -1376,7 +1376,7 @@ class maintenanceController extends Controller
                     ->orderBy('buses.id');
 
                 $data2 = $query2->get();
-                $allbuses = Bus::whereIn('type', ['v8', 'l5'])->selectRaw('
+                $allbuses = Bus::whereIn('type', [ 'l5'])->selectRaw('
                     id as id_bus, 
                     name as name_bus, 
                     0 as total_gasoile')->get();
