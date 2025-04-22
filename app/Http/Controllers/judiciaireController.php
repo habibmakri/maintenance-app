@@ -419,9 +419,9 @@ class judiciaireController extends Controller
         $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
         $tableData = [];
         foreach ($accidents as $accident) {
-            if($accident->id_chauffeur == 80 ){
+            if ($accident->id_chauffeur == 80) {
                 $resposablity = $accident->responsability ? 'من العامل' : 'ليس من العامل';
-            }else{
+            } else {
                 $resposablity = $accident->responsability ? 'من اسائق' : 'ليس من السائق';
             }
             $tableData[] = [
@@ -453,14 +453,14 @@ class judiciaireController extends Controller
         $maxCount = max(count($pairList), count($impairList));
         $pairList = array_pad($pairList, $maxCount, '');
         $impairList = array_pad($impairList, $maxCount, '');
-        
+
         for ($i = 0; $i < $maxCount; $i++) {
             $membersList[] = [
                 "pair" => $pairList[$i],
                 "impair" => $impairList[$i]
             ];
         }
-        
+
         $templateProcessor->cloneRowAndSetValues('pair', $membersList);
 
 
@@ -555,11 +555,23 @@ class judiciaireController extends Controller
         $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
         $monthName = 'سنة ' . $year;
 
+        // $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])
+        //     ->select('id_chauffeur', DB::raw('COUNT(*) as count_declarations'))
+        //     ->groupBy('id_chauffeur')
+        //     ->orderByDesc('count_declarations')
+        //     ->get();
         $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])
-            ->select('id_chauffeur', DB::raw('COUNT(*) as count_declarations'))
+            ->select(
+                'id_chauffeur',
+                DB::raw('COUNT(*) as count_declarations'),
+                DB::raw("SUM(CASE WHEN responsability = true THEN 1 ELSE 0 END) as count_true"),
+                DB::raw("SUM(CASE WHEN responsability = false THEN 1 ELSE 0 END) as count_false")
+            )
             ->groupBy('id_chauffeur')
             ->orderByDesc('count_declarations')
-            ->get();
+            ->get()
+            ->keyBy('id_chauffeur');
+        // dd($declarations[2]->count_true);
         // dd($declarations);
         // $mpdf = new Mpdf([
         //     'format' => 'A4',

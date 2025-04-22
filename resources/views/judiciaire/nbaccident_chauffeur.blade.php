@@ -59,13 +59,15 @@
         <p style="margin: 0px;font-size:28px;">عدد الحوادث حسب السائق</p>
         <h2 style="margin: 0px;font-size:28px;">{{ $monthName }}</h2>
     </div>
-
+    
     <table style="font-size:16px;">
         <thead>
             <tr>
                 <td style="font-weight: bold">الرقم</td>
                 <td style="font-weight: bold">السائق</td>
                 <td style="font-weight: bold">عدد الحوادث</td>
+                <td style="font-weight: bold">من السائق</td>
+                <td style="font-weight: bold">ليس من السائق</td>
             </tr>
         </thead>
         <tbody>
@@ -75,6 +77,8 @@
                     <td>{{ $i }}</td>
                     <td>{{ $declaration->chauffeur->name }}</td>
                     <td>{{ $declaration->count_declarations }}</td>
+                    <td>{{ $declaration->count_true }}</td>
+                    <td>{{ $declaration->count_false }}</td>
                 </tr>
                 {{$i++}}
             @endforeach
