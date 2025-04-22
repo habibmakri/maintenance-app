@@ -63,11 +63,11 @@
     <table style="font-size:16px;">
         <thead>
             <tr>
-                <td style="font-weight: bold">الرقم</td>
-                <td style="font-weight: bold">السائق</td>
-                <td style="font-weight: bold">عدد الحوادث</td>
-                <td style="font-weight: bold">من السائق</td>
-                <td style="font-weight: bold">ليس من السائق</td>
+                <td style="font-weight: bold; width: 50px;">الرقم</td>
+                <td style="font-weight: bold; width: 200px;">السائق</td>
+                <td style="font-weight: bold; width: 120px;">عدد الحوادث</td>
+                <td style="font-weight: bold; width: 120px;">من السائق</td>
+                <td style="font-weight: bold; width: 120px;">ليس من السائق</td>
             </tr>
         </thead>
         <tbody>

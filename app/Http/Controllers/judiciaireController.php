@@ -605,7 +605,7 @@ class judiciaireController extends Controller
         صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
         </div>
         ";
-        $nomfichier = 'لائحة الصيانة من_.pdf';
+        $nomfichier = 'عدد الحوادث حسب السائقين سنة'.$year.'.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
