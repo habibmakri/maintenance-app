@@ -64,7 +64,7 @@
         <thead>
             <tr>
                 <td style="font-weight: bold; width: 50px;">الرقم</td>
-                <td style="font-weight: bold; width: 500px;">السائق</td>
+                <td style="font-weight: bold; width: 450px;">السائق</td>
                 <td style="font-weight: bold; width: 120px;">عدد الحوادث</td>
                 <td style="font-weight: bold; width: 120px;">من السائق</td>
                 <td style="font-weight: bold; width: 120px;">ليس من السائق</td>
