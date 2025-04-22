@@ -148,9 +148,10 @@ class judiciaireController extends Controller
     }
     public function judiciaire_extraire()
     {
-        $declarations = declaration_judiciaire::all();
+        $declarations = declaration_judiciaire::orderBy('number')->get();
         $declarationsmonth = declaration_judiciaire::whereMonth('time_day', date('m'))
             ->whereYear('time_day', date('Y'))
+            ->orderBy('number')
             ->get();
         return view("judiciaire.extraire", compact(['declarations']));
     }
