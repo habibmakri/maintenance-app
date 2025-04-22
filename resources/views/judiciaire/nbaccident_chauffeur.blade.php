@@ -60,11 +60,11 @@
         <h2 style="margin: 0px;font-size:28px;">{{ $monthName }}</h2>
     </div>
     
-    <table style="font-size:18px;">
+    <table style="font-size:17px;">
         <thead>
             <tr>
                 <td style="font-weight: bold; width: 50px;">الرقم</td>
-                <td style="font-weight: bold; width: 450px;">السائق</td>
+                <td style="font-weight: bold; width: 420px;">السائق</td>
                 <td style="font-weight: bold; width: 120px;">عدد الحوادث</td>
                 <td style="font-weight: bold; width: 120px;">من السائق</td>
                 <td style="font-weight: bold; width: 120px;">ليس من السائق</td>
