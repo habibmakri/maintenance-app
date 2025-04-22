@@ -148,10 +148,9 @@ class judiciaireController extends Controller
     }
     public function judiciaire_extraire()
     {
-        $declarations = declaration_judiciaire::orderBy('number')->get();
+        $declarations = declaration_judiciaire::all();
         $declarationsmonth = declaration_judiciaire::whereMonth('time_day', date('m'))
             ->whereYear('time_day', date('Y'))
-            ->orderBy('number')
             ->get();
         return view("judiciaire.extraire", compact(['declarations']));
     }
@@ -160,8 +159,8 @@ class judiciaireController extends Controller
         $declarations = declaration_judiciaire::where('commission_id', null)->get();
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
-        $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->get();
-        $commissions = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->get();
+        $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->orderBy('number')->get();
+        $commissions = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->orderBy('number')->get();
         return view("judiciaire.commission", compact(['declarations', 'commissions', 'commissionsthisyear']));
     }
     public function add_judiciaire_commission(Request $request)
