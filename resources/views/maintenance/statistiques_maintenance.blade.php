@@ -256,6 +256,7 @@
                                 <option value="" disabled selected>Sélectionner la piece</option>
                                 <option value="Pannes Déclarés">Pannes Déclarés</option>
                                 <option value="Traveaux libre">Traveaux libre</option>
+                                <option value="Pannes Non Résolue">Pannes Non Résolue</option>
                             </select>
                             <label for="piecepanne">Type</label>
                         </div>
