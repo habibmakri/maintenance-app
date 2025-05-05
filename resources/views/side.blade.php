@@ -28,6 +28,13 @@
               </a>
             </li>
           @endif
+          @if(in_array('maintenance_validate', $permissions))
+            <li>
+              <a href="{{ route('app.maintenance.validate') }}">
+                <i class="bi bi-circle"></i><span>Valider</span>
+              </a>
+            </li>
+          @endif
           @if(in_array('maintenance_jauge', $permissions))
             <li>
               <a href="{{ route('app.maintenance.maintenance_jauge') }}">

@@ -20,6 +20,7 @@ use App\Models\traveauxlibre_model;
 use App\Models\traveauxlibreusedpieces;
 use App\Models\used_pieces;
 use App\Models\User;
+use App\Models\validate_maintenance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,58 +49,6 @@ class maintenanceController extends Controller
         return view("maintenance.maintenancein", compact('buses', 'lines', 'stations', 'pannes', 'chauffeurs', 'date'));
     }
 
-    // public function insertFichemaintenance(maintenanceinRequest $request)
-    // {
-    //     $ficheitem = $request->validated();
-    //     $exists = fichemaintenance::where('id_bus', $ficheitem['bus'])
-    //         ->where('date_fiche', $ficheitem['date'])
-    //         ->where('brigade', $ficheitem['brigade'])
-    //         ->exists();
-
-    //     if ($exists) {
-    //         return redirect()->back()->with('error', 'Fiche déjà remplie pour ce bus à cette date.');
-    //     }
-    //     if ($ficheitem['partit'] == "oui") {
-    //         $bus = Bus::find($ficheitem['bus']);
-    //         if((float)$bus->kmactuelle <(float)$ficheitem['kmarive'] ){
-    //             $bus->update([
-    //                 'kmactuelle'=>$ficheitem['kmarive']
-    //             ]);
-    //         }
-    //         fichemaintenance::create([
-    //             'user_id' => Auth::user()->id,
-    //             'date_fiche' => $ficheitem['date'],
-    //             'id_bus' => $ficheitem['bus'],
-    //             'id_ligne' => $ficheitem['ligne'],
-    //             'brigade' => $ficheitem['brigade'],
-    //             'heur_depart' => $ficheitem['hdepart'],
-    //             'heur_arrive' => $ficheitem['harrive'],
-    //             'gasoile' => $ficheitem['gasoile'],
-    //             'kmdepart' => $ficheitem['kmdepart'],
-    //             'kmarrive' => $ficheitem['kmarive'],
-    //             'kmhlp' => $ficheitem['kmhlp'],
-    //             'kmgobale' => $ficheitem['kmarive'] - $ficheitem['kmdepart'],
-    //             'kmcommerciale' => ($ficheitem['kmarive'] - $ficheitem['kmdepart']) - $ficheitem['kmhlp'],
-    //         ]);
-    //     } else {
-    //         fichemaintenance::create([
-    //             'user_id' => Auth::user()->id,
-    //             'date_fiche' => $ficheitem['date'],
-    //             'id_bus' => $ficheitem['bus'],
-    //             'id_ligne' => null,
-    //             'brigade' => $ficheitem['brigade'],
-    //             'heur_depart' => "00:00",
-    //             'heur_arrive' => "00:00",
-    //             'gasoile' => "0",
-    //             'kmdepart' => "0",
-    //             'kmarrive' => "0",
-    //             'kmhlp' => "0",
-    //             'kmgobale' => "0",
-    //             'kmcommerciale' => "0",
-    //         ]);
-    //     }
-    //     return redirect()->back()->with('success', 'Fiche remplie avec succès.');
-    // }
     public function insertFichemaintenance(maintenanceinRequest $request)
     {
         $ficheitem = $request->validated();
@@ -310,6 +259,43 @@ class maintenanceController extends Controller
     {
         return view('maintenance.maintenancefix');
     }
+
+
+    public function miantenance_validate(Request $request)
+    {
+        return view('maintenance.maintenancevalidate');
+    }
+    public function refresh_validate(Request $request)
+    {
+        $month = $request->month;
+        $year = $request->year;
+        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth();
+        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth();
+        $results = [];
+        for ($date = $firstDay->copy(); $date->lte($lastDay); $date->addDay()) {
+            $day = $date->format('Y-m-d');
+    
+            $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->exists();
+            $validated = validate_maintenance::query()->whereDate('date', $day)->exists();
+    
+            $results[] = [
+                'day' => $day,
+                'fiches' => $fiches,
+                'validated' => $validated,
+            ];
+        }
+        // dd($results);
+        return response()->json($results);
+    }
+
+
+
+
+
+
+
+
+
     public function deletefiche($id)
     {
         $record = fichemaintenance::find($id);

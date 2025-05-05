@@ -33,6 +33,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     Route::prefix('/')->controller(MaintenanceController::class)->name('maintenance.')->group(function () {
         Route::get('maintenance_in','maintenance_in')->name('maintenance_in')->middleware('rolesMiddleware:maintenance_in');
         Route::post('maintenance_in','insertFichemaintenance');
+        Route::get('miantenance_validate','miantenance_validate')->name('validate')->middleware('rolesMiddleware:maintenance_validate');
+        Route::get('maintenance/refresh_validate','refresh_validate')->name('refresh_validate')->middleware('rolesMiddleware:maintenance_validate');
         Route::get('maintenance/check-buses',  'checkBuses')->name('check_buses');
         Route::get('maintenance_show','maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
         Route::post('maintenance/pdf', 'generatePDF')->name('pdf');
