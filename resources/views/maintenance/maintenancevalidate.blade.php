@@ -1,6 +1,6 @@
 @extends('base')
 
-@section('title', 'Modification')
+@section('title', 'Validation')
 
 @section('content')
 
@@ -145,7 +145,6 @@
                                 if (entry.validated) {
                                     dayDiv.style.backgroundColor = 'green';
                                 } else if (entry.fiches) {
-                                    console.log("hello");
                                     dayDiv.style.backgroundColor = 'yellow';
                                 } else {
                                     dayDiv.style.backgroundColor = 'white';
