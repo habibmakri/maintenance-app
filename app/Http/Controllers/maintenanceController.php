@@ -274,10 +274,10 @@ class maintenanceController extends Controller
         $results = [];
         for ($date = $firstDay->copy(); $date->lte($lastDay); $date->addDay()) {
             $day = $date->format('Y-m-d');
-    
+
             $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->exists();
             $validated = validate_maintenance::query()->whereDate('date', $day)->exists();
-    
+
             $results[] = [
                 'day' => $day,
                 'fiches' => $fiches,
@@ -286,6 +286,31 @@ class maintenanceController extends Controller
         }
         // dd($results);
         return response()->json($results);
+    }
+    public function refresh_validate_day(Request $request)
+    {
+        $day = $request->day;
+        $month = $request->month;
+        $year = $request->year;
+        $date = \Carbon\Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-{$day}")->toDateString();
+        $data = fichemaintenance::query()->whereDate('date_fiche', $date)->get();
+        // $data = fichemaintenance::query()
+        //     ->whereDate('date_fiche', $date);
+        $validation = validate_maintenance::query()->whereDate('date', $date)->first();
+        if($validation){
+            $val = $validation->created_at;
+        }else{
+            $val = null;
+        }
+        $result = [
+            'date' => $date,
+            'nb_fiches' => $data->count(),
+            'kmgobale' => $data->sum('kmgobale'),
+            'kmcommerciale' => $data->sum('kmcommerciale'),
+            'gasoile' => $data->sum('gasoile'),
+            'validation' => $val
+        ];
+        return response()->json($result);
     }
 
 
@@ -470,7 +495,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air','Huile 10w40','Huile 5w30'])->get();
+        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air', 'Huile 10w40', 'Huile 5w30'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
@@ -1078,23 +1103,23 @@ class maintenanceController extends Controller
 
             switch ($month) {
                 case '1tri':
-                    $firstDay = \Carbon\Carbon::createFromDate($year, 1, 1)->format('Y-m-d');  
-                    $lastDay = \Carbon\Carbon::createFromDate($year, 3, 31)->format('Y-m-d');  
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 1, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 3, 31)->format('Y-m-d');
                     break;
 
                 case '2tri':
-                    $firstDay = \Carbon\Carbon::createFromDate($year, 4, 1)->format('Y-m-d');  
-                    $lastDay = \Carbon\Carbon::createFromDate($year, 6, 30)->format('Y-m-d');  
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 4, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 6, 30)->format('Y-m-d');
                     break;
 
                 case '3tri':
-                    $firstDay = \Carbon\Carbon::createFromDate($year, 7, 1)->format('Y-m-d');  
-                    $lastDay = \Carbon\Carbon::createFromDate($year, 9, 30)->format('Y-m-d');  
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 7, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 9, 30)->format('Y-m-d');
                     break;
 
                 case '4tri':
-                    $firstDay = \Carbon\Carbon::createFromDate($year, 10, 1)->format('Y-m-d'); 
-                    $lastDay = \Carbon\Carbon::createFromDate($year, 12, 31)->format('Y-m-d'); 
+                    $firstDay = \Carbon\Carbon::createFromDate($year, 10, 1)->format('Y-m-d');
+                    $lastDay = \Carbon\Carbon::createFromDate($year, 12, 31)->format('Y-m-d');
                     break;
 
                 case '1sem':
@@ -1362,7 +1387,7 @@ class maintenanceController extends Controller
                     ->orderBy('buses.id');
 
                 $data2 = $query2->get();
-                $allbuses = Bus::whereIn('type', [ 'l5'])->selectRaw('
+                $allbuses = Bus::whereIn('type', ['l5'])->selectRaw('
                     id as id_bus, 
                     name as name_bus, 
                     0 as total_gasoile')->get();
@@ -1505,7 +1530,7 @@ class maintenanceController extends Controller
                     ->groupBy('buses.id', 'buses.name')
                     ->orderBy('buses.id');
                 $data = $query->get();
-            }elseif ($piece == 'Pannes Non Résolue') {
+            } elseif ($piece == 'Pannes Non Résolue') {
                 $query = bus::query()
                     ->whereIn('buses.type', ['v8', 'l5'])
                     ->leftJoin('fiches_maintenance', function ($join) use ($firstDay, $lastDay) {

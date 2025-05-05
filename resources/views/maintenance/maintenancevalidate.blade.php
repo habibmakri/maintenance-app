@@ -91,7 +91,21 @@
                 @endfor
             </div>
         </div>
-        <div style="flex: 0 0 40%;">
+        <div id="dayDetails"
+            style="
+        flex: 0 0 40%;
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 280px;
+        transition: all 0.3s ease;
+    ">
             <h4>Détails du jour</h4>
             <p>Sélectionnez un jour pour voir plus d'informations.</p>
         </div>
@@ -115,6 +129,7 @@
                             dayDiv.style.backgroundColor = 'white';
                             dayDiv.style.opacity = '1';
                             dayDiv.style.pointerEvents = 'auto';
+                            dayDiv.onclick = refreshday;
                         }
                     }
                 }
@@ -122,12 +137,9 @@
 
             function fetchData(event) {
                 event.preventDefault();
-
                 const month = monthInput.value;
                 const year = yearInput.value;
-
                 if (!month || !year) return;
-
                 fetch(`/app/maintenance/refresh_validate?month=${month}&year=${year}`)
                     .then(response => response.json())
                     .then(data => {
@@ -138,6 +150,9 @@
                             const dayNumber = date.getDate();
                             const dayDiv = document.getElementById(`day${dayNumber}`);
                             if (dayDiv) {
+                                dayDiv.dataset.day = dayNumber;
+                                dayDiv.dataset.month = month;
+                                dayDiv.dataset.year = year;
                                 if (entry.validated) {
                                     dayDiv.style.backgroundColor = 'green';
                                 } else if (entry.fiches) {
@@ -149,6 +164,34 @@
                         });
                     })
                     .catch(error => console.error('Erreur lors de la récupération des données :', error));
+            }
+
+            function refreshday(event) {
+                const dayDiv = event.currentTarget;
+                const day = dayDiv.dataset.day;
+                const month = dayDiv.dataset.month;
+                const year = dayDiv.dataset.year;
+                const detailsDiv = document.getElementById('dayDetails');
+
+                if (day && month && year) {
+                    console.log(`Clicked day: ${day}-${month}-${year}`);
+                    fetch(`/app/maintenance/refresh_validate_day?month=${month}&year=${year}&day=${day}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            detailsDiv.innerHTML = `
+                    <h4>Détails du ${data.date}</h4>
+                        <p><strong>Nombre de fiches :</strong> ${data.nb_fiches}</p>
+                        <p><strong>Km global :</strong> ${data.kmgobale}</p>
+                        <p><strong>Km commerciale :</strong> ${data.kmcommerciale}</p>
+                        <p><strong>Gasoile :</strong> ${data.gasoile}</p>
+                        <p><strong>Validé :</strong> ${data.validation ? 'Oui' : 'Non'}</p>
+                `;
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des données :', error);
+                            detailsDiv.innerHTML = `<p>Erreur lors du chargement des données.</p>`;
+                        });
+                }
             }
             monthInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);

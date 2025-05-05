@@ -35,6 +35,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance_in','insertFichemaintenance');
         Route::get('miantenance_validate','miantenance_validate')->name('validate')->middleware('rolesMiddleware:maintenance_validate');
         Route::get('maintenance/refresh_validate','refresh_validate')->name('refresh_validate')->middleware('rolesMiddleware:maintenance_validate');
+        Route::get('maintenance/refresh_validate_day','refresh_validate_day')->name('refresh_validate_day')->middleware('rolesMiddleware:maintenance_validate');
         Route::get('maintenance/check-buses',  'checkBuses')->name('check_buses');
         Route::get('maintenance_show','maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
         Route::post('maintenance/pdf', 'generatePDF')->name('pdf');
