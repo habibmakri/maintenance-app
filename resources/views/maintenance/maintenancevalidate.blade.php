@@ -67,8 +67,7 @@
 
     <div style="display: flex;  margin: auto; margin-top: 40px; gap: 20px;">
         <div style="flex: 0 0 60%;">
-            <div
-                style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;max-width:700px;margin-left:100px;">
+            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;max-width:700px;margin-left:100px;">
                 @for ($i = 1; $i <= 31; $i++)
                     <div id="day{{ $i }}"
                         style="
@@ -83,7 +82,10 @@
                             border: 1px solid black;
                             transition: 0.7s;
                             cursor: pointer;
-                        ">
+                            border: 1px solid black;
+                        "
+                        onmouseover="this.style.boxShadow='0 6px 17px rgba(0, 0, 0, 0.4)'"
+                        onmouseout="this.style.boxShadow='none'">
                         {{ $i }}
                     </div>
                 @endfor
@@ -94,7 +96,7 @@
             <p>Sélectionnez un jour pour voir plus d'informations.</p>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const monthInput = document.getElementById('month');
