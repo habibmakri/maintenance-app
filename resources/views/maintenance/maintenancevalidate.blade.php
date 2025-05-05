@@ -63,44 +63,38 @@
                 <label for="year">Année</label>
             </div>
         </div>
-        {{-- <button id="actualisé" class="btn btn-outline-success col-md-2">Actualisé</button> --}}
     </div>
 
-
-
-    <div
-        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 570px; margin: auto; margin-top: 40px;">
-        @for ($i = 1; $i <= 31; $i++)
-            @php
-                // $state = $days[$i]->state ?? 'nauth'; // par défaut : non authentifié
-                $color = match ('validated') {
-                    'validated' => 'green',
-                    'filled' => 'yellow',
-                    default => 'white',
-                };
-            @endphp
-            <div id="day{{ $i }}"
-                style="
-                    text-align: center;
-                    font-size: 24px;
-                    height: 78px;
-                    font-family: Poppins;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 900;
-                    border-width: 1px;
-                    border-style: solid;
-                    border-color: black;
-                    border-image: initial;
-                    transition: 0.7s;
-                    cursor:pointer;
-                ">
-                {{ $i }}
+    <div style="display: flex;  margin: auto; margin-top: 40px; gap: 20px;">
+        <div style="flex: 0 0 60%;">
+            <div
+                style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;max-width:700px;margin-left:100px;">
+                @for ($i = 1; $i <= 31; $i++)
+                    <div id="day{{ $i }}"
+                        style="
+                            text-align: center;
+                            font-size: 24px;
+                            height: 78px;
+                            font-family: Poppins;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: 900;
+                            border: 1px solid black;
+                            transition: 0.7s;
+                            cursor: pointer;
+                        ">
+                        {{ $i }}
+                    </div>
+                @endfor
             </div>
-        @endfor
+        </div>
+        <div style="flex: 0 0 40%;">
+            <h4>Détails du jour</h4>
+            <p>Sélectionnez un jour pour voir plus d'informations.</p>
+        </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const monthInput = document.getElementById('month');
@@ -112,9 +106,9 @@
                     const dayDiv = document.getElementById(`day${i}`);
                     if (dayDiv) {
                         if (i > totalDays) {
-                            dayDiv.style.backgroundColor = '#dddddd'; // gris clair
-                            dayDiv.style.opacity = '0.5'; // fade
-                            dayDiv.style.pointerEvents = 'none'; // désactive les clics
+                            dayDiv.style.backgroundColor = '#dddddd';
+                            dayDiv.style.opacity = '0.5';
+                            dayDiv.style.pointerEvents = 'none';
                         } else {
                             dayDiv.style.backgroundColor = 'white';
                             dayDiv.style.opacity = '1';
@@ -154,7 +148,6 @@
                     })
                     .catch(error => console.error('Erreur lors de la récupération des données :', error));
             }
-
             monthInput.addEventListener('change', fetchData);
             yearInput.addEventListener('change', fetchData);
             // actualisé.addEventListener('click', fetchData);
