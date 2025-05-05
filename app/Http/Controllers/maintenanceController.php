@@ -275,7 +275,7 @@ class maintenanceController extends Controller
         for ($date = $firstDay->copy(); $date->lte($lastDay); $date->addDay()) {
             $day = $date->format('Y-m-d');
 
-            $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->exists();
+            $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->where('declaré',true)->exists();
             $validated = validate_maintenance::query()->whereDate('date', $day)->exists();
 
             $results[] = [
@@ -293,7 +293,7 @@ class maintenanceController extends Controller
         $month = $request->month;
         $year = $request->year;
         $date = \Carbon\Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-{$day}")->toDateString();
-        $data = fichemaintenance::query()->whereDate('date_fiche', $date)->get();
+        $data = fichemaintenance::query()->whereDate('date_fiche', $date)->where('declaré',true)->get();
         // $data = fichemaintenance::query()
         //     ->whereDate('date_fiche', $date);
         $validation = validate_maintenance::query()->whereDate('date', $date)->first();
