@@ -74,7 +74,7 @@
                                 {{ $bus->vidange_moteur_date ?? 0 }}
                             @elseif($typevidange == 'boite')
                                 {{ $bus->vidange_boite_date ?? 0 }}
-                            @elseif($typevidange == 'pond')
+                            @elseif($typevidange == 'pont')
                                 {{ $bus->vidange_pond_date ?? 0 }}
                             @endif
                         </td>
@@ -83,7 +83,7 @@
                                 {{ $bus->derniervidange ?? 0 }}
                             @elseif($typevidange == 'boite')
                                 {{ $bus->derniervidangeboite ?? 0 }}
-                            @elseif($typevidange == 'pond')
+                            @elseif($typevidange == 'pont')
                                 {{ $bus->derniervidangepond ?? 0 }}
                             @endif
                         </td>
@@ -93,7 +93,7 @@
                                     {{ $bus->kmactuelle - $bus->derniervidange ?? 0 }}/ 8000
                                 @elseif($typevidange == 'boite')
                                     {{ $bus->kmactuelle - $bus->derniervidangeboite ?? 0 }}/ 50000
-                                @elseif($typevidange == 'pond')
+                                @elseif($typevidange == 'pont')
                                     {{ $bus->kmactuelle - $bus->derniervidangepond ?? 0 }}/ 100000
                                 @endif
                             </td>
@@ -103,7 +103,7 @@
                                     {{ $bus->kmactuelle - $bus->derniervidange ?? 0 }}/ 8000
                                 @elseif($typevidange == 'boite')
                                     {{ $bus->kmactuelle - $bus->derniervidangeboite ?? 0 }}/ 30000
-                                @elseif($typevidange == 'pond')
+                                @elseif($typevidange == 'pont')
                                     {{ $bus->kmactuelle - $bus->derniervidangepond ?? 0 }}/ 100000
                                 @endif
                             </td>
