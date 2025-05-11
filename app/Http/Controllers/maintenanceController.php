@@ -202,6 +202,7 @@ class maintenanceController extends Controller
             $query = fichemaintenance::query();
 
 
+
             if ($request->date) {
                 $query->where('date_fiche', '=', $request->date);
             }
@@ -210,6 +211,8 @@ class maintenanceController extends Controller
             $query->with(['bus', 'ligne'])->orderBy('id_bus');
 
             $data = $query->get()->map(function ($item) {
+                $valid = validate_maintenance::where('date', $item->date_fiche)->first();
+                // dd($valid);
                 if ($item->ligne) {
                     return [
                         'id' => $item->id,
@@ -222,6 +225,7 @@ class maintenanceController extends Controller
                         'kmcommerciale' => $item->kmcommerciale,
                         'brigade' => $item->brigade,
                         'date_fiche' => \Carbon\Carbon::parse($item->date_fiche)->format('d/m/Y'),
+                        'validated' => (bool) $valid,
                     ];
                 } else {
                     return [
@@ -235,6 +239,7 @@ class maintenanceController extends Controller
                         'kmcommerciale' => $item->kmcommerciale,
                         'brigade' => $item->brigade,
                         'date_fiche' => \Carbon\Carbon::parse($item->date_fiche)->format('d/m/Y'),
+                        'validated' => (bool) $valid,
                     ];
                 }
             });
@@ -275,7 +280,7 @@ class maintenanceController extends Controller
         for ($date = $firstDay->copy(); $date->lte($lastDay); $date->addDay()) {
             $day = $date->format('Y-m-d');
 
-            $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->where('declaré',true)->exists();
+            $fiches = fichemaintenance::query()->whereDate('date_fiche', $day)->where('declaré', true)->exists();
             $validated = validate_maintenance::query()->whereDate('date', $day)->exists();
 
             $results[] = [
@@ -293,13 +298,13 @@ class maintenanceController extends Controller
         $month = $request->month;
         $year = $request->year;
         $date = \Carbon\Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-{$day}")->toDateString();
-        $data = fichemaintenance::query()->whereDate('date_fiche', $date)->where('declaré',true)->get();
+        $data = fichemaintenance::query()->whereDate('date_fiche', $date)->where('declaré', true)->get();
         // $data = fichemaintenance::query()
         //     ->whereDate('date_fiche', $date);
         $validation = validate_maintenance::query()->whereDate('date', $date)->first();
-        if($validation){
+        if ($validation) {
             $val = $validation->created_at;
-        }else{
+        } else {
             $val = null;
         }
         $result = [
@@ -313,7 +318,23 @@ class maintenanceController extends Controller
         return response()->json($result);
     }
 
-
+    public function validate_day(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'unique:validate_maintenance,date'],
+        ]);
+        $date = $request->date;
+        if ($date) {
+            validate_maintenance::create(
+                [
+                    'date' => $date,
+                    'valid' => true
+                ]
+            );
+            return redirect()->back()->with('success', $date . 'Valider');
+        }
+        return redirect()->back()->with('error', 'erreur');
+    }
 
 
 
@@ -324,7 +345,9 @@ class maintenanceController extends Controller
     public function deletefiche($id)
     {
         $record = fichemaintenance::find($id);
-        if ($record) {
+        $date = $record->date_fiche;
+        $valid = validate_maintenance::where('date', $date)->first();
+        if ($record && !$valid) {
             $record->delete();
             return response()->json(['success' => true]);
         }
@@ -358,6 +381,10 @@ class maintenanceController extends Controller
         $stations = Station::all();
         $chauffeurs = chauffeurs::orderBy('fr_name')->get();
         if ($record) {
+            $valid = validate_maintenance::where('date', $record->date_fiche)->first();
+            if ($valid) {
+                return redirect()->back()->withErrors(['Fiche validé.']);
+            }
             return view('maintenance.maintenanceedit', compact('record', 'buses', 'lines', 'stations', 'chauffeurs'));
         }
         return redirect()->back()->withErrors(['Record not found.']);

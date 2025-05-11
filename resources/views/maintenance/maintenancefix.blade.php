@@ -91,7 +91,7 @@
                                     <td>${item.heur_depart}</td>
                                     <td>${item.kmcommerciale}</td>
                                     <td>
-                                     <i class="bi bi-pencil edit-icon" data-id="${item.id}" style="margin-right:15%;cursor: pointer;"></i>     
+                                     ${item.validated == false ? `<i class="bi bi-pencil edit-icon" data-id="${item.id}" style="margin-right:15%; cursor: pointer;"></i>` : ''}    
                                      <i class="bi bi-trash delete-icon" data-id="${item.id}" style="cursor: pointer;"></i>     
                                     </td>
                                 </tr>

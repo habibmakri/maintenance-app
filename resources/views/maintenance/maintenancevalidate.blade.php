@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>{{ session('success') }}</strong>
@@ -15,6 +16,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="pagetitle">
         <h1>Validation des données de maintenance</h1>
         <nav>
@@ -185,6 +198,19 @@
                         <p><strong>Km commerciale :</strong> ${data.kmcommerciale}</p>
                         <p><strong>Gasoile :</strong> ${data.gasoile}</p>
                         <p><strong>Validé :</strong> ${data.validation ? 'Oui' : 'Non'}</p>
+                        ${!data.validation ? `
+                            <form action="{{ route('app.maintenance.validate_day') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="date" value="${data.date}">
+                                <button type="submit" class="btn btn-success">
+                                    Valider
+                                </button>
+                            </form>
+                        ` : `
+                        <button disabled type="submit" class="btn btn-success">
+                                    Valider
+                                </button>
+                        `}
                 `;
                         })
                         .catch(error => {
