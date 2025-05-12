@@ -57,9 +57,13 @@ class maintenanceController extends Controller
             ->where('brigade', $ficheitem['brigade'])
             ->where('declaré', true)
             ->exists();
-
+        $valid = validate_maintenance::where('date', $ficheitem['date'])->first();
+        
         if ($exists) {
             return redirect()->back()->with('error', 'Fiche déjà remplie pour ce bus à cette date.');
+        }
+        if((bool) $valid){
+            return redirect()->back()->with('error', 'date déja validé.');
         }
         setcookie('date', $ficheitem['date'], 0, '/');
         $ficheData = [
