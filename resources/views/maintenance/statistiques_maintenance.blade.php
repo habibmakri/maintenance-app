@@ -633,7 +633,7 @@
                         chart.setOption({
                             title: {
                                 // text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue.toFixed(2)}`,
-                                text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue}`,
+                                text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue)}`,
                                 left: 'center',
                             },
                             tooltip: {
@@ -646,7 +646,8 @@
                                     if (!params[0].data || params[0].data.value == null) {
                                         return `${params[0].axisValue} : <strong> 0 </strong>`;
                                     }
-                                    return `${params[0].axisValue} : <strong>${params[0].data.value.toFixed(2)}</strong>`;
+                                    // return `${params[0].axisValue} : <strong>${params[0].data.value.toFixed(2)}</strong>`;
+                                    return `${params[0].axisValue} : <strong>${params[0].data.value}</strong>`;
                                 }
                             },
                             xAxis: {
