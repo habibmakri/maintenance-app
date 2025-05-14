@@ -58,11 +58,11 @@ class maintenanceController extends Controller
             ->where('declaré', true)
             ->exists();
         $valid = validate_maintenance::where('date', $ficheitem['date'])->first();
-        
+
         if ($exists) {
             return redirect()->back()->with('error', 'Fiche déjà remplie pour ce bus à cette date.');
         }
-        if((bool) $valid){
+        if ((bool) $valid) {
             return redirect()->back()->with('error', 'date déja validé.');
         }
         setcookie('date', $ficheitem['date'], 0, '/');
@@ -1186,7 +1186,7 @@ class maintenanceController extends Controller
                     ->selectRaw('
             buses.id as id_bus, 
             buses.name as name_bus, 
-            COALESCE(SUM(fiches_maintenance.gasoile), 0) as total_gasoile
+        COALESCE(ROUND(SUM(fiches_maintenance.gasoile), 2), 0) as total_gasoile
         ')
                     ->groupBy('buses.id', 'buses.name')
                     ->orderBy('buses.id');
