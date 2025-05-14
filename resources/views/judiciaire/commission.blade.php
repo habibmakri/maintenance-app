@@ -78,8 +78,8 @@
                                     $members = json_decode($commission->members, true);
                                 @endphp
                                 @if ($members)
-                                    @foreach ($members as $name => $role)
-                                        <strong>{{ $name }}</strong>: {{ $role }}<br>
+                                    @foreach ($members as $namem => $role)
+                                        <strong>{{ $namem }}</strong>: {{ $role }}<br>
                                     @endforeach
                                 @else
                                     No members
@@ -273,8 +273,8 @@
                                 $members = json_decode($commission->members, true);
                             @endphp
                             @if ($members)
-                                @foreach ($members as $name => $role)
-                                    <strong>{{ $name }}</strong>: {{ $role }}<br>
+                                @foreach ($members as $namem => $role)
+                                    <strong>{{ $namem }}</strong>: {{ $role }}<br>
                                 @endforeach
                             @else
                                 No members
