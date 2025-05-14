@@ -67,7 +67,7 @@
                 <tbody>
                     @foreach ($clients as $client)
                         @if (abs(
-                                \Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)->diffInDays(now())) < 10. && \Carbon\Carbon::parse($client->last_remind)->diffInDays(\Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)) > 10.)
+                                \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->diffInDays(now())) < 10. && \Carbon\Carbon::parse($client->last_remind)->diffInDays(\Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)) > 10.)
                             <tr>
                                 <td>{{ $client->id }}</td>
                                 <td>{{ $client->name }}</td>
