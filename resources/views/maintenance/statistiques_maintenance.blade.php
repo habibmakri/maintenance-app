@@ -632,7 +632,8 @@
 
                         chart.setOption({
                             title: {
-                                text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue.toFixed(2)}`,
+                                // text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue.toFixed(2)}`,
+                                text: `${piece} Du ${monthInput.options[monthInput.selectedIndex].text} ${year} - Valeur moyenne ${meanValue}`,
                                 left: 'center',
                             },
                             tooltip: {
