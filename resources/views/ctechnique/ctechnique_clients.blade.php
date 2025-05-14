@@ -75,7 +75,7 @@
                                 <td>{{ $client->date_controle }}</td>
                                 <td>{{ $client->phone }}</td>
                                 <td>{{ $client->immatriculation }}</td>
-                                <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)->format('Y-m-d') }}
+                                <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->format('Y-m-d') }}
                                 </td>
                                 <td style="display: flex">
                                     <form action="" method="">
@@ -124,7 +124,7 @@
                             <td>{{ $client->date_controle }}</td>
                             <td>{{ $client->phone }}</td>
                             <td>{{ $client->immatriculation }}</td>
-                            <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths($client->type->mois)->format('Y-m-d') }}
+                            <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->format('Y-m-d') }}
                             </td>
                             <td style="display: flex">
                                 <i class="bi bi-trash delete-icon"  style="cursor: pointer;"
