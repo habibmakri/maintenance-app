@@ -616,7 +616,9 @@
                         const xLabels = data.map(item => item.name_bus);
 
 
-                        const yValues = data.map(item => item.total_gasoile);
+                        // const yValues = data.map(item => item.total_gasoile);
+                        const yValues = data.map(item => Number(item.total_gasoile));
+
                         const filteredValues = yValues.filter(val => val > 0);
                         const meanValue = filteredValues.length > 0 ?
                             filteredValues.reduce((sum, val) => sum + val, 0) / filteredValues.length :
