@@ -7,6 +7,7 @@ use App\Http\Requests\maintenanceinRequest;
 use App\Http\Requests\resoudre_panne_request;
 use App\Models\Bus;
 use App\Models\chauffeurs;
+use App\Models\extincteurs;
 use App\Models\fichemaintenance;
 use App\Models\fichepanne_model;
 use App\Models\jaugesmodel;
@@ -601,6 +602,11 @@ class maintenanceController extends Controller
             $bus->update(['derniervidangepond' => $request->kilometrage, 'vidange_pond_date' => $request->date]);
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');
+    }
+    public function extincteurs()
+    {
+        $extincteurs = extincteurs::where('bus',true);
+        return view('secuirité.extincteurs', compact(['extincteurs']));
     }
     public function maintenance_jauge()
     {

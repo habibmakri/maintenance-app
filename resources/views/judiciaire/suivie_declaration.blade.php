@@ -476,12 +476,12 @@
             pertes.innerHTML = declaration.pertes;
             photos.innerHTML = ``;
             declarationphotos = JSON.parse(declaration.photos);
-            if (declaration.caat) {
+            if (declaration.caat == true) {
                 caat.innerHTML = `ثم التصريح في ${declaration.date_caat}`
             } else {
                 caat.innerHTML = `لم يتم التصريح بعد`
             }
-            if (declaration.paye) {
+            if (declaration.paye == true) {
                 paye.innerHTML = `ثم تلقي ${declaration.paye_montant}دج  في ${declaration.date_paye}`
             } else {
                 paye.innerHTML = `لم يتم تلقي التعويض بعد`

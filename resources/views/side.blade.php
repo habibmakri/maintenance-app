@@ -8,7 +8,7 @@
       </a>
     </li>
     {{-- Maintenance tabs --}}
-      @if(in_array('maintenance_in', $permissions)||in_array('maintenance_out', $permissions)||in_array('maintenance_fix', $permissions)||in_array('maintenance_panne', $permissions)||in_array('maintenance_vidange', $permissions)||in_array('statistiques_maintenance', $permissions))
+      @if(in_array('maintenance_in', $permissions)||in_array('maintenance_out', $permissions)||in_array('maintenance_fix', $permissions)||in_array('maintenance_panne', $permissions)||in_array('maintenance_vidange', $permissions)||in_array('statistiques_maintenance', $permissions)||in_array('extinctuers_maintenance', $permissions))
       <li class="nav-item ">
         <a class="nav-link collapsed" data-bs-target="#maintenance-nav" data-bs-toggle="collapse" href="#">
           <i class="bi  bi-wrench "></i><span>Maintenance</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -74,6 +74,13 @@
             <li>
               <a href="{{ route('app.maintenance.statistiques') }}">
                 <i class="bi bi-circle"></i><span>Statistiques Maintenance</span>
+              </a>
+            </li>
+          @endif
+          @if(in_array('extinctuers_maintenance', $permissions))
+            <li>
+              <a href="{{ route('app.maintenance.extincteurs') }}">
+                <i class="bi bi-circle"></i><span>Extincteurs</span>
               </a>
             </li>
           @endif
