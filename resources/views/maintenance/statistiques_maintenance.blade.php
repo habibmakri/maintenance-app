@@ -826,7 +826,7 @@
                         const yValues = Array(12).fill(0);
                         data.forEach(item => {
                             let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
-                            yValues[monthIndex] = item.total;
+                            yValues[monthIndex] = Number(item.total);
                         });
                         const totalvals = data.map(item => item.total_gasoile);
                         const total = yValues.reduce((sum, val) => sum + val, 0);
