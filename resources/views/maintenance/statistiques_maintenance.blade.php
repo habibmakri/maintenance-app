@@ -616,7 +616,6 @@
                         const xLabels = data.map(item => item.name_bus);
 
 
-                        // const yValues = data.map(item => item.total_gasoile);
                         const yValues = data.map(item => Number(item.total_gasoile));
 
                         const filteredValues = yValues.filter(val => val > 0);
@@ -764,7 +763,7 @@
                         const yValues = Array(12).fill(0);
                         data.forEach(item => {
                             let monthIndex = parseInt(item.month.split('-')[1], 10) - 1;
-                            yValues[monthIndex] = item.total;
+                            yValues[monthIndex] = Number(item.total);
                         });
                         const totalvals = data.map(item => item.total_gasoile);
                         const total = yValues.reduce((sum, val) => sum + val, 0);
