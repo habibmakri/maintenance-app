@@ -621,7 +621,7 @@
                         const meanValue = filteredValues.length > 0 ?
                             filteredValues.reduce((sum, val) => sum + val, 0) / filteredValues.length :
                             0;
-
+                        console.log(meanValue)
                         const barData = yValues.map(value => ({
                             value,
                             itemStyle: {
