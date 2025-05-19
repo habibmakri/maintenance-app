@@ -11,6 +11,7 @@ use App\Http\Requests\edit_bus_request;
 use App\Http\Requests\edit_ligne_request;
 use App\Http\Requests\edit_user_request;
 use App\Models\Bus;
+use App\Models\extincteurs;
 use App\Models\Ligne;
 use App\Models\Panne;
 use App\Models\pieces_maintanance;
@@ -210,5 +211,42 @@ class gestionController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);
+    }
+
+    public function manage_extincteurs(){
+        $extincteurs = extincteurs::all();
+        return view('gestion.extincteurs', compact(['extincteurs']));
+    }
+    public function add_extincteur(){
+        return view('gestion.add_extincteurs');
+    }
+    public function do_add_extincteur(Request $request)
+    {
+        extincteurs::create([
+            'reference' => $request->reference,
+            'type' => $request->type,
+            'bus' => $request->bus == 1 ? true : false,
+            'affectation' => $request->Affectation,
+            'date_recharge' => $request->date_recharge,
+            'date_expiration' => $request->date_expiration,
+        ]);
+        return to_route('app.gestion.manage_extincteurs')->with('success', 'Extincteur créé avec succès!');
+    }
+    public function recharge_extincteur(Request $request)
+    {
+        $request->validate([
+            'extincteurid' => 'required | exists:extincteur,id'
+        ]);
+        $extincteur = extincteurs::find($request->extincteurid);
+        if($extincteur){
+            $extincteur->update([
+               'date_recharge' => $request->date_recharge,
+               'date_expiration' => $request->date_expiration
+            ]); 
+            return to_route('app.gestion.manage_extincteurs')->with('success', 'Extincteur Rechargé avec succès!');
+        }else{
+            return to_route('app.gestion.manage_extincteurs')->with('error', 'Extincteur n\'existe pas!');
+        }
+        
     }
 }

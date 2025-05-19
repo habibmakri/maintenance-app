@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('extincteur', function (Blueprint $table) {
             $table->id();
-            $table->string('reference');
+            $table->string('reference')->nullable();
             $table->string('type');
             $table->boolean('bus');
-            $table->string('affectation');
-            $table->date('date_recharge');
+            $table->string('affectation')->nullable();
+            $table->date('date_recharge')->nullable();
             $table->date('date_expiration');
             $table->timestamps();
         });

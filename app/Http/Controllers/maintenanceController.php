@@ -605,7 +605,8 @@ class maintenanceController extends Controller
     }
     public function extincteurs()
     {
-        $extincteurs = extincteurs::where('bus',true);
+        $extincteurs = extincteurs::where('bus',true)->get();
+        // dd($extincteurs);
         return view('secuirité.extincteurs', compact(['extincteurs']));
     }
     public function maintenance_jauge()

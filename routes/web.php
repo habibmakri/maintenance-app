@@ -9,6 +9,7 @@ use App\Http\Controllers\judiciaireController;
 use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
 use App\Http\Controllers\personelleController;
+use App\Http\Controllers\securiteController;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -81,7 +82,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('traveaux_libre','ajouter_traveaux_libre');
         Route::get('statistiques_miantenance','statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
         Route::get('maintenance/statistiques_data',  'statistiques_data')->name('statistiques_data');
-        Route::get('maintenance/extincteurs',  'extincteurs')->name('extincteurs');
+        Route::get('maintenance/extincteurs',  'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:extincteurs_maintenance');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');
@@ -108,6 +109,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('manage_piece/add_piece','add_piece')->name('add_piece')->middleware('rolesMiddleware:manage_piece');
         Route::post('manage_piece/add_piece','do_add_piece');
         Route::post('manage_piece/deletepiece:{id}', 'delete_piece');
+        Route::get('manage_extincteurs','manage_extincteurs')->name('manage_extincteurs')->middleware('rolesMiddleware:manage_extincteurs');
+        Route::get('manage_extincteurs/add_extincteur','add_extincteur')->name('add_extincteur')->middleware('rolesMiddleware:manage_extincteurs');
+        Route::post('manage_extincteurs/add_extincteur','do_add_extincteur');
+        Route::post('manage_extincteurs/recharge_extincteur','recharge_extincteur')->name('recharge_extincteur');
         // Route::post('user_in','insertUser');        
     });
     Route::prefix('/')->controller(personelleController::class)->name('personelle.')->group(function () {
@@ -150,6 +155,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('evaluations/evaluations_pdf','evaluations_pdf')->name('evaluations_pdf');
         Route::post('evaluations/etatevaluations_pdf','etatevaluations_pdf')->name('etatevaluations_pdf');
         Route::post('evaluations/print_evaluation','print_evaluation')->name('print_evaluation');
+        
+    });
+    Route::prefix('/')->controller(securiteController::class)->name('securite.')->group(function () {
+        Route::get('securite/extincteurs','extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
         
     });
     

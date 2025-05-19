@@ -39,37 +39,46 @@
 
 
     <table class="table datatable">
-        {{-- <thead>
+        <thead>
             <tr>
-                <th>id</th>
+                <th>N°</th>
                 <th>
-                    name
+                    Reference
                 </th>
-                <th>KM-actuelle</th>
-                <th>Dernier vidange moteur</th>
-                <th>Dernier vidange boite</th>
-                <th>Dernier vidange pond</th>
-                <th data-type="date" data-format="YYYY/DD/MM">Dernier modification</th>
-                <th>actions</th>
+                <th>Type</th>
+                <th>Affectation</th>
+                <th>Date Recahrge</th>
+                <th>Date d'expiration</th>
+                <th>Reste</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($buses as $bus)
+            @foreach ($extincteurs as $extincteur)
                 <tr>
-                    <td>{{ $bus->id }}</td>
-                    <td>{{ $bus->name }}</td>
-                    <td>{{ $bus->kmactuelle }}</td>
-                    <td>{{ $bus->derniervidange }}</td>
-                    <td>{{ $bus->derniervidangeboite }}</td>
-                    <td>{{ $bus->derniervidangepond }}</td>
-                    <td>{{ $bus->updated_at }}</td>
-                    <td>
-                        <i class="bi bi-pencil edit-icon" data-id="{{ $bus->id }}"
-                            style="margin-right:15%;cursor: pointer;" onclick="handleEditClick('{{ $bus->id }}')"></i>
+                    <td>{{ $extincteur->id }}</td>
+                    <td>{{ $extincteur->reference }}</td>
+                    <td>{{ $extincteur->type }}</td>
+                    <td>{{ $extincteur->affectation }}</td>
+                    <td>{{ $extincteur->date_recharge }}</td>
+                    <td>{{ $extincteur->date_expiration }}</td>
+                    @php
+                        $rechargeDate = \Carbon\Carbon::parse($extincteur->date_recharge);
+                        $expirationDate = \Carbon\Carbon::parse($extincteur->date_expiration);
+                        $differenceInDays = $expirationDate->diffInDays($rechargeDate, false);
+                        if ($differenceInDays < 0) {
+                            $cssClass = 'text-danger fw-bold'; 
+                        } elseif ($differenceInDays < 15) {
+                            $cssClass = 'text-warning fw-bold';
+                        } else {
+                            $cssClass = ''; 
+                        }
+                    @endphp
+                    <td class="{{ $cssClass }}">
+                        {{ $differenceInDays }} Jours
                     </td>
                 </tr>
             @endforeach
-        </tbody> --}}
+        </tbody>
     </table>
     <script>
         function handleEditClick(id) {
