@@ -35,8 +35,8 @@
 </head>
 
 <body class="toggle-sidebar">
+    
     <header id="header" class="header fixed-top d-flex align-items-center justify-content-center">
-
         <style>
             @font-face {
                 font-family: 'Tajwal';
@@ -101,7 +101,7 @@
                 transform: translateY(0);
             }
         </style>
-        <form class="row g-3" action="" method="post" dir="rtl" style="width: 85%; align-items: center;">
+        <form class="row g-3 mx-auto" action="" method="post" dir="rtl" >
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>{{ session('success') }}</strong>
