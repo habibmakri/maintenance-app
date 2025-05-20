@@ -138,7 +138,7 @@
 
             <div class="col-md-8">
                 <div class="form-floating">
-                    <input name="nin" type="text" value="{{ old('nin') }}" class="form-control" required
+                    <input name="nin" type="number" value="{{ old('nin') }}" class="form-control" required
                         id="nin" placeholder="XXXXXXXXXX" pattern="^\d{20}$">
                     <label for="nin">رقم التعريف الوطني</label>
                 </div>
@@ -147,7 +147,8 @@
             <div class="col-md-3">
                 <div class="form-floating">
                     <input name="nom_ar" type="text" value="{{ old('nom_ar') }}" class="form-control" required
-                        id="nom_ar" placeholder="اللقب">
+                        id="nom_ar" placeholder="اللقب" pattern="^[\u0600-\u06FF\s]+$"
+       title="Veuillez entrer uniquement des lettres arabes.">
                     <label for="nom_ar">اللقب</label>
                 </div>
             </div>
@@ -155,7 +156,8 @@
             <div class="col-md-3">
                 <div class="form-floating">
                     <input name="prenom_ar" type="text" value="{{ old('prenom_ar') }}" class="form-control"
-                        required id="prenom_ar" placeholder="الإسم">
+                        required id="prenom_ar" placeholder="الإسم" pattern="^[\u0600-\u06FF\s]+$"
+       title="Veuillez entrer uniquement des lettres arabes.">
                     <label for="prenom_ar">الإسم</label>
                 </div>
             </div>
@@ -204,7 +206,7 @@
 
             <div class="col-md-4">
                 <div class="form-floating">
-                    <input name="phone" type="tel" value="{{ old('phone') }}" class="form-control" required
+                    <input name="phone" type="phone" value="{{ old('phone') }}" class="form-control" required
                         id="phone" placeholder="0600000000" pattern="^0[5-7][0-9]{8}$">
                     <label for="phone">رقم الهاتف</label>
                 </div>

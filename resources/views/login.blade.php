@@ -104,9 +104,9 @@
                                         <div class="col-12">
                                             <button class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
-                                        {{-- <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
-                    </div> --}}
+                                        <div class="col-12">
+                      <p class="small mb-0 " style="text-align: center"> <a href="{{ route('inscription_taxi') }}">Inscription taxi</a></p>
+                    </div>
                                     </form>
 
                                 </div>
