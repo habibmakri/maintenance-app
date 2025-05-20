@@ -158,6 +158,23 @@
                 </ul>
             </li>
         @endif
+        {{-- Formation tabs --}}
+        @if (in_array('confirmer_taxis', $permissions))
+            <li class="nav-item ">
+                <a class="nav-link collapsed" data-bs-target="#Centre-nav" data-bs-toggle="collapse" href="#">
+                    <i class="ri-clipboard-line"></i><span>Centre de Formation</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="Centre-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    @if (in_array('confirmer_taxis', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.confirmer_taxis') }}">
+                                <i class="bi bi-circle"></i><span>Confirmer Taxis</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
         {{-- Personelle tabs --}}
         @if (in_array('personelle_stat', $permissions))
             <li class="nav-item ">

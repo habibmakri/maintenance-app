@@ -4,7 +4,9 @@ use App\Http\Controllers\Authcontroller;
 use App\Http\Controllers\comptabiliteController;
 use App\Http\Controllers\ctechniqueController;
 use App\Http\Controllers\exploatationController;
+use App\Http\Controllers\formationController;
 use App\Http\Controllers\gestionController;
+use App\Http\Controllers\inscriptionController;
 use App\Http\Controllers\judiciaireController;
 use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
@@ -161,7 +163,17 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('securite/extincteurs','extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
         
     });
+    Route::prefix('/')->controller(formationController::class)->name('formation.')->group(function () {
+        Route::get('formation/taxis','confirmer_taxis')->name('confirmer_taxis')->middleware('rolesMiddleware:confirmer_taxis');
+        
+    });
     
     
 });
 
+// Route::get('/inscription', [inscriptionController::class, 'inscription'])->name('inscription_formation');
+// Route::post('/inscription', [inscriptionController::class, 'add_rate_ctechnique']);
+Route::get('/taxi', [inscriptionController::class, 'taxi_provesoire'])->name('inscription_taxi');
+Route::post('/taxi', [inscriptionController::class, 'add_taxi_provesoire']);
+Route::get('/taxi/success/{id}', [inscriptionController::class, 'success'])->name('inscription_taxi.success');
+Route::get('/taxi/download/{id}', [inscriptionController::class, 'downloadPdf'])->name('inscription_taxi.download');
