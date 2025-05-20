@@ -46,15 +46,15 @@
             }
         </style>
 
-        <div class="d-flex flex-column align-items-center" style="width: 66%;">
+        <div class="d-flex flex-column align-items-center pt-1" style="width: 66%;">
             <p class="logo d-flex align-items-center"
                 style="width: 100%;text-align: center;justify-content: center;gap: 60px;">
-                <img src="/LOGO ETUS.png" alt="">
+                <img style="padding-top:10px;max-height: 50px;" src="/LOGO ETUS.png" alt="">
                 <span class="d-none d-lg-block"
-                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:16px;">المؤسسة العمومية للنقل
+                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px; ;">المؤسسة العمومية للنقل
                     الحضري<br> والشبه الحضري سيدي بلعباس</span>
                 <span class="d-none d-lg-block"
-                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:16px;">مديرية النقل <br>
+                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px;">مديرية النقل <br>
                     ولاية سيدي بلعباس</span>
             </p>
             {{-- <i class="bi bi-list toggle-sidebar-btn"></i> --}}
