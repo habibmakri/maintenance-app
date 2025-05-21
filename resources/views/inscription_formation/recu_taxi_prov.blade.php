@@ -7,20 +7,21 @@
         body {
             font-family: 'Sakkal Majalla', sans-serif;
             font-size: 18px;
-            line-height: 1.8;
+            line-height: 1.4;
             direction: rtl;
             padding: 30px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            margin-top: 30px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            border-bottom: 2px solid black;
         }
 
         .header2 {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             line-height: 1;
         }
 
@@ -57,12 +58,13 @@
     <div class="header2">
         <p>الجمهورية الجزائرية الديمقراطية الشعبية</p>
         <p>وزارة النقل</p>
-        <p>المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</p>
+        <p>مديرية النقل لولاية سيدي بلعباس</p>
     </div>
     <div class="header">
         <h1>وصل تسجيل</h1>
         <h2>للتكوين للحصول على دفتر المقاعد لسائقي سيارات الأجرة - 2025</h2>
-        <p>رقم تسجيل:{{$taxi->id}}</p>
+        <p>رقم تسجيل: {{ $taxi->id }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; وقت التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong></p>
+
     </div>
 
     @php
@@ -84,13 +86,6 @@
     <div class="info-line">
         رقم الهاتف: <strong>{{ $taxi->phone }}</strong> – العنوان: <strong>{{ $taxi->adresse }}</strong>
     </div>
-
-    <div class="info-line">
-        رقم رخصة السياقة: <strong>{{ $taxi->n_permis }}</strong>، الصادرة بتاريخ:
-        <strong>{{ \Carbon\Carbon::parse($taxi->date_permis)->format('Y-m-d') }}</strong>
-        بـ <strong>{{ $taxi->lieu_permis }}</strong>
-    </div>
-
     @if ($taxi->email)
         <div class="info-line">
             البريد الإلكتروني: <strong>{{ $taxi->email }}</strong>
@@ -98,18 +93,37 @@
     @endif
 
     <div class="info-line">
+        رقم رخصة السياقة: <strong>{{ $taxi->n_permis }}</strong>، الصادرة بتاريخ:
+        <strong>{{ \Carbon\Carbon::parse($taxi->date_permis)->format('Y-m-d') }}</strong>
+        بـ <strong>{{ $taxi->lieu_permis }}</strong>
+    </div>
+
+    <div class="info-line">
         بلدية الإستغلال: <strong>{{ $taxi->comune_exploi }}</strong>
     </div>
+    <div class="info-line">
+        المعلومات المذكورة أعلاه مصرحة من طرف {{ $civilite }} و {{ $civilite2 }} مسؤوليتها. </div>
 
     <div class="info-line section-title">
-        معلومات إضافية:
+        الملف المطلوب:
     </div>
-    <div class="info-line">
-        تاريخ التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong>
-    </div>
-    <div class="info-line">
-المعلومات المذكورة أعلاه مصرحة من طرف {{$civilite}} و {{$civilite2}} مسؤوليتها.    </div>
 
+    <ul
+        style="padding-right: 40px; list-style-type: square; font-family: 'Sakkal Majalla', sans-serif; font-size: 18px;">
+        <li>نسخة من بطاقة التعريف الوطني.</li>
+        <li>نسخة من رخصة السياقة.</li>
+        <li>مستخرج من صفيحة السوابق العدلية.</li>
+        <li>شهادة الإقامة.</li>
+        <li>3 صور حديثة.</li>
+        <li>ثلاث شهادات طبية تثبت اللياقة البدنية والعقلية وحدة البصر.</li>
+        <li>شهادة عدم الانتساب.</li>
+    </ul>
+    <div class="info-line section-title">
+        ملاحظة:
+    </div>
+    <div class="info-line">
+        يخضع صاحب طلب دفتر المقاعد للنقل بواسطة سيارة الأجرة لتحقيق إداري تقوم به مصالح مختصة.
+    </div>
 
 </body>
 

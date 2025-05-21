@@ -39,16 +39,21 @@ class inscriptionController extends Controller
             'autoScriptToLang' => true,
             'autoLangToFont' => true,
         ]);
-        $imagePath = public_path('/LOGO ETUS.png');
+        // $imagePath = public_path('/LOGO ETUS.png');
         $html = view('inscription_formation.recu_taxi_prov', compact(['taxi']))->render();
         $mpdf->AddPage();
-        $mpdf->Image($imagePath, 20, 20, 20, 20, 'png');
+        // $mpdf->Image($imagePath, 20, 20, 20, 20, 'png');
         $mpdf->SetY(10);
         date_default_timezone_set('Africa/Algiers');
+//         $htmlFooter = "
+// <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
+//     <div>المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</div>
+//     <div>048764072 - طريق معسكر مطول</div>
+// </div>
+// ";
         $htmlFooter = "
 <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
-    <div>المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</div>
-    <div>048764072 - طريق معسكر مطول</div>
+    <div>مديرية النقل لولاية سيدي بلعباس - 048764497</div>
 </div>
 ";
 
