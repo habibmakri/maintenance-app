@@ -101,17 +101,23 @@
                 transform: translateY(0);
             }
         </style>
-        
-        <div style="text-align: center; margin-top: 50px;">
-    <h2 style="color: green;">✔ ثم التسجيل بنجاح</h2>
-    <p>يرجى الانتظار قليلاً، سيتم تحميل الوصل تلقائيًا.</p>
-</div>
 
-<script>
-    window.onload = function() {
-        window.open("{{ route('inscription_taxi.download', $taxi->id) }}", "_blank");
-    };
-</script>
+        <div style="text-align: center; margin-top: 50px;">
+            <h2 style="color: green;">✔ ثم التسجيل بنجاح</h2>
+            <p>يرجى الانتظار قليلاً، سيتم تحميل الوصل تلقائيًا.</p>
+            <p>
+                <a href="{{ route('inscription_taxi.download', $taxi->id) }}" target="_blank"
+                    style="color: blue; font-weight: bold;">
+                    إضغط هنا إذا لم يتم تحميل الوصل تلقائيًا
+                </a>
+            </p>
+        </div>
+
+        <script>
+            window.onload = function() {
+                window.open("{{ route('inscription_taxi.download', $taxi->id) }}", "_blank");
+            };
+        </script>
     </main>
 </body>
 <script src="/theme/tomselect/tom-select.complete.min.js"></script>
