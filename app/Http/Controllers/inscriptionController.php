@@ -66,7 +66,7 @@ class inscriptionController extends Controller
     {
 
         $validatedData = $request->validate([
-            'nin' => 'required|digits:20',
+            'nin' => 'required|digits:18',
             'phone' => 'required|regex:/^0[5-7][0-9]{8}$/',
             'gender' => 'required',
             'nom_ar' => 'required|string',
