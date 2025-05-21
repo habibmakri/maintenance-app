@@ -107,7 +107,7 @@
             <p>يرجى الانتظار قليلاً، سيتم تحميل الوصل تلقائيًا.</p>
             <p>
                 <a href="{{ route('inscription_taxi.download', $taxi->id) }}" target="_blank"
-                    style="color: blue; font-weight: bold;">
+                    style="color: red; font-weight: bold;">
                     إضغط هنا إذا لم يتم تحميل الوصل تلقائيًا
                 </a>
             </p>

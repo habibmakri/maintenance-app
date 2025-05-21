@@ -129,7 +129,10 @@ class inscriptionController extends Controller
         ]);
         // self::create_pdf($taxi);
         // return redirect()->back()->with('success', 'تم تسجيل المعلومات بنجاح.');
-        session(['can_download_pdf' => $taxi->id]);
+        session([
+            'can_download_pdf' => $taxi->id,
+            'pdf_download_expiration' => now()->addMinute()
+        ]);
         return redirect()->route('inscription_taxi.success', ['id' => $taxi->id]);
     }
 
@@ -142,10 +145,20 @@ class inscriptionController extends Controller
     public function downloadPdf($id)
     {
         $allowedId = session('can_download_pdf');
-        if (!$allowedId || $allowedId != $id) {
-            abort(403, 'Unauthorized access');
+        $expiration = session('pdf_download_expiration');
+
+        if (!$allowedId || $allowedId != $id || !$expiration) {
+            abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
         }
-        session()->forget('can_download_pdf');
+
+        $expiration = Carbon::parse($expiration);
+
+        if (now()->greaterThan($expiration)) {
+            session()->forget(['can_download_pdf', 'pdf_download_expiration']);
+            abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
+        }
+
+
         $taxi = taxis_prov::findOrFail($id);
         return $this->create_pdf($taxi);
     }
