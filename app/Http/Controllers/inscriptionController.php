@@ -45,12 +45,12 @@ class inscriptionController extends Controller
         // $mpdf->Image($imagePath, 20, 20, 20, 20, 'png');
         $mpdf->SetY(10);
         date_default_timezone_set('Africa/Algiers');
-//         $htmlFooter = "
-// <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
-//     <div>المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</div>
-//     <div>048764072 - طريق معسكر مطول</div>
-// </div>
-// ";
+        //         $htmlFooter = "
+        // <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
+        //     <div>المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس</div>
+        //     <div>048764072 - طريق معسكر مطول</div>
+        // </div>
+        // ";
         $htmlFooter = "
 <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
     <div>مديرية النقل لولاية سيدي بلعباس - 048764497</div>
@@ -96,6 +96,11 @@ class inscriptionController extends Controller
         $existingByNin = taxis_prov::where('nin', $request->nin)->first();
         if ($existingByNin) {
             return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+        }
+
+        $datePermis = \Carbon\Carbon::parse($request->date_permis);
+        if ($datePermis->diffInDays(now()) < 730) {
+            return back()->withErrors(['date_permis' => 'تاريخ رخصة السياقة يجب أن يكون أقدم من عامين.'])->withInput();
         }
 
         $taxi =  taxis_prov::create([
