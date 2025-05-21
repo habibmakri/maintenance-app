@@ -14,7 +14,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             margin-top: 30px;
         }
 
@@ -67,7 +67,7 @@
 
     @php
         $civilite = $taxi->gender === 'homme' ? 'السيد' : 'السيدة';
-        $civilite2 = $taxi->gender === 'homme' ? 'هو' : 'هي';
+        $civilite2 = $taxi->gender === 'homme' ? 'هو يتحمل' : 'هي تتحمل';
     @endphp
 
     <div class="info-line">
@@ -108,7 +108,7 @@
         تاريخ التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong>
     </div>
     <div class="info-line">
-المعلومات المذكورة أعلاه مصرحة من طرف {{$civilite}} و {{$civilite2}} يتحمل مسؤوليتها.    </div>
+المعلومات المذكورة أعلاه مصرحة من طرف {{$civilite}} و {{$civilite2}} مسؤوليتها.    </div>
 
 
 </body>
