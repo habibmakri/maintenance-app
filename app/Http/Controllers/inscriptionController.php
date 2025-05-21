@@ -103,6 +103,11 @@ class inscriptionController extends Controller
             return back()->withErrors(['date_permis' => 'تاريخ رخصة السياقة يجب أن يكون أقدم من عامين.'])->withInput();
         }
 
+        $birthdate = \Carbon\Carbon::parse($request->birthdate);
+        if ($birthdate->diffInDays(now()) < 9131) {
+            return back()->withErrors(['birthdate' => 'يجب أن يكون عمر المترشح 25 سنة على الأقل.'])->withInput();
+        }
+
         $taxi =  taxis_prov::create([
             'nin' => $request->nin,
             'inscription_time' => Carbon::now('Africa/Algiers'),
