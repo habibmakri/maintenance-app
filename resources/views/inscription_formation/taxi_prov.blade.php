@@ -139,7 +139,7 @@
             <div class="col-md-8">
                 <div class="form-floating">
                     <input name="nin" type="number" value="{{ old('nin') }}" class="form-control" required
-                        id="nin" placeholder="XXXXXXXXXX" pattern="^\d{20}$">
+                        id="nin" placeholder="XXXXXXXXXX" pattern="^\d{18}$">
                     <label for="nin">رقم التعريف الوطني</label>
                 </div>
             </div>
