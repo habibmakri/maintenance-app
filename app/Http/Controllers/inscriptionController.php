@@ -53,7 +53,7 @@ class inscriptionController extends Controller
         // ";
         $htmlFooter = "
 <div style='border-top: 1px solid black; padding-top: 5px; text-align: center; font-size: 14px;'>
-    <div>مديرية النقل لولاية سيدي بلعباس - 048764497</div>
+    <div>مديرية النقل لولاية سيدي بلعباس </div>
 </div>
 ";
 
