@@ -62,10 +62,12 @@
     <div class="header">
         <h1>وصل تسجيل</h1>
         <h2>للتكوين للحصول على دفتر المقاعد لسائقي سيارات الأجرة - 2025</h2>
+        <p>رقم تسجيل:{{$taxi->id}}</p>
     </div>
 
     @php
         $civilite = $taxi->gender === 'homme' ? 'السيد' : 'السيدة';
+        $civilite2 = $taxi->gender === 'homme' ? 'هو' : 'هي';
     @endphp
 
     <div class="info-line">
@@ -106,7 +108,7 @@
         تاريخ التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong>
     </div>
     <div class="info-line">
-المعلومات المذكورة أعلاه مصرحة من طرف {{$civilite}} و هو يتحمل مسؤوليتها.    </div>
+المعلومات المذكورة أعلاه مصرحة من طرف {{$civilite}} و {{$civilite2}} يتحمل مسؤوليتها.    </div>
 
 
 </body>
