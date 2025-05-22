@@ -35,7 +35,7 @@
 </head>
 
 <body class="toggle-sidebar">
-    
+
     <header id="header" class="header fixed-top d-flex align-items-center justify-content-center">
         <style>
             @font-face {
@@ -51,10 +51,12 @@
                 style="width: 100%;text-align: center;justify-content: center;gap: 60px;">
                 <img style="padding-top:10px;max-height: 50px;" src="/LOGO ETUS.png" alt="">
                 <span class="d-none d-lg-block"
-                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px; ;">المؤسسة العمومية للنقل
+                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px; ;">المؤسسة
+                    العمومية للنقل
                     الحضري<br> والشبه الحضري سيدي بلعباس</span>
                 <span class="d-none d-lg-block"
-                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px;">مديرية النقل <br>
+                    style="font-family: 'Tajwal', sans-serif;text-align: end;font-size:20px;padding-top:10px;">مديرية
+                    النقل <br>
                     ولاية سيدي بلعباس</span>
             </p>
             {{-- <i class="bi bi-list toggle-sidebar-btn"></i> --}}
@@ -71,6 +73,17 @@
                 للراغبين في مزاولة نشاط سائق سيارة الأجرة <br>
                 2025
             </h1>
+        </div>
+        <div class="alert alert-info alert-dismissible fade show mt-3" role="alert" dir="rtl">
+           يجب على صاحب الطلب من أجل الحصول على دفتر مقاعد النقل بواسطة سيارة الأجرة ان يستوفي الشروط التالية:
+            <ul style="padding-right: 40px; list-style-type: square; font-size: 14px;" dir="rtl">
+                <li>أن يبلغ خمسا وعشرين  (25) سنة على الأقل.</li>
+                <li>أن يتمتع بجميع حقوقه المدنية والوطنية.</li>
+                <li>أن يكون من جنسية جزائرية.</li>
+                <li>أن لا يمارس نشاطا مأجورا آخر.</li>
+                <li>أن يكون حائزا على رخصة سياقة منذ سنتين على الأقل.</li>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <style>
             label {
@@ -101,7 +114,7 @@
                 transform: translateY(0);
             }
         </style>
-        <form class="row g-3 mx-auto" action="" method="post" dir="rtl" >
+        <form class="row g-3 mx-auto" action="" method="post" dir="rtl">
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>{{ session('success') }}</strong>
@@ -148,7 +161,7 @@
                 <div class="form-floating">
                     <input name="nom_ar" type="text" value="{{ old('nom_ar') }}" class="form-control" required
                         id="nom_ar" placeholder="اللقب" pattern="^[\u0600-\u06FF\s]+$"
-       title="Veuillez entrer uniquement des lettres arabes.">
+                        title="Veuillez entrer uniquement des lettres arabes.">
                     <label for="nom_ar">اللقب</label>
                 </div>
             </div>
@@ -157,7 +170,7 @@
                 <div class="form-floating">
                     <input name="prenom_ar" type="text" value="{{ old('prenom_ar') }}" class="form-control"
                         required id="prenom_ar" placeholder="الإسم" pattern="^[\u0600-\u06FF\s]+$"
-       title="Veuillez entrer uniquement des lettres arabes.">
+                        title="Veuillez entrer uniquement des lettres arabes.">
                     <label for="prenom_ar">الإسم</label>
                 </div>
             </div>
@@ -252,11 +265,11 @@
                 </div>
             </div>
 
-            <div class="text-end" style="justify-items: center;">
+            <div style="display: flex; justify-content: center;">
                 <input type="submit" id="submit" value="سجل">
             </div>
 
-            <div id="bus-form-container" class="row"></div>
+            {{-- <div id="bus-form-container" class="row"></div> --}}
         </form>
     </main>
 </body>
