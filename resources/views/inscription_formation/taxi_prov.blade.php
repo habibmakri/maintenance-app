@@ -75,9 +75,9 @@
             </h1>
         </div>
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert" dir="rtl">
-           يجب على صاحب الطلب من أجل الحصول على دفتر مقاعد النقل بواسطة سيارة الأجرة ان يستوفي الشروط التالية:
+            يجب على صاحب الطلب من أجل الحصول على دفتر مقاعد النقل بواسطة سيارة الأجرة ان يستوفي الشروط التالية:
             <ul style="padding-right: 40px; list-style-type: square; font-size: 14px;" dir="rtl">
-                <li>أن يبلغ خمسا وعشرين  (25) سنة على الأقل.</li>
+                <li>أن يبلغ خمسا وعشرين (25) سنة على الأقل.</li>
                 <li>أن يتمتع بجميع حقوقه المدنية والوطنية.</li>
                 <li>أن يكون من جنسية جزائرية.</li>
                 <li>أن لا يمارس نشاطا مأجورا آخر.</li>
@@ -152,7 +152,7 @@
             <div class="col-md-8">
                 <div class="form-floating">
                     <input name="nin" type="number" value="{{ old('nin') }}" class="form-control" required
-                        id="nin" placeholder="XXXXXXXXXX" pattern="^\d{18}$">
+                        id="nin" placeholder="XXXXXXXXXX" pattern="^\d{18}$" oninput="this.value = this.value.slice(0, 18)">
                     <label for="nin">رقم التعريف الوطني</label>
                 </div>
             </div>
@@ -240,6 +240,50 @@
                     <label for="comune_exploi">بلدية ممارسة النشاط</label>
                 </div>
             </div>
+
+            {{-- <div class="col-md-4">
+                <div class="form-floating">
+                    <select class="form-select" required name="comune_exploi" id="comune_exploi"
+                        aria-label="بلدية ممارسة النشاط">
+                        <option value="" disabled {{ old('comune_exploi') ? '' : 'selected' }}>اختر بلدية
+                        </option>
+                        @php
+                            $communes = [
+                                'سيدي بلعباس',
+                                'سيدي لحسن',
+                                'سفيزف',
+                                'تنيرة',
+                                'عين البرد',
+                                'سيدي براهيم',
+                                'مصطفى بن براهيم',
+                                'بلعربي',
+                                'تلاغ',
+                                'مزاورو',
+                                'مرين',
+                                'رأس الماء',
+                                'بن باديس',
+                                'بضرابين المقراني',
+                                'حاسي زهانة',
+                                'سيدي علي بوسيدي',
+                                'لمطار',
+                                'سيدي علي بن يوب',
+                                'بوخنفيس',
+                            ];
+                        @endphp
+                        @foreach ($communes as $commune)
+                            <option value="{{ $commune }}"
+                                {{ old('comune_exploi') == $commune ? 'selected' : '' }}>
+                                {{ $commune }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <label for="comune_exploi">بلدية ممارسة النشاط</label>
+                </div>
+            </div> --}}
+
+
+
+
 
             <div class="col-md-4">
                 <div class="form-floating">
