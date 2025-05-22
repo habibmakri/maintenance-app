@@ -75,7 +75,7 @@
             </h1>
         </div>
         <div class="alert alert-info alert-dismissible fade show mt-3" role="alert" dir="rtl">
-            يجب على صاحب الطلب من أجل الحصول على دفتر مقاعد النقل بواسطة سيارة الأجرة ان يستوفي الشروط التالية:
+            يجب على صاحب الطلب من أجل الحصول على دفتر مقاعد للنقل بواسطة سيارة الأجرة ان يستوفي الشروط التالية:
             <ul style="padding-right: 40px; list-style-type: square; font-size: 14px;" dir="rtl">
                 <li>أن يبلغ خمسا وعشرين (25) سنة على الأقل.</li>
                 <li>أن يتمتع بجميع حقوقه المدنية والوطنية.</li>
