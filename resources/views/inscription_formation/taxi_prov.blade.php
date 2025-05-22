@@ -220,7 +220,7 @@
             <div class="col-md-4">
                 <div class="form-floating">
                     <input name="phone" type="phone" value="{{ old('phone') }}" class="form-control" required
-                        id="phone" placeholder="0600000000" pattern="^0[5-7][0-9]{8}$">
+                        id="phone" placeholder="0600000000" pattern="^0[5-7][0-9]{8}$" oninput="this.value = this.value.slice(0, 10)">
                     <label for="phone">رقم الهاتف</label>
                 </div>
             </div>
