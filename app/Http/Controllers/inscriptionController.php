@@ -127,6 +127,7 @@ class inscriptionController extends Controller
             'lieu_permis' => $request->lieu_permis,
             'comune_exploi' => $request->comune_exploi,
             'list' => $request->list,
+            'ip_adress' => $request->ip(),
         ]);
         // self::create_pdf($taxi);
         // return redirect()->back()->with('success', 'تم تسجيل المعلومات بنجاح.');

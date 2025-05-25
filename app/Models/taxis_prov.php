@@ -39,6 +39,7 @@ class taxis_prov extends Model
         'rejet',
         'validation_number',
         'list',
+        'ip_adress',
     ];
 
     // public function list()
