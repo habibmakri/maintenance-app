@@ -156,7 +156,7 @@ class judiciaireController extends Controller
     }
     public function judiciaire_commission()
     {
-        $declarations = declaration_judiciaire::where('commission_id', null)->get();
+        $declarations = declaration_judiciaire::where('commission_id', null)->where('time_day', '>', '2024-12-31 23:59:59')->get();
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
         $commissionsthisyear = commission_judiciaire::with(['declarations.chauffeur', 'declarations.bus'])->whereBetween('date', [$startOfYear, $endOfYear])->orderBy('number')->get();
