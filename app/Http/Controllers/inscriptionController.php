@@ -15,7 +15,7 @@ class inscriptionController extends Controller
     }
     public function taxi_provesoire(Request $request)
     {
-        dd("hello",$request->ip());
+        // dd("hello",$request->ip());
         return view('inscription_formation.taxi_prov');
     }
     function create_pdf($taxi)
