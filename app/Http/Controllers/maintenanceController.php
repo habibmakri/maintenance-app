@@ -605,7 +605,7 @@ class maintenanceController extends Controller
     }
     public function extincteurs()
     {
-        $extincteurs = extincteurs::where('bus',true)->get();
+        $extincteurs = extincteurs::where('bus', true)->get();
         // dd($extincteurs);
         return view('secuirité.extincteurs', compact(['extincteurs']));
     }
@@ -2656,8 +2656,46 @@ class maintenanceController extends Controller
             });
         }
 
+        $buses = Bus::whereIn('type', ['v8', 'l5'])->get();
+        $vidange = [];
+        $vidange_pond = [];
+        $vidange_boite = [];
+        if ($typepanne == "tous") {
+
+            foreach ($buses as $bus) {
+                if (($bus->kmactuelle - $bus->derniervidangepond) > 100000) {
+                    $vidange_pond[] = [
+                        "bus" => $bus,
+                        "km" => ($bus->kmactuelle - $bus->derniervidangepond)
+                    ];
+                }
+                if (($bus->kmactuelle - $bus->derniervidange) > 8000) {
+                    $vidange[] = [
+                        "bus" => $bus,
+                        "km" => ($bus->kmactuelle - $bus->derniervidange)
+                    ];
+                }
+
+
+                if ($bus->type == 'v8') {
+                    if (($bus->kmactuelle - $bus->derniervidangeboite) > 50000) {
+                        $vidange_boite[] = [
+                            "bus" => $bus,
+                            "km" => ($bus->kmactuelle - $bus->derniervidangeboite)
+                        ];
+                    }
+                } else {
+                    if (($bus->kmactuelle - $bus->derniervidangeboite) > 30000) {
+                        $vidange_boite[] = [
+                            "bus" => $bus,
+                            "km" => ($bus->kmactuelle - $bus->derniervidangeboite)
+                        ];
+                    }
+                }
+            }
+        }
         // dd($data);
-        $html = view('maintenance.pannecour_pdf', compact('data'))->render();
+        $html = view('maintenance.pannecour_pdf', compact('data', 'vidange', 'vidange_pond', 'vidange_boite'))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',

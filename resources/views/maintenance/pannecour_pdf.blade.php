@@ -115,6 +115,67 @@
             </tr>
         </tbody>
     </table>
+
+    @if (count($vidange) > 0)
+        <h4>Vidange Moteur (> 8000 km)</h4>
+        <table style="font-size:10px;">
+            <thead>
+                <tr>
+                    <th>Bus</th>
+                    <th>Km depuis dernière vidange</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($vidange as $item)
+                    <tr>
+                        <td>{{ $item['bus']->name ?? $item['bus']->id }}</td>
+                        <td>{{ $item['km'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    @if (count($vidange_pond) > 0)
+        <h4>Vidange Pont (> 100000 km)</h4>
+        <table style="font-size:10px;">
+            <thead>
+                <tr>
+                    <th>Bus</th>
+                    <th>Km depuis dernière vidange pont</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($vidange_pond as $item)
+                    <tr>
+                        <td>{{ $item['bus']->name ?? $item['bus']->id }}</td>
+                        <td>{{ $item['km'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    @if (count($vidange_boite) > 0)
+        <h4>Vidange Boîte (V8 > 50000 km, L5 > 30000 km)</h4>
+        <table style="font-size:10px;">
+            <thead>
+                <tr>
+                    <th>Bus</th>
+                    <th>Km depuis dernière vidange boîte</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($vidange_boite as $item)
+                    <tr>
+                        <td>{{ $item['bus']->name ?? $item['bus']->id }}</td>
+                        <td>{{ $item['km'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
 </body>
 
 </html>
