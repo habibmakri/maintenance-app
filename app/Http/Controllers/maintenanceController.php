@@ -2660,7 +2660,7 @@ class maintenanceController extends Controller
         $vidange = [];
         $vidange_pond = [];
         $vidange_boite = [];
-        if ($typepanne == "tous") {
+        if ($typepanne == "tous" ||$typepanne == "mecanique") {
 
             foreach ($buses as $bus) {
                 if (($bus->kmactuelle - $bus->derniervidangepond) > 100000) {
