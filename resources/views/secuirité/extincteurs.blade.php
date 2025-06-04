@@ -66,9 +66,10 @@
                     <td>{{ $extincteur->date_recharge }}</td>
                     <td>{{ $extincteur->date_expiration }}</td>
                     @php
-                        $rechargeDate = \Carbon\Carbon::parse($extincteur->date_recharge);
+                        // $rechargeDate = \Carbon\Carbon::parse($extincteur->date_recharge);
+                        $now = \Carbon\Carbon::now();
                         $expirationDate = \Carbon\Carbon::parse($extincteur->date_expiration);
-                        $differenceInDays = $rechargeDate->diffInDays($expirationDate, false);
+                        $differenceInDays = $now->diffInDays($expirationDate, false);
                         if ($differenceInDays < 0) {
                             $cssClass = 'text-danger fw-bold'; 
                         } elseif ($differenceInDays < 15) {
