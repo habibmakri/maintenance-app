@@ -57,9 +57,13 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $i = 1;
+            @endphp
             @foreach ($extincteurs as $extincteur)
                 <tr>
-                    <td>{{ $extincteur->id }}</td>
+                    {{-- <td>{{ $extincteur->id }}</td> --}}
+                    <td>{{ $i }}</td>
                     <td>{{ $extincteur->reference }}</td>
                     <td>{{ $extincteur->type }}</td>
                     <td>{{ $extincteur->affectation }}</td>
@@ -71,13 +75,16 @@
                             onclick="handlerechargeclick({{ $extincteur }})">Recharger</button>
                     </td>
                 </tr>
+                @php
+                    $i = $i + 1;
+                @endphp
             @endforeach
         </tbody>
     </table>
     <div class="modal fade" id="ExtralargeModal" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header" >
+                <div class="modal-header">
                     <h5 class="modal-title" id="modal_title"> </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -114,13 +121,13 @@
             console.log("Editing bus with ID:", id);
             window.location.href = `/app/manage_bus/edit_bus:${id}`;
         }
+
         function handlerechargeclick(extincteur) {
             const modal_title = document.getElementById('modal_title');
             const declarationIdInput = document.getElementById('extincteurid');
             modal_title.innerHTML = '';
             modal_title.innerHTML = extincteur.reference + ' - ' + extincteur.affectation;
-            declarationIdInput.value = extincteur.id; 
+            declarationIdInput.value = extincteur.id;
         }
-
     </script>
 @endsection

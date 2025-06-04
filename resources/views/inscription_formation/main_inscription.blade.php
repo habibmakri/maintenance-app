@@ -254,7 +254,7 @@
                                 <a href="#">ابدأ الطلب</a>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-4 d-flex">
+                        {{-- <div class="col-12 col-md-6 col-lg-4 d-flex">
                             <div class="tab-card h-100 w-100">
                                 <h1> تعليم سياقة مركبات ذات محرك</h1>
                                 <p>
@@ -262,7 +262,7 @@
                                 </p>
                                 <a href="#">ابدأ الطلب</a>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>
@@ -270,22 +270,14 @@
             <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="container mt-4">
                     <div class="tab-card">
-                        <h1>طلب دفتر المقاعد - الخواص</h1>
+                        <h1>فتح حساب خاص بالمؤسسة</h1>
                         <p>
                             يمكنك من خلال هذا القسم تقديم طلب دفتر المقاعد المخصص لسائقي سيارات الأجرة الفرديين لسنة
                             2025.
                         </p>
-                        <a href="#">ابدأ الطلب</a>
+                        <a href="#">فتح حساب</a>
                     </div>
-
-                    <div class="tab-card">
-                        <h1>طلب دفتر المقاعد - المؤسسات</h1>
-                        <p>
-                            هذا القسم مخصص للمؤسسات العاملة في مجال النقل الحضري التي ترغب في تقديم طلب دفتر المقاعد
-                            للسائقين التابعين لها.
-                        </p>
-                        <a href="#">ابدأ الطلب</a>
-                    </div>
+                   
                 </div>
             </div>
         </div>
