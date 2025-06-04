@@ -11,7 +11,9 @@ class inscriptionController extends Controller
 {
     public function inscription()
     {
-        dd("hello");
+        // dd("hello");
+        return view('inscription_formation.main_inscription');
+
     }
     public function taxi_provesoire(Request $request)
     {

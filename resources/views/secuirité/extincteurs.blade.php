@@ -64,7 +64,7 @@
                     @php
                         $rechargeDate = \Carbon\Carbon::parse($extincteur->date_recharge);
                         $expirationDate = \Carbon\Carbon::parse($extincteur->date_expiration);
-                        $differenceInDays = $expirationDate->diffInDays($rechargeDate, false);
+                        $differenceInDays = $rechargeDate->diffInDays($expirationDate, false);
                         if ($differenceInDays < 0) {
                             $cssClass = 'text-danger fw-bold'; 
                         } elseif ($differenceInDays < 15) {
