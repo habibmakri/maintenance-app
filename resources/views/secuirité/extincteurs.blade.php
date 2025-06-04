@@ -53,9 +53,13 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $i = 1;
+            @endphp
             @foreach ($extincteurs as $extincteur)
                 <tr>
-                    <td>{{ $extincteur->id }}</td>
+                    {{-- <td>{{ $extincteur->id }}</td> --}}
+                    <td>{{ $i }}</td>
                     <td>{{ $extincteur->reference }}</td>
                     <td>{{ $extincteur->type }}</td>
                     <td>{{ $extincteur->affectation }}</td>
@@ -72,6 +76,7 @@
                         } else {
                             $cssClass = ''; 
                         }
+                        $i = $i+1;
                     @endphp
                     <td class="{{ $cssClass }}">
                         {{ $differenceInDays }} Jours
