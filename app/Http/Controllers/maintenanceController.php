@@ -2648,6 +2648,7 @@ class maintenanceController extends Controller
             ->where('fichepanne.solved', false)
             // ->orderBy('fiches_maintenance.date_fiche')
             ->orderBy('fiches_maintenance.id_bus')
+            ->orderBy('fiches_maintenance.date_fiche')
             ->get();
         if ($typepanne == "tous") {
             $data = $fichepannes;
