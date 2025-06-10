@@ -2646,7 +2646,8 @@ class maintenanceController extends Controller
         $fichepannes = fichepanne_model::query()
             ->join('fiches_maintenance', 'fichepanne.fichemaintenance_id', '=', 'fiches_maintenance.id')
             ->where('fichepanne.solved', false)
-            ->orderBy('fiches_maintenance.date_fiche')
+            // ->orderBy('fiches_maintenance.date_fiche')
+            ->orderBy('fiches_maintenance.id_bus')
             ->get();
         if ($typepanne == "tous") {
             $data = $fichepannes;
