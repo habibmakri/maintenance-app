@@ -3774,11 +3774,11 @@ class maintenanceController extends Controller
                         ->first();
 
                     if ($matinRecord && $soirRecord) {
-                        if ($soirRecord->kmarrive === 0.0) {
+                        if ($soirRecord->kmarrive == 0.0) {
                             // dd($matinRecord,$soirRecord);
                             $kDepartValue = $matinRecord->kmdepart;
                             $kDistValue = $matinRecord->kmarrive - $matinRecord->kmdepart;
-                        } elseif ($matinRecord->kmarrive === 0.0) {
+                        } elseif ($matinRecord->kmarrive == 0.0) {
                             $kDepartValue = $soirRecord->kmdepart;
                             $kDistValue = $soirRecord->kmarrive - $soirRecord->kmdepart;
                         } else {
