@@ -3785,10 +3785,10 @@ class maintenanceController extends Controller
                             $kDepartValue = $matinRecord->kmdepart;
                             $kDistValue = $soirRecord->kmarrive - $matinRecord->kmdepart;
                         }
-                    } elseif ($matinRecord) {
+                    } elseif ($matinRecord && !$soirRecord) {
                         $kDepartValue = $matinRecord->kmdepart;
                         $kDistValue = $matinRecord->kmarrive - $matinRecord->kmdepart;
-                    } elseif ($soirRecord) {
+                    } elseif ($soirRecord && !$matinRecord) {
                         $kDepartValue = $soirRecord->kmdepart;
                         $kDistValue = $soirRecord->kmarrive - $soirRecord->kmdepart;
                     } else {

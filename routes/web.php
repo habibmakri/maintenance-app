@@ -170,8 +170,12 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     
     
 });
-    Route::prefix('/')->controller(MaintenanceController::class)->name('inscription.')->group(function () {
-        Route::get('/inscription', [inscriptionController::class, 'inscription'])->name('inscription_formation');
+    Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {
+        Route::get('/', [inscriptionController::class, 'inscription'])->name('inscription_formation');
+        Route::get('/insc_taxi', [inscriptionController::class, 'insc_taxi'])->name('inscription_taxi');
+        Route::get('/insc_tper', [inscriptionController::class, 'insc_tper'])->name('inscription_tper');
+        Route::get('/insc_tmar', [inscriptionController::class, 'insc_tmar'])->name('inscription_tmar');
+        Route::get('/insc_tdan', [inscriptionController::class, 'insc_tdan'])->name('inscription_tdan');
     });
 // Route::post('/inscription', [inscriptionController::class, 'add_rate_ctechnique']);
 Route::get('/taxi', [inscriptionController::class, 'taxi_provesoire'])->name('inscription_taxi');

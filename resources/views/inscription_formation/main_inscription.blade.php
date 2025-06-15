@@ -1,5 +1,5 @@
 @extends('inscription_formation.base_insc')
-@section('title', 'الصفحة الرئيسية - التسجيل لدفتر المقاعد')
+@section('title', 'الصفحة الرئيسية - التسجيل في مركز تكوين')
 @section('content')
 
     <style>
@@ -10,10 +10,10 @@
         }
 
         /* header {
-                background-color: #afd4fc;
-                color: white;
-                padding: 30px 0;
-            } */
+                    background-color: #afd4fc;
+                    color: white;
+                    padding: 30px 0;
+                } */
 
         .welcome {
             margin-top: 60px;
@@ -120,8 +120,9 @@
         <h2 class="mb-4" style="font-family: 'Tajwal', sans-serif;font-weight: bold;">أهلاً بكم في منصة التسجيل
             الإلكتروني</h2>
         <p class="lead mb-4">
-            تمكنكم هذه المنصة من تقديم طلب الحصول على دفتر المقاعد<br>
-            لمزاولة نشاط سائق سيارة الأجرة لسنة <strong>2025</strong>.
+            تمكنكم هذه المنصة من تقديم طلب الحصول على تكوين <br>
+            في مركز تكوين المؤسسة العمومية للنقل الحضري والشبه الحضري سيدي بلعباس
+.
         </p>
 
         <div class="d-flex gap-2 justify-content-center flex-wrap" role="tablist">
@@ -148,7 +149,7 @@
                                     يمكنك من خلال هذا القسم تقديم طلب دفتر المقاعد المخصص لسائقي سيارات الأجرة الفرديين
                                     لسنة 2025.
                                 </p>
-                                <a href="#">ابدأ الطلب</a>
+                                <a href="{{ route('inscription_taxi') }}">ابدأ الطلب</a>
                             </div>
                         </div>
 
@@ -158,7 +159,7 @@
                                 <p>
                                     يمكنك من خلال هذا القسم تقديم طلب دفتر المقاعد المخصص لسائقي سيارات الأجرة الفرديين.
                                 </p>
-                                <a href="#">ابدأ الطلب</a>
+                                <a href="{{ route('inscription.inscription_taxi') }}">ابدأ الطلب</a>
                             </div>
                         </div>
 
@@ -169,7 +170,7 @@
                                     يمكنك من خلال هذا القسم تقديم طلب التكوين للحصول على شهادة الكفاءة المهنية سائقي
                                     مركبات نقل الأشخاص. </p>
                                 </p>
-                                <a href="#">ابدأ الطلب</a>
+                                <a href="{{ route('inscription.inscription_tper') }}">ابدأ الطلب</a>
                             </div>
                         </div>
 
@@ -180,7 +181,18 @@
                                     يمكنك من خلال هذا القسم تقديم طلب التكوين للحصول على شهادة الكفاءة المهنية سائقي
                                     مركبات نقل البضائع. </p>
                                 </p>
-                                <a href="#">ابدأ الطلب</a>
+                                <a href="{{ route('inscription.inscription_tmar') }}">ابدأ الطلب</a>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4 d-flex">
+                            <div class="tab-card h-100 w-100">
+                                <h1> شهادة الكفاءة المهنية سائقي مركبات نقل المواد الخطرة</h1>
+                                <p>
+                                    يمكنك من خلال هذا القسم تقديم طلب التكوين للحصول على شهادة الكفاءة المهنية سائقي
+                                    مركبات نقل الموادالخطرة. </p>
+                                </p>
+                                <a href="{{ route('inscription.inscription_tdan') }}">ابدأ الطلب</a>
                             </div>
                         </div>
                         {{-- <div class="col-12 col-md-6 col-lg-4 d-flex">

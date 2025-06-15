@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<html lang="en">
+{{-- <html lang="en"> --}}
 
 <head>
     <meta charset="UTF-8">
@@ -36,13 +36,13 @@
 </head>
 {{-- <body class="toggle-sidebar"> --}}
 
-<body>
+<body class="toggle-sidebar">
     <style>
-        body {
+        /* body {
             font-family: 'Tajawal', sans-serif;
             background: #f9f9f9;
             text-align: center;
-        }
+        } */
 
         /* header {
             background-color: #afd4fc;

@@ -15,6 +15,26 @@ class inscriptionController extends Controller
         return view('inscription_formation.main_inscription');
 
     }
+    public function insc_taxi()
+    {
+        return view('inscription_formation.insc_taxi');
+
+    }
+    public function insc_tper()
+    {
+        return view('inscription_formation.insc_tper');
+
+    }
+    public function insc_tmar()
+    {
+        return view('inscription_formation.insc_tmar');
+
+    }
+    public function insc_tdan()
+    {
+        return view('inscription_formation.insc_tdan');
+
+    }
     public function taxi_provesoire(Request $request)
     {
         // dd("hello",$request->ip());
