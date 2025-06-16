@@ -38,8 +38,8 @@ return new class extends Migration
             $table->boolean('rejet')->default(false);
             $table->string('validation_number')->unique()->nullable();
             $table->string('payment_number')->unique()->nullable();
-            $table->unsignedBigInteger('entreprise_id');
-            $table->string('ip_adress');
+            $table->unsignedBigInteger('entreprise_id')->nullable();
+            $table->string('ip_adress')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('entreprise_id')->references('id')->on('entreprise')->nullable(); 
@@ -65,8 +65,8 @@ return new class extends Migration
             $table->boolean('rejet')->default(false);
             $table->string('validation_number')->unique()->nullable();
             $table->string('payment_number')->unique()->nullable();
-            $table->unsignedBigInteger('entreprise_id');
-            $table->string('ip_adress');
+            $table->unsignedBigInteger('entreprise_id')->nullable();
+            $table->string('ip_adress')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('entreprise_id')->references('id')->on('entreprise')->nullable(); 
@@ -92,8 +92,8 @@ return new class extends Migration
             $table->boolean('rejet')->default(false);
             $table->string('validation_number')->unique()->nullable();
             $table->string('payment_number')->unique()->nullable();
-            $table->unsignedBigInteger('entreprise_id');
-            $table->string('ip_adress');
+            $table->unsignedBigInteger('entreprise_id')->nullable();
+            $table->string('ip_adress')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('entreprise_id')->references('id')->on('entreprise')->nullable(); 

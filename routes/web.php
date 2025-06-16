@@ -17,7 +17,7 @@ use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/email', function(){
+Route::get('/email', function () {
     return redirect()->away('https://webmail.etus22.dz/');
 })->name('email');
 Route::get('/login', [Authcontroller::class, 'login'])->name('login');
@@ -30,18 +30,18 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('index');
 
-Route::prefix('/app')->controller(mainController::class)->name('app.')->middleware(CheckUser::class)->group(function(){
-    Route::get('/','main')->name('main');
-    
+Route::prefix('/app')->controller(mainController::class)->name('app.')->middleware(CheckUser::class)->group(function () {
+    Route::get('/', 'main')->name('main');
+
     Route::prefix('/')->controller(MaintenanceController::class)->name('maintenance.')->group(function () {
-        Route::get('maintenance_in','maintenance_in')->name('maintenance_in')->middleware('rolesMiddleware:maintenance_in');
-        Route::post('maintenance_in','insertFichemaintenance');
-        Route::get('miantenance_validate','miantenance_validate')->name('validate')->middleware('rolesMiddleware:maintenance_validate');
-        Route::get('maintenance/refresh_validate','refresh_validate')->name('refresh_validate')->middleware('rolesMiddleware:maintenance_validate');
-        Route::get('maintenance/refresh_validate_day','refresh_validate_day')->name('refresh_validate_day')->middleware('rolesMiddleware:maintenance_validate');
-        Route::post('maintenance/validate_day','validate_day')->name('validate_day')->middleware('rolesMiddleware:maintenance_validate');
+        Route::get('maintenance_in', 'maintenance_in')->name('maintenance_in')->middleware('rolesMiddleware:maintenance_in');
+        Route::post('maintenance_in', 'insertFichemaintenance');
+        Route::get('miantenance_validate', 'miantenance_validate')->name('validate')->middleware('rolesMiddleware:maintenance_validate');
+        Route::get('maintenance/refresh_validate', 'refresh_validate')->name('refresh_validate')->middleware('rolesMiddleware:maintenance_validate');
+        Route::get('maintenance/refresh_validate_day', 'refresh_validate_day')->name('refresh_validate_day')->middleware('rolesMiddleware:maintenance_validate');
+        Route::post('maintenance/validate_day', 'validate_day')->name('validate_day')->middleware('rolesMiddleware:maintenance_validate');
         Route::get('maintenance/check-buses',  'checkBuses')->name('check_buses');
-        Route::get('maintenance_show','maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
+        Route::get('maintenance_show', 'maintnenance_show')->name('maintenance_show')->middleware('rolesMiddleware:maintenance_out');
         Route::post('maintenance/pdf', 'generatePDF')->name('pdf');
         Route::post('maintenance/gasoilepdf', 'generate_gasoile_PDF')->name('gasoilepdf');
         Route::post('maintenance/gasoileexcel', 'generate_gasoile_EXCEL')->name('gasoileexcel');
@@ -50,14 +50,14 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/excel', 'generateEXCEL')->name('excel');
         Route::post('maintenance/etatkilometrage', 'generateETATKilometrage')->name('etatkilometrage');
         Route::get('maintenance/refreshfichtable', 'refreshfichtable');
-        Route::get('maintenance_fix','maintnenance_fix')->name('maintenance_fix')->middleware('rolesMiddleware:maintenance_fix');
+        Route::get('maintenance_fix', 'maintnenance_fix')->name('maintenance_fix')->middleware('rolesMiddleware:maintenance_fix');
         Route::get('maintenance/refreshfixtable', 'refreshfixtable');
         Route::post('maintenance/deletefiche:{id}', 'deletefiche');
         Route::get('editfiche:{id}', 'editfiche')->name('maintenance_edit')->middleware('rolesMiddleware:maintenance_fix');
         Route::post('editfiche:{id}', 'doeditfiche');
-        Route::get('maintenance_export','login_form')->name('maintenance_export');
-        Route::get('maintenance_panne','maintenance_panne')->name('maintenance_panne')->middleware('rolesMiddleware:maintenance_panne');
-        Route::post('maintenance_panne','resoudre_maintenance_panne');
+        Route::get('maintenance_export', 'login_form')->name('maintenance_export');
+        Route::get('maintenance_panne', 'maintenance_panne')->name('maintenance_panne')->middleware('rolesMiddleware:maintenance_panne');
+        Route::post('maintenance_panne', 'resoudre_maintenance_panne');
         Route::post('maintenance/ajouter_ndpanne', 'ajouter_ndpanne')->name('ajouter_ndpanne');
         Route::post('maintenance/deletefichepanne:{id}', 'deletefichepanne');
         Route::post('maintenance/deletetraveauxlibre:{id}', 'deletetraveauxlibre');
@@ -71,112 +71,110 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/fiche_suivie_vidange_pdf', 'generate_fiche_suivie_vidange_pdf')->name('fiche_suivie_vidange_pdf');
         Route::post('maintenance/suividatepanne_pdf', 'generate_suividatepanne_pdf')->name('suividatepanne_pdf');
         Route::post('maintenance/pannerapport_pdf', 'generate_Pannerapport_PDF')->name('panne_pdf');
-        Route::get('maintenance_vidange','maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_vidange');
-        Route::post('maintenance_vidange','ajouter_vidange');
-        Route::get('maintenance_jauge','maintenance_jauge')->name('maintenance_jauge')->middleware('rolesMiddleware:maintenance_jauge');
-        Route::post('maintenance_jauge','ajouter_jauge');
-        Route::post('maintenance/check_jauge_date','check_jauge_date')->name('check_jauge_date');
-        Route::post('maintenance/ajouter_jauge_huilemoteur','ajouter_jauge_huilemoteur')->name('ajouter_jauge_huilemoteur');
-        Route::post('maintenance/ajouter_jauge_glaciole','ajouter_jauge_glaciole')->name('ajouter_jauge_glaciole');
-        Route::post('maintenance/ajouter_jauge_direction','ajouter_jauge_direction')->name('ajouter_jauge_direction');
-        Route::post('maintenance/ajouter_jauge_btv','ajouter_jauge_btv')->name('ajouter_jauge_btv');
-        Route::get('traveaux_libre','traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_tlibre');
-        Route::post('traveaux_libre','ajouter_traveaux_libre');
-        Route::get('statistiques_miantenance','statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
+        Route::get('maintenance_vidange', 'maintenance_vidange')->name('maintenance_vidange')->middleware('rolesMiddleware:maintenance_vidange');
+        Route::post('maintenance_vidange', 'ajouter_vidange');
+        Route::get('maintenance_jauge', 'maintenance_jauge')->name('maintenance_jauge')->middleware('rolesMiddleware:maintenance_jauge');
+        Route::post('maintenance_jauge', 'ajouter_jauge');
+        Route::post('maintenance/check_jauge_date', 'check_jauge_date')->name('check_jauge_date');
+        Route::post('maintenance/ajouter_jauge_huilemoteur', 'ajouter_jauge_huilemoteur')->name('ajouter_jauge_huilemoteur');
+        Route::post('maintenance/ajouter_jauge_glaciole', 'ajouter_jauge_glaciole')->name('ajouter_jauge_glaciole');
+        Route::post('maintenance/ajouter_jauge_direction', 'ajouter_jauge_direction')->name('ajouter_jauge_direction');
+        Route::post('maintenance/ajouter_jauge_btv', 'ajouter_jauge_btv')->name('ajouter_jauge_btv');
+        Route::get('traveaux_libre', 'traveaux_libre')->name('traveaux_libre')->middleware('rolesMiddleware:maintenance_tlibre');
+        Route::post('traveaux_libre', 'ajouter_traveaux_libre');
+        Route::get('statistiques_miantenance', 'statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
         Route::get('maintenance/statistiques_data',  'statistiques_data')->name('statistiques_data');
         Route::get('maintenance/extincteurs',  'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:extincteurs_maintenance');
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
-        Route::get('manage_user','manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');
-        Route::get('manage_user/add_user','add_user')->name('add_user')->middleware('rolesMiddleware:manage_user');
-        Route::post('manage_user/add_user','do_add_user');
+        Route::get('manage_user', 'manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');
+        Route::get('manage_user/add_user', 'add_user')->name('add_user')->middleware('rolesMiddleware:manage_user');
+        Route::post('manage_user/add_user', 'do_add_user');
         Route::post('manage_user/deleteuser:{id}', 'delete_user');
-        Route::get('manage_user/edit_user:{id}','edit_user')->name('edit_user')->middleware('rolesMiddleware:manage_user');
-        Route::post('manage_user/edit_user:{id}','do_edit_user');
-        Route::get('manage_bus','manage_bus')->name('manage_bus')->middleware('rolesMiddleware:manage_bus');
-        Route::get('manage_bus/add_bus','add_bus')->name('add_bus')->middleware('rolesMiddleware:manage_bus');
-        Route::post('manage_bus/add_bus','do_add_bus');
-        Route::get('manage_bus/edit_bus:{id}','edit_bus')->name('edit_bus')->middleware('rolesMiddleware:manage_bus');
-        Route::post('manage_bus/edit_bus:{id}','do_edit_bus');
-        Route::get('manage_ligne','manage_ligne')->name('manage_ligne')->middleware('rolesMiddleware:manage_ligne');
-        Route::get('manage_ligne/add_ligne','add_ligne')->name('add_ligne')->middleware('rolesMiddleware:manage_ligne');
-        Route::post('manage_ligne/add_ligne','do_add_ligne');
-        Route::get('manage_ligne/edit_ligne:{id}','edit_ligne')->name('edit_ligne')->middleware('rolesMiddleware:manage_ligne');
-        Route::post('manage_ligne/edit_ligne:{id}','do_edit_ligne');
-        Route::get('manage_panne','manage_panne')->name('manage_panne')->middleware('rolesMiddleware:manage_panne');
-        Route::get('manage_panne/add_panne','add_panne')->name('add_panne')->middleware('rolesMiddleware:manage_panne');
-        Route::post('manage_panne/add_panne','do_add_panne');
+        Route::get('manage_user/edit_user:{id}', 'edit_user')->name('edit_user')->middleware('rolesMiddleware:manage_user');
+        Route::post('manage_user/edit_user:{id}', 'do_edit_user');
+        Route::get('manage_bus', 'manage_bus')->name('manage_bus')->middleware('rolesMiddleware:manage_bus');
+        Route::get('manage_bus/add_bus', 'add_bus')->name('add_bus')->middleware('rolesMiddleware:manage_bus');
+        Route::post('manage_bus/add_bus', 'do_add_bus');
+        Route::get('manage_bus/edit_bus:{id}', 'edit_bus')->name('edit_bus')->middleware('rolesMiddleware:manage_bus');
+        Route::post('manage_bus/edit_bus:{id}', 'do_edit_bus');
+        Route::get('manage_ligne', 'manage_ligne')->name('manage_ligne')->middleware('rolesMiddleware:manage_ligne');
+        Route::get('manage_ligne/add_ligne', 'add_ligne')->name('add_ligne')->middleware('rolesMiddleware:manage_ligne');
+        Route::post('manage_ligne/add_ligne', 'do_add_ligne');
+        Route::get('manage_ligne/edit_ligne:{id}', 'edit_ligne')->name('edit_ligne')->middleware('rolesMiddleware:manage_ligne');
+        Route::post('manage_ligne/edit_ligne:{id}', 'do_edit_ligne');
+        Route::get('manage_panne', 'manage_panne')->name('manage_panne')->middleware('rolesMiddleware:manage_panne');
+        Route::get('manage_panne/add_panne', 'add_panne')->name('add_panne')->middleware('rolesMiddleware:manage_panne');
+        Route::post('manage_panne/add_panne', 'do_add_panne');
         Route::post('manage_panne/deletepanne:{id}', 'delete_panne');
-        Route::get('manage_piece','manage_piece')->name('manage_piece')->middleware('rolesMiddleware:manage_piece');
-        Route::get('manage_piece/add_piece','add_piece')->name('add_piece')->middleware('rolesMiddleware:manage_piece');
-        Route::post('manage_piece/add_piece','do_add_piece');
+        Route::get('manage_piece', 'manage_piece')->name('manage_piece')->middleware('rolesMiddleware:manage_piece');
+        Route::get('manage_piece/add_piece', 'add_piece')->name('add_piece')->middleware('rolesMiddleware:manage_piece');
+        Route::post('manage_piece/add_piece', 'do_add_piece');
         Route::post('manage_piece/deletepiece:{id}', 'delete_piece');
-        Route::get('manage_extincteurs','manage_extincteurs')->name('manage_extincteurs')->middleware('rolesMiddleware:manage_extincteurs');
-        Route::get('manage_extincteurs/add_extincteur','add_extincteur')->name('add_extincteur')->middleware('rolesMiddleware:manage_extincteurs');
-        Route::post('manage_extincteurs/add_extincteur','do_add_extincteur');
-        Route::post('manage_extincteurs/recharge_extincteur','recharge_extincteur')->name('recharge_extincteur');
+        Route::get('manage_extincteurs', 'manage_extincteurs')->name('manage_extincteurs')->middleware('rolesMiddleware:manage_extincteurs');
+        Route::get('manage_extincteurs/add_extincteur', 'add_extincteur')->name('add_extincteur')->middleware('rolesMiddleware:manage_extincteurs');
+        Route::post('manage_extincteurs/add_extincteur', 'do_add_extincteur');
+        Route::post('manage_extincteurs/recharge_extincteur', 'recharge_extincteur')->name('recharge_extincteur');
         // Route::post('user_in','insertUser');        
     });
     Route::prefix('/')->controller(personelleController::class)->name('personelle.')->group(function () {
-        Route::get('personelle_stat','personelle_stat')->name('statistiques')->middleware('rolesMiddleware:personelle_stat');
-        
+        Route::get('personelle_stat', 'personelle_stat')->name('statistiques')->middleware('rolesMiddleware:personelle_stat');
     });
     Route::prefix('/')->controller(comptabiliteController::class)->name('comptabilite.')->group(function () {
-        Route::get('comptabilite_stat','comptabilite_stat')->name('statistiques')->middleware('rolesMiddleware:comptabilite_stat');
-        
+        Route::get('comptabilite_stat', 'comptabilite_stat')->name('statistiques')->middleware('rolesMiddleware:comptabilite_stat');
     });
     Route::prefix('/')->controller(exploatationController::class)->name('exploatation.')->group(function () {
-        Route::get('exploatation_stat','exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
-        
+        Route::get('exploatation_stat', 'exploatation_stat')->name('statistiques')->middleware('rolesMiddleware:exploatation_stat');
     });
     Route::prefix('/')->controller(judiciaireController::class)->name('judiciaire.')->group(function () {
-        Route::get('judiciaire_in','judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
-        Route::post('judiciaire_in','do_judiciaire_in')->middleware('rolesMiddleware:judiciaire_in');
-        Route::post('judiciaire_photos','do_judiciaire_photos')->name('ajoute_photos')->middleware('rolesMiddleware:judiciaire_in');
-        Route::get('judiciaire_suivre','judiciaire_suivre')->name('suivre')->middleware('rolesMiddleware:judiciaire_in');
+        Route::get('judiciaire_in', 'judiciaire_in')->name('declare')->middleware('rolesMiddleware:judiciaire_in');
+        Route::post('judiciaire_in', 'do_judiciaire_in')->middleware('rolesMiddleware:judiciaire_in');
+        Route::post('judiciaire_photos', 'do_judiciaire_photos')->name('ajoute_photos')->middleware('rolesMiddleware:judiciaire_in');
+        Route::get('judiciaire_suivre', 'judiciaire_suivre')->name('suivre')->middleware('rolesMiddleware:judiciaire_in');
         Route::post('judiciaire/handle_caat:{id},{date}', 'handle_caat');
         Route::post('judiciaire/handle_paye:{id},{date},{montant}', 'handle_paye');
-        Route::get('judiciaire_extraire','judiciaire_extraire')->name('extraire')->middleware('rolesMiddleware:judiciaire_out');
+        Route::get('judiciaire_extraire', 'judiciaire_extraire')->name('extraire')->middleware('rolesMiddleware:judiciaire_out');
         Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
         Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
-        Route::get('judiciaire_commission','judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
-        Route::post('judiciaire_commission','add_judiciaire_commission')->middleware('rolesMiddleware:judiciaire_commission');
+        Route::get('judiciaire_commission', 'judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
+        Route::post('judiciaire_commission', 'add_judiciaire_commission')->middleware('rolesMiddleware:judiciaire_commission');
         Route::post('judiciaire/commission_word', 'generate_commission_word')->name('commission_word');
     });
     Route::prefix('/')->controller(ctechniqueController::class)->name('ctechnique.')->group(function () {
-        Route::get('ctechnique_in','ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');
-        Route::post('ctechnique_in','add_ctechnique_in');
-        Route::get('ctechnique_clients','ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_rendezvous');
+        Route::get('ctechnique_in', 'ctechnique_in')->name('ctechnique_in')->middleware('rolesMiddleware:ctechnique_in');
+        Route::post('ctechnique_in', 'add_ctechnique_in');
+        Route::get('ctechnique_clients', 'ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_rendezvous');
         Route::post('ctechnique/deleteclient:{id}', 'deleteclient');
-        Route::get('ctechnique_clients/edit_client:{id}','edit_client')->name('edit_client')->middleware('rolesMiddleware:ctechnique_in');
-        Route::post('ctechnique_clients/edit_client:{id}','do_edit_client');
+        Route::get('ctechnique_clients/edit_client:{id}', 'edit_client')->name('edit_client')->middleware('rolesMiddleware:ctechnique_in');
+        Route::post('ctechnique_clients/edit_client:{id}', 'do_edit_client');
         // Route::post('ctechnique_in','add_ctechnique_in');
-        Route::get('evaluations','evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
+        Route::get('evaluations', 'evaluations')->name('evaluations')->middleware('rolesMiddleware:ctechnique_evaluations');
         Route::get('evaluations/refreshcharts',  'refreshCharts');
-        Route::post('evaluations/marquercommelue','marquercommelue')->name('marquercommelue');
-        Route::post('evaluations/evaluations_pdf','evaluations_pdf')->name('evaluations_pdf');
-        Route::post('evaluations/etatevaluations_pdf','etatevaluations_pdf')->name('etatevaluations_pdf');
-        Route::post('evaluations/print_evaluation','print_evaluation')->name('print_evaluation');
-        
+        Route::post('evaluations/marquercommelue', 'marquercommelue')->name('marquercommelue');
+        Route::post('evaluations/evaluations_pdf', 'evaluations_pdf')->name('evaluations_pdf');
+        Route::post('evaluations/etatevaluations_pdf', 'etatevaluations_pdf')->name('etatevaluations_pdf');
+        Route::post('evaluations/print_evaluation', 'print_evaluation')->name('print_evaluation');
     });
     Route::prefix('/')->controller(securiteController::class)->name('securite.')->group(function () {
-        Route::get('securite/extincteurs','extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
-        
+        Route::get('securite/extincteurs', 'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
     });
     Route::prefix('/')->controller(formationController::class)->name('formation.')->group(function () {
-        Route::get('formation/taxis','confirmer_taxis')->name('confirmer_taxis')->middleware('rolesMiddleware:confirmer_taxis');
-        
+        Route::get('formation/taxis', 'confirmer_taxis')->name('confirmer_taxis')->middleware('rolesMiddleware:confirmer_taxis');
     });
-    
-    
 });
-    Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {
-        Route::get('/', [inscriptionController::class, 'inscription'])->name('inscription_formation');
-        Route::get('/insc_taxi', [inscriptionController::class, 'insc_taxi'])->name('inscription_taxi');
-        Route::get('/insc_tper', [inscriptionController::class, 'insc_tper'])->name('inscription_tper');
-        Route::get('/insc_tmar', [inscriptionController::class, 'insc_tmar'])->name('inscription_tmar');
-        Route::get('/insc_tdan', [inscriptionController::class, 'insc_tdan'])->name('inscription_tdan');
-    });
+Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {
+    Route::get('/', [inscriptionController::class, 'inscription'])->name('inscription_formation');
+    Route::get('/insc_taxi', [inscriptionController::class, 'insc_taxi'])->name('inscription_taxi');
+    Route::post('/insc_taxi', [inscriptionController::class, 'add_taxi']);
+    Route::get('/insc_tper', [inscriptionController::class, 'insc_tper'])->name('inscription_tper');
+    Route::post('/insc_tper', [inscriptionController::class, 'add_tper']);
+    Route::get('/insc_tmar', [inscriptionController::class, 'insc_tmar'])->name('inscription_tmar');
+    Route::post('/insc_tmar', [inscriptionController::class, 'add_tmar']);
+    Route::get('/insc_tdan', [inscriptionController::class, 'insc_tdan'])->name('inscription_tdan');
+    Route::post('/insc_tdan', [inscriptionController::class, 'add_tdan']);
+    Route::get('/success/{type_insc}/{id}', [inscriptionController::class, 'dynamic_success'])->name('success');
+    Route::get('/download/{type_insc}/{id}', [inscriptionController::class, 'dynamic_downloadPdf'])->name('download');
+});
 // Route::post('/inscription', [inscriptionController::class, 'add_rate_ctechnique']);
 Route::get('/taxi', [inscriptionController::class, 'taxi_provesoire'])->name('inscription_taxi');
 Route::post('/taxi', [inscriptionController::class, 'add_taxi_provesoire']);

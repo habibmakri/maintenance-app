@@ -20,7 +20,7 @@ return new class extends Migration
         Schema::table('taxis', function (Blueprint $table) {
             $table->string('ip_adress')->after('payment_number');
             $table->string('gender')->after('birthplace'); 
-            $table->unsignedBigInteger('list')->after('rejet');
+            $table->unsignedBigInteger('list')->nullable()->after('rejet');
             $table->dateTime('inscription_time')->after('id'); 
             $table->string('nin')->unique()->after('prenom_fr'); 
             $table->foreign('list')->references('id')->on('taxis_list')->nullable(); 

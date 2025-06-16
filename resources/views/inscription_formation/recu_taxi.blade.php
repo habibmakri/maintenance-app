@@ -59,27 +59,35 @@
         <p>الجمهورية الجزائرية الديمقراطية الشعبية</p>
         <p>وزارة النقل</p>
         <p>مديرية النقل لولاية سيدي بلعباس</p>
+        <p> المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس </p>
     </div>
     <div class="header">
         <h1>وصل تسجيل</h1>
-        <h2>للتكوين للحصول على دفتر المقاعد لسائقي سيارات الأجرة - 2025</h2>
-        <p>رقم تسجيل: {{ $taxi->id }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; وقت التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong></p>
+        <h2>للتكوين للحصول على دفتر المقاعد لسائقي سيارات الأجرة</h2>
+        <p>رقم تسجيل:
+            taxi_{{ $taxi->id }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            وقت التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong>
+        </p>
 
     </div>
 
     @php
         $civilite = $taxi->gender === 'homme' ? 'السيد' : 'السيدة';
         $civilite2 = $taxi->gender === 'homme' ? 'هو يتحمل' : 'هي تتحمل';
+        $taMarbota = $taxi->gender === 'homme' ? '' : 'ة';
+        $taMaftoha = $taxi->gender === 'homme' ? '' : 'ت';
     @endphp
 
     <div class="info-line">
         {{ $civilite }}: <strong>{{ $taxi->nom_ar }} {{ $taxi->prenom_ar }}</strong>
-        المولود(ة) بتاريخ: <strong>{{ \Carbon\Carbon::parse($taxi->birthdate)->format('Y-m-d') }}</strong>
+        المولود{{ $taMarbota }} بتاريخ:
+        <strong>{{ \Carbon\Carbon::parse($taxi->birthdate)->format('Y-m-d') }}</strong>
         بـ <strong>{{ $taxi->birthplace }}</strong>
     </div>
 
     <div class="info-line">
-        والحامل(ة) للرقم الوطني: <strong>{{ $taxi->nin }}</strong>، قد قام(ت) بالتسجيل في التكوين المتعلق بالحصول على
+        والحامل{{ $taMarbota }} للرقم الوطني: <strong>{{ $taxi->nin }}</strong>، قد قام{{ $taMaftoha }}
+        بالتسجيل في التكوين المتعلق بالحصول على
         دفتر المقاعد.
     </div>
 
@@ -104,11 +112,11 @@
     <div class="info-line">
         المعلومات المذكورة أعلاه مصرحة من طرف {{ $civilite }} و {{ $civilite2 }} مسؤوليتها. </div>
 
-    <div class="info-line section-title">
+    {{-- <div class="info-line section-title">
         الملف المطلوب:
-    </div>
+    </div> --}}
 
-    <ul
+    {{-- <ul
         style="padding-right: 40px; list-style-type: square; font-family: 'Sakkal Majalla', sans-serif; font-size: 18px;">
         <li>نسخة من بطاقة التعريف الوطني.</li>
         <li>نسخة من رخصة السياقة.</li>
@@ -117,12 +125,13 @@
         <li>3 صور شمسية حديثة.</li>
         <li>ثلاث شهادات طبية تثبت اللياقة البدنية والعقلية وحدة البصر.</li>
         <li>شهادة عدم الانتساب إلى الضمان الإجتماعي.</li>
-    </ul>
+    </ul> --}}
     <div class="info-line section-title">
         ملاحظة:
     </div>
     <div class="info-line">
-        يخضع صاحب طلب دفتر المقاعد للنقل بواسطة سيارة الأجرة لتحقيق إداري تقوم به مصالح مختصة.
+        يخضع صاحب طلب دفتر المقاعد للنقل بواسطة سيارة الأجرة لتحقيق إداري تقوم به مصالح مختصة بمديرية النقل ويتم الإتصال
+        به من طرف مؤسستنا في حال القبول.
     </div>
 
 </body>

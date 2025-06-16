@@ -59,27 +59,46 @@
         <p>الجمهورية الجزائرية الديمقراطية الشعبية</p>
         <p>وزارة النقل</p>
         <p>مديرية النقل لولاية سيدي بلعباس</p>
+        <p> المؤسسة العمومية للنقل الحضري وشبه الحضري سيدي بلعباس </p>
     </div>
     <div class="header">
         <h1>وصل تسجيل</h1>
-        <h2>للتكوين للحصول على دفتر المقاعد لسائقي سيارات الأجرة - 2025</h2>
-        <p>رقم تسجيل: {{ $taxi->id }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; وقت التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong></p>
+        @if ($type_insc == 'tper')
+            <h2> للحصول على شهادة الكفاءة المهنية
+                لسائقي مركبات نقل الأشخاص</h2>
+        @endif
+        @if ($type_insc == 'tmar')
+            <h2> للحصول على شهادة الكفاءة المهنية
+                لسائقي مركبات نقل البضائع</h2>
+        @endif
+        @if ($type_insc == 'tdan')
+            <h2> للحصول على شهادة الكفاءة المهنية
+                لسائقي مركبات نقل المواد الخطرة</h2>
+        @endif
+        <p>رقم تسجيل:
+            {{$type_insc}}_{{ $taxi->id }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            وقت التسجيل: <strong>{{ \Carbon\Carbon::parse($taxi->inscription_time)->format('H:i:s d-m-Y') }}</strong>
+        </p>
 
     </div>
 
     @php
         $civilite = $taxi->gender === 'homme' ? 'السيد' : 'السيدة';
         $civilite2 = $taxi->gender === 'homme' ? 'هو يتحمل' : 'هي تتحمل';
+        $taMarbota = $taxi->gender === 'homme' ? '' : 'ة';
+        $taMaftoha = $taxi->gender === 'homme' ? '' : 'ت';
     @endphp
 
     <div class="info-line">
         {{ $civilite }}: <strong>{{ $taxi->nom_ar }} {{ $taxi->prenom_ar }}</strong>
-        المولود(ة) بتاريخ: <strong>{{ \Carbon\Carbon::parse($taxi->birthdate)->format('Y-m-d') }}</strong>
+        المولود{{ $taMarbota }} بتاريخ:
+        <strong>{{ \Carbon\Carbon::parse($taxi->birthdate)->format('Y-m-d') }}</strong>
         بـ <strong>{{ $taxi->birthplace }}</strong>
     </div>
 
     <div class="info-line">
-        والحامل(ة) للرقم الوطني: <strong>{{ $taxi->nin }}</strong>، قد قام(ت) بالتسجيل في التكوين المتعلق بالحصول على
+        والحامل{{ $taMarbota }} للرقم الوطني: <strong>{{ $taxi->nin }}</strong>، قد قام{{ $taMaftoha }}
+        بالتسجيل في التكوين المتعلق بالحصول على
         دفتر المقاعد.
     </div>
 
@@ -97,6 +116,9 @@
         <strong>{{ \Carbon\Carbon::parse($taxi->date_permis)->format('Y-m-d') }}</strong>
         بـ <strong>{{ $taxi->lieu_permis }}</strong>
     </div>
+    <div class="info-line">
+        صنف رخضة السياقة: <strong>{{ $taxi->type_permis }}</strong>
+    </div>
 
     {{-- <div class="info-line">
         بلدية الإستغلال: <strong>{{ $taxi->comune_exploi }}</strong>
@@ -104,11 +126,11 @@
     <div class="info-line">
         المعلومات المذكورة أعلاه مصرحة من طرف {{ $civilite }} و {{ $civilite2 }} مسؤوليتها. </div>
 
-    <div class="info-line section-title">
+    {{-- <div class="info-line section-title">
         الملف المطلوب:
-    </div>
+    </div> --}}
 
-    <ul
+    {{-- <ul
         style="padding-right: 40px; list-style-type: square; font-family: 'Sakkal Majalla', sans-serif; font-size: 18px;">
         <li>نسخة من بطاقة التعريف الوطني.</li>
         <li>نسخة من رخصة السياقة.</li>
@@ -117,14 +139,26 @@
         <li>3 صور شمسية حديثة.</li>
         <li>ثلاث شهادات طبية تثبت اللياقة البدنية والعقلية وحدة البصر.</li>
         <li>شهادة عدم الانتساب إلى الضمان الإجتماعي.</li>
-    </ul>
+    </ul> --}}
     <div class="info-line section-title">
         ملاحظة:
     </div>
     <div class="info-line">
-        يخضع صاحب طلب دفتر المقاعد للنقل بواسطة سيارة الأجرة لتحقيق إداري تقوم به مصالح مختصة.
+        سيتم استخراج وصل دفع مستحقات مع هذا الوصل يرجى إحضاره مع المبلغ مرفقا بالوثائق التالية:
     </div>
-
+    <ul
+        style="padding-right: 40px; list-style-type: square; font-family: 'Sakkal Majalla', sans-serif; font-size: 18px;">
+        {{-- <li>نسخة من بطاقة التعريف الوطني.</li> --}}
+        <li>ثلاث صور شمسية حديثة.</li>
+        <li>نسخة من رخصة السياقة.</li>
+        <li>شهادات طبية (طب عام،طب العيون،طب الأمراض الصدرية).
+        </li>
+        <li>تصريح إقامة ساري المفعول(أثناء مدة التكوين).</li>
+        @if ($type_insc == 'tdan')
+        <li>نسخة من شهادة الكفاءة المهنية لنقل البضائع.</li>
+        @endif
+    </ul>
+    
 </body>
 
 </html>
