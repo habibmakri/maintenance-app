@@ -159,7 +159,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('securite/extincteurs', 'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
     });
     Route::prefix('/')->controller(formationController::class)->name('formation.')->group(function () {
-        Route::get('formation/taxis', 'confirmer_taxis')->name('confirmer_taxis')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::get('formation/taxis', 'confirmer_taxis_prov')->name('confirmer_taxis_prov')->middleware('rolesMiddleware:confirmer_taxis_prov');
+        Route::get('formation/personne', 'transport_personne')->name('transport_personne')->middleware('rolesMiddleware:manage_transpors');
+        Route::get('formation/marchandise', 'transport_marchandise')->name('transport_marchandise')->middleware('rolesMiddleware:manage_transpors');
+        Route::get('formation/danger', 'transport_danger')->name('transport_danger')->middleware('rolesMiddleware:manage_transpors');
     });
 });
 Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {

@@ -122,7 +122,6 @@
         <p class="lead mb-4">
             تمكنكم هذه المنصة من تقديم طلب الحصول على تكوين <br>
             في مركز تكوين المؤسسة العمومية للنقل الحضري والشبه الحضري سيدي بلعباس
-.
         </p>
 
         <div class="d-flex gap-2 justify-content-center flex-wrap" role="tablist">
