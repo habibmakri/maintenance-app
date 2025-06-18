@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class taxis extends Model
 {
-     use SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'taxis';
 
@@ -42,4 +43,5 @@ class taxis extends Model
         'payment_number',
         'ip_adress',
     ];
+
 }

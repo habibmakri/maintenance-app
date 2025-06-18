@@ -8,6 +8,10 @@
             font-weight: normal;
             font-style: normal;
         }
+        
+        label {
+            inset-inline-end: auto !important;
+        }
     </style>
 
     <div class="pagetitle">
@@ -71,14 +75,60 @@
                     <td style="text-align: right;">{{ $taxi->phone }}</td>
                     <td style="text-align:left ;">
                         <button type="button"
-                                    @if ($taxi->payment_number != null) class="btn btn-success" disabled @else class="btn btn-danger" @endif
-                                    data-bs-toggle="modal" onclick="">مستحقات</button>
+                            @if ($taxi->payment_number != null) class="btn btn-success" disabled @else class="btn btn-danger" @endif
+                            data-bs-toggle="modal" data-bs-target="#ExtralargeModal1"
+                            onclick='handleresoudreclick(@json($taxi), @json($type_insc))'>مستحقات</button>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#ExtralargeModal1"
-                            onclick="">معلومات</button>
+                            data-bs-target="#ExtralargeModal2" onclick="">معلومات</button>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <div class="modal fade" id="ExtralargeModal1" tabindex="-1"
+        style="display: none; text-align: right;font-family: 'Tajwal';" aria-hidden="true" dir="rtl">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" dir="ltr">
+                    <h5 class="modal-title" id="validation_title"> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    <form class="row g-3" action="{{route('app.formation.valider_transport')}}" method="post">
+                        @csrf
+                        <div class="col-md-12">
+                            <h4 style="font-family: 'Tajwal';" >تاريخ دفع المستحقات</h4>
+                            <input type="hidden" name="type_insc" id="type_insc_input">
+                            <input type="hidden" name="id_participant" id="id_participant">
+                            <div class="form-floating">
+                                <input name="date" id="dateInput" type="date" required class="form-control"
+                                    style="text-align: end;">
+                                <label for="date">اليوم</label>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
+                            <button type="submit" class="btn btn-primary">تأكيد</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        function handleresoudreclick(taxi, type_insc) {
+            const modal_title = document.getElementById('validation_title');
+            const type_insc_input = document.getElementById('type_insc_input');
+            const id_participant = document.getElementById('id_participant');
+            modal_title.innerHTML = '';
+            modal_title.innerHTML = 'Validation ' + type_insc + ': ' + taxi.nom_fr + ' ' + taxi.prenom_fr;
+            type_insc_input.innerHTML = '';
+            type_insc_input.value = type_insc;
+            id_participant.innerHTML = '';
+            id_participant.value = taxi.id;
+
+        }
+    </script>
 @endsection

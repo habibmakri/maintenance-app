@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('type');
             $table->integer('last_number');
             $table->date('date');
-            $table->string('detail')->nullable();
+            // $table->string('detail')->nullable(); 
             $table->timestamps();
         });
     }

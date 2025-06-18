@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class tper extends Model
 {
-      use SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'transport_personne';
 
@@ -43,6 +44,3 @@ class tper extends Model
         'ip_adress',
     ];
 }
-
-
-

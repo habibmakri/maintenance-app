@@ -94,8 +94,10 @@
                                 @endif
                             </td>
                             <td style="text-align:left ;">
-                                @if ($declaration->photos == "[]")
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages" onclick="handleimagesclick({{ $declaration }})">إضافة صور</button>
+                                @if ($declaration->photos == '[]')
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#ExtralargeModalimages"
+                                        onclick="handleimagesclick({{ $declaration }})">إضافة صور</button>
                                 @endif
                                 <button type="button"
                                     @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
@@ -119,15 +121,16 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            
-                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post" enctype="multipart/form-data">
+
+                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-12">
                                     <label for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
-                                    <input name="photos[]" class="form-control" type="file" id="formFile" accept=".png, .jpg, .jpeg"
-                                        multiple>
+                                    <input name="photos[]" class="form-control" type="file" id="formFile"
+                                        accept=".png, .jpg, .jpeg" multiple>
                                 </div>
-                        
+
                                 <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_images_id">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
@@ -146,7 +149,8 @@
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
                             <h5 class="modal-title" id="modal_title"> </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <h5 style="font-family: 'Tajwal'">سيدي بلعباس يوم: <span style="font-weight: bold;"
@@ -235,8 +239,10 @@
                                 @endif
                             </td>
                             <td style="text-align:left ;">
-                                @if ($declaration->photos == "[]")
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ExtralargeModalimages2" onclick="handleimagesclick2({{ $declaration }})">إضافة صور</button>
+                                @if ($declaration->photos == '[]')
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#ExtralargeModalimages2"
+                                        onclick="handleimagesclick2({{ $declaration }})">إضافة صور</button>
                                 @endif
                                 <button type="button"
                                     @if ($declaration->caat == true) class="btn btn-success" disabled @else class="btn btn-danger" @endif
@@ -254,23 +260,26 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="modal fade" id="ExtralargeModalimages2" tabindex="-1" style="display: none;" aria-hidden="true">
+            <div class="modal fade" id="ExtralargeModalimages2" tabindex="-1" style="display: none;"
+                aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
                             <h5 class="modal-title" id="modal_title_images2"> </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            
-                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post" enctype="multipart/form-data" dir="rtl">
+
+                            <form class="row g-3" action="{{ route('app.judiciaire.ajoute_photos') }}" method="post"
+                                enctype="multipart/form-data" dir="rtl">
                                 @csrf
                                 <div class="col-md-12">
                                     <label for="formFile" class="col-sm-2 col-form-label">صور الخسائر</label>
-                                    <input name="photos[]" class="form-control" type="file" id="formFile2" accept=".png, .jpg, .jpeg"
-                                        multiple>
+                                    <input name="photos[]" class="form-control" type="file" id="formFile2"
+                                        accept=".png, .jpg, .jpeg" multiple>
                                 </div>
-                        
+
                                 <input type="hidden" name="fichedeclaration_id" id="fichedeclaration_images_id2">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
@@ -282,7 +291,8 @@
                 </div>
 
             </div>
-            <div class="modal fade" id="ExtralargeModal2" tabindex="-1" style="display: none;" aria-hidden="true" dir="rtl">
+            <div class="modal fade" id="ExtralargeModal2" tabindex="-1" style="display: none;" aria-hidden="true"
+                dir="rtl">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header" dir="ltr">
@@ -407,6 +417,7 @@
                 }
             }
         }
+
         function handleimagesclick(declaration) {
             const modal_title = document.getElementById('modal_title_images');
             const declarationIdInput = document.getElementById('fichedeclaration_images_id');
@@ -414,8 +425,9 @@
             modal_title.innerHTML = declaration.bus.name + ' - ' + declaration.chauffeur.fr_name + ' le ' + declaration
                 .time_day + ' signaler le ' +
                 declaration.date_fiche;
-            declarationIdInput.value = declaration.id; 
+            declarationIdInput.value = declaration.id;
         }
+
         function handleimagesclick2(declaration) {
             const modal_title = document.getElementById('modal_title_images2');
             const declarationIdInput = document.getElementById('fichedeclaration_images_id2');
@@ -425,6 +437,7 @@
                 declaration.date_fiche;
             declarationIdInput.value = declaration.id;
         }
+
         function handleresoudreclick(declaration, ligneval) {
             const modal_title = document.getElementById('modal_title');
             const declarationIdInput = document.getElementById('fichedeclaration_id');
@@ -464,9 +477,9 @@
             declarationdate.innerHTML = formattedDate;
             bus.innerHTML = declaration.bus.name;
             chauffeur.innerHTML = declaration.chauffeur.name;
-            if(ligneval){
+            if (ligneval) {
                 ligne.innerHTML = ligneval.name;
-            }else{
+            } else {
                 ligne.innerHTML = "خارج الخدمة";
             }
             time.innerHTML = declaration.time_day.split(" ")[1];
@@ -567,10 +580,10 @@
             declarationdate.innerHTML = formattedDate;
             bus.innerHTML = declaration.bus.name;
             chauffeur.innerHTML = declaration.chauffeur.name;
-            
-            if(ligneval){
+
+            if (ligneval) {
                 ligne.innerHTML = ligneval.name;
-            }else{
+            } else {
                 ligne.innerHTML = "خارج الخدمة";
             }
             time.innerHTML = declaration.time_day.split(" ")[1];
