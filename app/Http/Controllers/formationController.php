@@ -77,6 +77,7 @@ class formationController extends Controller
         $participant->update([
             'payment_number' => $payment_number,
             'validation_number' => $validation_number,
+            'date_paiement' => $request->date,
         ]);
         if ($request->type_insc == 'Tansport personne') {
             return redirect()->back()->with('success', $participant->nom_fr.' '.$participant->prenom_fr.' Validé avec succes!');

@@ -41,6 +41,7 @@ class taxis extends Model
         'list',
         'validation_number',
         'payment_number',
+        'date_paiement',
         'ip_adress',
     ];
 

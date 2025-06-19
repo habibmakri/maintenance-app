@@ -42,6 +42,7 @@ class tmar extends Model
         'payment_number',
         'entreprise_id',
         'ip_adress',
+        'date_paiement',
     ];
 
 

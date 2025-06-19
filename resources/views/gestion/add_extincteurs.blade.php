@@ -73,7 +73,9 @@
                     <option value="Poudre Seche-04KG">Poudre Seche-04KG</option>
                     <option value="Poudre Seche-06KG">Poudre Seche-06KG</option>
                     <option value="Poudre Seche-09KG">Poudre Seche-09KG</option>
+                    <option value="POUDR A GAZ - 04kg">POUDR A GAZ - 04kg</option>
                     <option value="POUDR A GAZ - 09kg">POUDR A GAZ - 09kg</option>
+                    <option value="POUDR ABC - 09kg">POUDR ABC - 09kg</option>
                 </select>
                 <label for="type">Type</label>
             </div>
