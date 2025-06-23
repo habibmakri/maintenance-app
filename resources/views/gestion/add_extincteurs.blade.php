@@ -69,6 +69,7 @@
                     <option value="CO2-06KG">CO2-06KG</option>
                     <option value="CO2-10KG">CO2-10KG</option>
                     <option value="Eau Paulverisee-09L">Eau Paulverisee-09L</option>
+                    <option value="Eau Paulverisee-04L">Eau Paulverisee-04L</option>
                     <option value="Poudre à GAS- PG 50KG - chariot">Poudre à GAS- PG 50KG "chariot"</option>
                     <option value="Poudre Seche-04KG">Poudre Seche-04KG</option>
                     <option value="Poudre Seche-06KG">Poudre Seche-06KG</option>
