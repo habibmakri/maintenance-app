@@ -157,9 +157,17 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     });
     Route::prefix('/')->controller(securiteController::class)->name('securite.')->group(function () {
         Route::get('securite/extincteurs', 'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
+        Route::post('securite/recharger_extincteur', 'recharger_extincteur')->name('recharger_extincteur');
     });
     Route::prefix('/')->controller(formationController::class)->name('formation.')->group(function () {
-        Route::get('formation/taxis', 'confirmer_taxis_prov')->name('confirmer_taxis_prov')->middleware('rolesMiddleware:confirmer_taxis_prov');
+        Route::get('formation/taxis_prov', 'confirmer_taxis_prov')->name('confirmer_taxis_prov')->middleware('rolesMiddleware:confirmer_taxis_prov');
+        Route::get('formation/taxis', 'confirmer_taxis')->name('confirmer_taxis')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::post('formation/rejet_taxi', 'do_rejet_taxis')->name('rejet_taxi')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::post('formation/confirmer_taxi', 'do_confirmer_taxis')->name('confirmer_taxi')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::post('formation/confirmer_list', 'do_confirmer_list')->name('confirmer_list')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::post('formation/print_list', 'print_list_taxis')->name('print_list_taxis')->middleware('rolesMiddleware:confirmer_taxis');
+        Route::get('formation/manage_list_taxis', 'manage_list_taxis')->name('manage_list_taxis')->middleware('rolesMiddleware:manage_list_taxis');
+        Route::get('formation/create_list_taxis', 'create_list_taxis')->name('create_list')->middleware('rolesMiddleware:manage_list_taxis');
         Route::get('formation/personne', 'transport_personne')->name('transport_personne')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/marchandise', 'transport_marchandise')->name('transport_marchandise')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/danger', 'transport_danger')->name('transport_danger')->middleware('rolesMiddleware:manage_transpors');

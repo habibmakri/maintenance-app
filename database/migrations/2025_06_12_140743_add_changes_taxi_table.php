@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('taxis_list', function (Blueprint $table) {
             $table->id();
-            $table->integer('counter')->default(0); 
+            $table->string('counter'); 
             $table->date('valid_date')->nullable(); 
             $table->timestamps();
         });

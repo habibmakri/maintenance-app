@@ -172,6 +172,20 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('confirmer_taxis', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.confirmer_taxis') }}">
+                                <i class="bi bi-circle"></i><span>Confirmer Taxis</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('manage_list_taxis', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.manage_list_taxis') }}">
+                                <i class="bi bi-circle"></i><span>Liste Taxis</span>
+                            </a>
+                        </li>
+                    @endif
                     @if (in_array('manage_transpors', $permissions))
                         <li>
                             <a href="{{ route('app.formation.transport_personne') }}">

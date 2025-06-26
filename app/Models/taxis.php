@@ -44,5 +44,9 @@ class taxis extends Model
         'date_paiement',
         'ip_adress',
     ];
+    public function list_m(): BelongsTo
+    {
+        return $this->belongsTo(taxis_list::class, 'list');
+    }
 
 }
