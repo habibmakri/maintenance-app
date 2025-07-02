@@ -54,6 +54,11 @@
         <thead dir="rtl">
             <tr>
                 <th style="text-align: right;">الرقم</th>
+                @if ($type_insc == 'Carnet Taxi')
+                    <th style="text-align: right;">
+                        لائحة
+                    </th>
+                @endif
                 <th style="text-align: right;">
                     الأسم
                 </th>
@@ -68,6 +73,9 @@
             @foreach ($taxis as $taxi)
                 <tr>
                     <td style="text-align: right;">{{ $taxi->id }}</td>
+                    @if ($type_insc == 'Carnet Taxi')
+                        <td style="text-align: right;">{{ $taxi->list_m->counter }}</td>
+                    @endif
                     <td style="text-align: right;">{{ $taxi->nom_ar }}</td>
                     <td style="text-align: right;">{{ $taxi->prenom_ar }}</td>
                     <td style="text-align: right;">{{ $taxi->birthdate . '  ' . $taxi->birthplace }}</td>

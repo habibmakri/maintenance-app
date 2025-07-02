@@ -18,7 +18,8 @@ class formationController extends Controller
     public function confirmer_taxis_prov()
     {
         $taxis = taxis_prov::all();
-        return view('formation.confirmation', compact(['taxis']));
+        $list = null;
+        return view('formation.confirmation', compact(['taxis', 'list']));
     }
 
     public function confirmer_taxis()
@@ -53,8 +54,8 @@ class formationController extends Controller
             $taxi->update([
                 'list' => $list->id
             ]);
-            return redirect()->back()->with('success',  $taxi->nom_fr . ' ' . $taxi->prenom_fr . 'confirmer avec succés: liste'.$list->counter);
-        }else{
+            return redirect()->back()->with('success',  $taxi->nom_fr . ' ' . $taxi->prenom_fr . 'confirmer avec succés: liste' . $list->counter);
+        } else {
             return redirect()->back()->with('error', 'Erreur');
         }
     }
@@ -71,7 +72,7 @@ class formationController extends Controller
                 'valid_date' => Carbon::now()->toDateString(),
             ]);
             return redirect()->back()->with('success',  $list->counter . 'confirmer avec succés.');
-        }else{
+        } else {
             return redirect()->back()->with('error', 'Erreur');
         }
     }
@@ -101,12 +102,12 @@ class formationController extends Controller
     public function print_list_taxis(Request $request)
     {
         $validated = $request->validate([
-            'list_id'=>'required',
+            'list_id' => 'required',
         ]);
         // dd($request->list_id);
 
 
-       
+
         $list = taxis_list::find($request->list_id);
         // $mpdf = new Mpdf([
         //     'format' => 'A4',
@@ -131,7 +132,7 @@ class formationController extends Controller
             'autoScriptToLang' => true,
             'autoLangToFont' => true,
         ]);
-        
+
         $html = view('formation.list_taxis_pdf', compact(['list']))->render();
         $mpdf->AddPage();
         date_default_timezone_set('Africa/Algiers');
@@ -155,12 +156,18 @@ class formationController extends Controller
     public function taxis()
     {
         $taxis = taxis::query()->leftJoin('taxis_list', 'taxis.list', '=', 'taxis_list.id')
-            ->whereNotNull('taxis_list.valid_date');
-
+            ->whereNotNull('taxis_list.valid_date')->select('taxis.*')->get();
         $type_insc = "Carnet Taxi";
+        // dd($taxis);
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
 
+    // public function formation_taxi()
+    // {
+    //     $taxis = taxis::all();
+    //     $type_insc = "Tansport personne";
+    //     return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
+    // }
     public function transport_personne()
     {
         $taxis = tper::all();
@@ -210,7 +217,10 @@ class formationController extends Controller
             $participant = tmar::find($request->id_participant);
         } else if ($request->type_insc == 'Tansport Materieux Dangereux') {
             $participant = tdan::find($request->id_participant);
+        } else if ($request->type_insc == 'Carnet Taxi') {
+            $participant = taxis::find($request->id_participant);
         }
+        // dd($participant);
         if (!$participant) {
             return redirect()->back()->withErrors(['id_participant' => 'Error']);
         }
@@ -228,6 +238,8 @@ class formationController extends Controller
         } else if ($request->type_insc == 'Tansport Marchendise') {
             return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
         } else if ($request->type_insc == 'Tansport Materieux Dangereux') {
+            return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
+        } else if ($request->type_insc == 'Carnet Taxi') {
             return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
         }
     }

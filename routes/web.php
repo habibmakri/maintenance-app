@@ -172,6 +172,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('formation/marchandise', 'transport_marchandise')->name('transport_marchandise')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/danger', 'transport_danger')->name('transport_danger')->middleware('rolesMiddleware:manage_transpors');
         Route::post('formation/valider', 'valider_transport')->name('valider_transport')->middleware('rolesMiddleware:manage_transpors');
+        Route::get('formation/formation_taxi', 'taxis')->name('formation_taxi')->middleware('rolesMiddleware:manage_transpors');
     });
 });
 Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {

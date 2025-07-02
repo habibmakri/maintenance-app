@@ -188,6 +188,11 @@
                     @endif
                     @if (in_array('manage_transpors', $permissions))
                         <li>
+                            <a href="{{ route('app.formation.formation_taxi') }}">
+                                <i class="bi bi-circle"></i><span>Formation taxi</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('app.formation.transport_personne') }}">
                                 <i class="bi bi-circle"></i><span>Transport personne</span>
                             </a>
