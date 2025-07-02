@@ -77,8 +77,8 @@
                     <option value="POUDR A GAZ - 04kg">POUDR A GAZ - 04kg</option>
                     <option value="POUDR A GAZ - 09kg">POUDR A GAZ - 09kg</option>
                     <option value="POUDR ABC - 09kg">POUDR ABC - 09kg</option>
-                    <option value="POUDR pp - 09kg">POUDR pp - 09kg</option>
-                    <option value="POUDR pp - 50kg">POUDR pp - 50kg</option>
+                    <option value="POUDR PP - 09kg">POUDR PP - 09kg</option>
+                    <option value="POUDR PP - 50kg">POUDR PP - 50kg</option>
                 </select>
                 <label for="type">Type</label>
             </div>
