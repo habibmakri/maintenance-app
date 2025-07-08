@@ -598,7 +598,7 @@ class maintenanceController extends Controller
             $bus->update(['derniervidange' => $request->kilometrage, 'vidange_moteur_date' => $request->date]);
         } elseif ($typevidange->name == 'Vidange boite vitesse') {
             $bus->update(['derniervidangeboite' => $request->kilometrage, 'vidange_boite_date' => $request->date]);
-        } elseif ($typevidange->name == 'Vidange pond') {
+        } elseif ($typevidange->name == 'Vidange pont') {
             $bus->update(['derniervidangepond' => $request->kilometrage, 'vidange_pond_date' => $request->date]);
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');

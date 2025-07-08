@@ -142,7 +142,7 @@ class formationController extends Controller
         صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
         </div>
         ";
-        $nomfichier = 'لائحة الصيانة من_.pdf';
+        $nomfichier = $list->counter.'لائحة سيارات أجرة رقم.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);

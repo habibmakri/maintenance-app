@@ -75,7 +75,7 @@
                     <td>{{$i}}</td>
                     <td>{{$taxi->nom_ar}}</td>
                     <td>{{$taxi->prenom_ar}}</td>
-                    <td>{{$taxi->birthdate}}</td>
+                    <td>{{$taxi->birthdate}}<br>{{$taxi->birthplace}}</td>
                     <td>{{$taxi->adresse}}</td>
                     <td>{{$taxi->phone}}</td>
                 </tr>
