@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\counters_formation;
+use App\Models\formation_sessions;
 use App\Models\taxis;
 use App\Models\taxis_list;
 use App\Models\taxis_prov;
@@ -185,6 +186,14 @@ class formationController extends Controller
         $taxis = tdan::all();
         $type_insc = "Tansport Materieux Dangereux";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
+    }
+    public function foramtion_sessions()
+    {
+        $lists = formation_sessions::all();
+        $allConfirmed = formation_sessions::all()->every(function ($taxi) {
+            return !is_null($taxi->valid_date);
+        });
+        return view('formation.taxis_list', compact(['lists', 'allConfirmed']));
     }
 
     function getNextFormattedNumber($typePrefix, $date)

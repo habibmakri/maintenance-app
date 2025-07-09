@@ -98,11 +98,11 @@
                 <form action="{{ route('app.formation.confirmer_list') }}" method="post">
                     @csrf
                     <input type="hidden" name="list_id" id="confirm_id">
-                    @if ($list != null)
+                    {{-- @if ($list != null) --}}
                         <h5 style="font-family: 'Tajwal';margin-right:50px;" class="mt-4 mb-4">هل أنت متـأكد من اللائحة
                             <span style="font-weight: bold;" id="confirm_name"></span>
                         </h5>
-                    @endif
+                    {{-- @endif --}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
                         <button type="submit" class="btn btn-primary">تأكيد</button>
@@ -126,7 +126,7 @@
                     <div class="d-flex mt-5"
                         style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
 
-                        @if ($list != null)
+                        {{-- @if ($list != null) --}}
                             <h5 style="font-family: 'Tajwal';">رقم اللائحة:
                                 <span style="font-weight: bold;" id="detail_name"></span>
                             </h5>
@@ -136,7 +136,7 @@
                             <h5 style="font-family: 'Tajwal';">تاريخ التأكيد:
                                 <span style="font-weight: bold;" id="detail_confirmdate"></span>
                             </h5>
-                        @endif
+                        {{-- @endif --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>

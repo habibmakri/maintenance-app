@@ -145,6 +145,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('ctechnique_in', 'add_ctechnique_in');
         Route::get('ctechnique_clients', 'ctechnique_clients')->name('ctechnique_clients')->middleware('rolesMiddleware:ctechnique_rendezvous');
         Route::post('ctechnique/deleteclient:{id}', 'deleteclient');
+        Route::post('ctechnique/sendmessage', 'sendmessage')->name('sendmessage')->middleware('rolesMiddleware:ctechnique_rendezvous');
+        Route::post('ctechnique/refreshcontrole', 'refreshcontrole')->name('refreshcontrole')->middleware('rolesMiddleware:ctechnique_rendezvous');
         Route::get('ctechnique_clients/edit_client:{id}', 'edit_client')->name('edit_client')->middleware('rolesMiddleware:ctechnique_in');
         Route::post('ctechnique_clients/edit_client:{id}', 'do_edit_client');
         // Route::post('ctechnique_in','add_ctechnique_in');
@@ -173,6 +175,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('formation/danger', 'transport_danger')->name('transport_danger')->middleware('rolesMiddleware:manage_transpors');
         Route::post('formation/valider', 'valider_transport')->name('valider_transport')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/formation_taxi', 'taxis')->name('formation_taxi')->middleware('rolesMiddleware:manage_transpors');
+        Route::get('formation/foramtion_sessions', 'foramtion_sessions')->name('foramtion_sessions')->middleware('rolesMiddleware:foramtion_sessions');
     });
 });
 Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {

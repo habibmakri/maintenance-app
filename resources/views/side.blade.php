@@ -98,7 +98,7 @@
         @if (in_array('manage_user', $permissions) ||
                 in_array('manage_lines', $permissions) ||
                 in_array('manage_bus', $permissions) ||
-                in_array('manage_panne', $permissions)||
+                in_array('manage_panne', $permissions) ||
                 in_array('manage_extincteurs', $permissions))
             <li class="nav-item ">
                 <a class="nav-link collapsed" data-bs-target="#gestion-nav" data-bs-toggle="collapse" href="#">
@@ -159,10 +159,15 @@
             </li>
         @endif
         {{-- Formation tabs --}}
-        @if (in_array('confirmer_taxis_prov', $permissions))
+        @if (in_array('confirmer_taxis_prov', $permissions) ||
+                in_array('confirmer_taxis', $permissions) ||
+                in_array('manage_list_taxis', $permissions) ||
+                in_array('manage_transpors', $permissions)||
+                in_array('foramtion_sessions', $permissions))
             <li class="nav-item ">
                 <a class="nav-link collapsed" data-bs-target="#Centre-nav" data-bs-toggle="collapse" href="#">
-                    <i class="ri-clipboard-line"></i><span>Centre de Formation</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="ri-clipboard-line"></i><span>Centre de Formation</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Centre-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     @if (in_array('confirmer_taxis_prov', $permissions))
@@ -189,7 +194,7 @@
                     @if (in_array('manage_transpors', $permissions))
                         <li>
                             <a href="{{ route('app.formation.formation_taxi') }}">
-                                <i class="bi bi-circle"></i><span>Formation taxi</span>
+                                <i class="bi bi-circle"></i><span>Carnet taxi</span>
                             </a>
                         </li>
                         <li>
@@ -205,6 +210,13 @@
                         <li>
                             <a href="{{ route('app.formation.transport_danger') }}">
                                 <i class="bi bi-circle"></i><span>Transport materieux dangereux</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('foramtion_sessions', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.foramtion_sessions') }}">
+                                <i class="bi bi-circle"></i><span>Session de Formation</span>
                             </a>
                         </li>
                     @endif
@@ -270,7 +282,8 @@
                 in_array('ctechnique_rendezvous', $permissions) ||
                 in_array('ctechnique_evaluations', $permissions))
             <li class="nav-item ">
-                <a class="nav-link collapsed" data-bs-target="#Ctechnique-nav" data-bs-toggle="collapse" href="#">
+                <a class="nav-link collapsed" data-bs-target="#Ctechnique-nav" data-bs-toggle="collapse"
+                    href="#">
                     <i class="  ri-car-line"></i><span>Controle Technique</span><i
                         class="bi bi-chevron-down ms-auto"></i>
                 </a>

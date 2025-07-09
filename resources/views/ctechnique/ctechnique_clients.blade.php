@@ -78,18 +78,18 @@
                                 <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->format('Y-m-d') }}
                                 </td>
                                 <td style="display: flex">
-                                    <form action="" method="">
+                                    <form action="{{route('app.ctechnique.sendmessage')}}" method="post">
                                         @csrf
                                         <input type="hidden" name="client_id" value="{{ $client->id }}">
                                         <button type="submit" style="border: none; background: none; cursor: pointer;">
-                                            <i class="bi bi-eye-fill" style="margin-right: 15%;"></i>
+                                            <i class="bi bi-chat-left-text" style="margin-right: 15%;"></i>
                                         </button>
                                     </form>
-                                    <form action="" method="">
+                                    <form action="{{route('app.ctechnique.refreshcontrole')}}" method="post">
                                         @csrf
                                         <input type="hidden" name="client_id" value="{{ $client->id }}">
                                         <button type="submit" style="border: none; background: none; cursor: pointer;">
-                                            <i class="bi bi-printer" style="margin-right: 15%;"></i>
+                                            <i class="bi bi-calendar-date" style="margin-right: 15%;"></i>
                                         </button>
                                     </form>
                                 </td>

@@ -46,7 +46,7 @@ class ctechniqueController extends Controller
             ) < 10. && \Carbon\Carbon::parse($client->last_remind)->diffInDays(\Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)) > 10.) {
                 $nbprocheclients++;
             }
-        return view('ctechnique.ctechnique_in', compact(['clienttypes','nbprocheclients']));
+        return view('ctechnique.ctechnique_in', compact(['clienttypes', 'nbprocheclients']));
     }
     public function add_ctechnique_in(Request $request)
     {
@@ -116,6 +116,29 @@ class ctechniqueController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);
+    }
+    public function sendmessage(Request $request)
+    {
+        $record = ctechnique_clients::find($request->client_id);
+        if ($record) {
+            $record->update([
+                'last_remind' => Carbon::now()->toDateString(),
+            ]);
+            return redirect()->back()->with('success',  'message envoyé');
+        }
+        return redirect()->back()->with('error',  'erreur');
+    }
+    public function refreshcontrole(Request $request)
+    {
+        $record = ctechnique_clients::find($request->client_id);
+        if ($record) {
+            $record->update([
+                'last_remind' => Carbon::now()->toDateString(),
+                'date_controle' => Carbon::now()->toDateString(),
+            ]);
+            return redirect()->back()->with('success',  'client mis a jour');
+        }
+        return redirect()->back()->with('error',  'erreur');
     }
     public function ctechnique_clients(Request $request)
     {

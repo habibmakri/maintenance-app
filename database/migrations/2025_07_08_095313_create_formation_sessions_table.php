@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('taxis_confirmed', function (Blueprint $table) {
-            $table->id();  
-            
+        Schema::create('formation_sessions', function (Blueprint $table) {
+            $table->id();
+            $table->string('type');
+            $table->string('counter');
+            $table->date('date_debut');
+            $table->date('date_fin');
+            $table->date('valid_date');
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taxis_confirmed');
+        Schema::dropIfExists('formation_sessions');
     }
 };
