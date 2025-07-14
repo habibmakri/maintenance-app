@@ -41,8 +41,10 @@ class taxis extends Model
         'list',
         'validation_number',
         'payment_number',
+        'cheque_number',
         'date_paiement',
         'ip_adress',
+        'session_id',
     ];
     public function list_m(): BelongsTo
     {

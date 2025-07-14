@@ -143,7 +143,7 @@ class formationController extends Controller
         صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
         </div>
         ";
-        $nomfichier = $list->counter.'لائحة سيارات أجرة رقم.pdf';
+        $nomfichier = $list->counter . 'لائحة سيارات أجرة رقم.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
@@ -190,12 +190,153 @@ class formationController extends Controller
     public function foramtion_sessions()
     {
         $lists = formation_sessions::all();
-        $allConfirmed = formation_sessions::all()->every(function ($taxi) {
-            return !is_null($taxi->valid_date);
-        });
-        return view('formation.taxis_list', compact(['lists', 'allConfirmed']));
+        $taxis = taxis::query()
+            ->whereNotNull('payment_number')
+            ->whereNull('session_id')->get();
+        $tper = tper::query()
+            ->whereNotNull('payment_number')
+            ->whereNull('session_id')->get();
+        $tmar = tmar::query()
+            ->whereNotNull('payment_number')
+            ->whereNull('session_id')->get();
+        $tdan = tdan::query()
+            ->whereNotNull('payment_number')
+            ->whereNull('session_id')->get();
+        // dd($taxis, $tper, $tmar, $tdan);
+        return view('formation.formation_sessions', compact(['lists', 'taxis', 'tper', 'tmar', 'tdan']));
     }
+    public function do_create_foramtion_sessions(Request $request)
+    {
+        $validated = $request->validate([
+            'participants' => 'required|array|min:1',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after:date_debut',
+            'type_insc' => 'required|in:taxis,tper,tmar,tdan',
+        ]);
+        if ($request->type_insc == "taxis") {
+            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation = formation_sessions::create([
+                'type' => $request->type_insc,
+                'counter' => $formation_number,
+                'date_debut' => $request->date_debut,
+                'date_fin' => $request->date_fin,
+            ]);
+            foreach ($request->participants as $participant) {
+                $record = taxis::find($participant);
+                if ($record) {
+                    $record->update([
+                        'session_id' => $formation->id,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
+        } elseif ($request->type_insc == "tper") {
+            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation = formation_sessions::create([
+                'type' => $request->type_insc,
+                'counter' => $formation_number,
+                'date_debut' => $request->date_debut,
+                'date_fin' => $request->date_fin,
+            ]);
+            foreach ($request->participants as $participant) {
+                $record = tper::find($participant);
+                if ($record) {
+                    $record->update([
+                        'session_id' => $formation->id,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
+        } elseif ($request->type_insc == "tmar") {
+            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation = formation_sessions::create([
+                'type' => $request->type_insc,
+                'counter' => $formation_number,
+                'date_debut' => $request->date_debut,
+                'date_fin' => $request->date_fin,
+            ]);
+            foreach ($request->participants as $participant) {
+                $record = tmar::find($participant);
+                if ($record) {
+                    $record->update([
+                        'session_id' => $formation->id,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
+        } elseif ($request->type_insc == "tdan") {
+            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation = formation_sessions::create([
+                'type' => $request->type_insc,
+                'counter' => $formation_number,
+                'date_debut' => $request->date_debut,
+                'date_fin' => $request->date_fin,
+            ]);
+            foreach ($request->participants as $participant) {
+                $record = tdan::find($participant);
+                if ($record) {
+                    $record->update([
+                        'session_id' => $formation->id,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
+        }
+        return redirect()->back()->with('error', ' Erreur!!');
+    }
+public function print_list_session(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+        ]);
+        // dd($request->list_id);
 
+
+
+        $list = formation_sessions::find($request->session_id);
+        // $mpdf = new Mpdf([
+        //     'format' => 'A4',
+        // ]);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        $html = view('formation.list_session_pdf', compact(['list']))->render();
+        $mpdf->AddPage();
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        $nomfichier = $list->type .' '.$list->counter. 'لائحة تكوين رقم.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
     function getNextFormattedNumber($typePrefix, $date)
     {
         // $year = $date->year;
@@ -216,6 +357,7 @@ class formationController extends Controller
         $validated = $request->validate([
             'date' => 'required',
             'id_participant' => 'required',
+            'cheque_number' => 'required',
             'type_insc' => 'required',
         ]);
         // dd($request);
@@ -240,6 +382,7 @@ class formationController extends Controller
         $participant->update([
             'payment_number' => $payment_number,
             'validation_number' => $validation_number,
+            'cheque_number' => $request->cheque_number,
             'date_paiement' => $request->date,
         ]);
         if ($request->type_insc == 'Tansport personne') {

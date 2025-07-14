@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('counter');
             $table->date('date_debut');
             $table->date('date_fin');
-            $table->date('valid_date');
+            $table->date('valid_date')->nullable();
             $table->timestamps();
         });
     }

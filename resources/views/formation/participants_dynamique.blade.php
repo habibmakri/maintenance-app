@@ -106,13 +106,19 @@
                     <form class="row g-3" action="{{ route('app.formation.valider_transport') }}" method="post">
                         @csrf
                         <div class="col-md-12">
-                            <h4 style="font-family: 'Tajwal';">تاريخ دفع المستحقات</h4>
                             <input type="hidden" name="type_insc" id="type_insc_input">
                             <input type="hidden" name="id_participant" id="id_participant">
+                            <h4 style="font-family: 'Tajwal';">تاريخ دفع المستحقات</h4>
                             <div class="form-floating">
                                 <input name="date" id="dateInput" type="date" required class="form-control"
                                     style="text-align: end;">
                                 <label for="date">اليوم</label>
+                            </div>
+                            <h4 class="mt-4" style="font-family: 'Tajwal';">رقم وصل البنك / أمر بالدفع</h4>
+                            <div class="form-floating">
+                                <input name="cheque_number" id="cheque_number" type="text" required class="form-control"
+                                    style="text-align: start;">
+                                <label for="cheque_number">الرقم</label>
                             </div>
                         </div>
 

@@ -40,9 +40,12 @@ class tmar extends Model
         'rejet',
         'validation_number',
         'payment_number',
+        'cheque_number',
         'entreprise_id',
         'ip_adress',
         'date_paiement',
+        'session_id',
+
     ];
 
 

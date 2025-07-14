@@ -24,9 +24,20 @@ class formation_sessions extends Model
         'counter',
         'valid_date',
     ];
-
-    public function count_taxis($type): HasMany
+    protected $modeltypes = [
+        'taxis' => \App\Models\taxis::class,
+        'tper' => \App\Models\tper::class,
+        'tmar' => \App\Models\tmar::class,
+        'tdan' => \App\Models\tdan::class,
+    ];
+    public function count_models($type): HasMany
     {
-        return $this->hasMany($type, 'session');
+        $model = $this->modeltypes[$type] ?? null;
+
+        if (!$model) {
+            throw new \Exception("Erreur unkown: " . $type);
+        }
+
+        return $this->hasMany($model, 'session_id');
     }
 }
