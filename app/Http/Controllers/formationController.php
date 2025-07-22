@@ -214,7 +214,7 @@ class formationController extends Controller
             'type_insc' => 'required|in:taxis,tper,tmar,tdan',
         ]);
         if ($request->type_insc == "taxis") {
-            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
@@ -231,7 +231,7 @@ class formationController extends Controller
             }
             return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
         } elseif ($request->type_insc == "tper") {
-            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
@@ -248,7 +248,7 @@ class formationController extends Controller
             }
             return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
         } elseif ($request->type_insc == "tmar") {
-            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
@@ -265,7 +265,7 @@ class formationController extends Controller
             }
             return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
         } elseif ($request->type_insc == "tdan") {
-            $formation_number = $this->getNextFormattedNumber('Formation_'.$request->type_insc, $request->date_debut);
+            $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
@@ -284,7 +284,7 @@ class formationController extends Controller
         }
         return redirect()->back()->with('error', ' Erreur!!');
     }
-public function print_list_session(Request $request)
+    public function print_list_session(Request $request)
     {
         $validated = $request->validate([
             'session_id' => 'required',
@@ -327,7 +327,7 @@ public function print_list_session(Request $request)
         صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
         </div>
         ";
-        $nomfichier = $list->type .' '.$list->counter. 'لائحة تكوين رقم.pdf';
+        $nomfichier = $list->type . ' ' . $list->counter . 'لائحة تكوين رقم.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
@@ -336,6 +336,44 @@ public function print_list_session(Request $request)
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
+    }
+    public function confirm_session(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+            'session_type' => 'required',
+        ]);
+        $modelMap = [
+            'taxis' => \App\Models\taxis::class,
+            'tper'  => \App\Models\tper::class,
+            'tmar'  => \App\Models\tmar::class,
+            'tdan'  => \App\Models\tdan::class,
+        ];
+
+        $type = $request->session_type;
+
+        if (isset($modelMap[$type])) {
+            $model = $modelMap[$type];
+
+            foreach ($request->participants as $participant) {
+                $notes = collect($participant)->except('id');
+                $record = $model::find($participant['id']);
+
+                if ($record) {
+                    $record->update([
+                        'notes' => json_encode($notes, JSON_UNESCAPED_UNICODE),
+                    ]);
+                }
+            }
+            $session = formation_sessions::find($request->session_id);
+            $session->update([
+                'valid_date' => Carbon::now()->toDateString(),
+            ]);
+        } else {
+            return back()->with('error', 'Erreur confirmation.');
+        }
+            return back()->with('success', 'Session '.$session->type.' '.$session->counter.' confirmé.');
+
     }
     function getNextFormattedNumber($typePrefix, $date)
     {

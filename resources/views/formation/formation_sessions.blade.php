@@ -172,11 +172,11 @@
                     <td style="text-align:right ;">
                         @if ($list->valid_date == null)
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal1"
-                                onclick='handleconfirmclick(@json($list))'>تأكيد</button>
+                                data-bs-target="#ExtralargeModal3"
+                                onclick='handleconfirmclick(@json($list),@json($members))'>تأكيد</button>
                         @else
                             <button type="button" class="btn btn-secondary" disabled data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal1" onclick=''>تأكيد</button>
+                                data-bs-target="" onclick=''>تأكيد</button>
                         @endif
                         <button type="button" class="btn btn-primary" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#ExtralargeModal2"
@@ -198,38 +198,99 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('app.formation.print_list_session') }}" method="post">
-                    @csrf
-                    <input type="hidden" name="session_id" id="detail_id">
-                    <div class="d-flex mt-5"
-                        style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
+                    <div style=";max-height: 70vh;overflow-Y: scroll;">
+                        @csrf
+                        <input type="hidden" name="session_id" id="detail_id">
+                        <div class="d-flex mt-5"
+                            style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
 
-                        {{-- @if ($list != null) --}}
-                        <h5 style="font-family: 'Tajwal';">رقم اللائحة:
-                            <span style="font-weight: bold;" id="detail_name"></span>
-                        </h5>
-                        <h5 style="font-family: 'Tajwal';">عدد المترشحين:
-                            <span style="font-weight: bold;" id="detail_participants"></span>
-                        </h5>
-                        <h5 style="font-family: 'Tajwal';">تاريخ التأكيد:
-                            <span style="font-weight: bold;" id="detail_confirmdate"></span>
-                        </h5>
+                            {{-- @if ($list != null) --}}
+                            <h5 style="font-family: 'Tajwal';">تاريخ البداية:
+                                <span style="font-weight: bold;" id="detail_ddebut"></span>
+                            </h5>
+                            <h5 style="font-family: 'Tajwal';">تاريخ النهاية:
+                                <span style="font-weight: bold;" id="detail_ddfin"></span>
+                            </h5>
+                        </div>
+                        <div class="d-flex mt-5"
+                            style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
+
+                            {{-- @if ($list != null) --}}
+                            <h5 style="font-family: 'Tajwal';">رقم اللائحة:
+                                <span style="font-weight: bold;" id="detail_name"></span>
+                            </h5>
+                            <h5 style="font-family: 'Tajwal';">عدد المترشحين:
+                                <span style="font-weight: bold;" id="detail_participants"></span>
+                            </h5>
+                            <h5 style="font-family: 'Tajwal';">تاريخ التأكيد:
+                                <span style="font-weight: bold;" id="detail_confirmdate"></span>
+                            </h5>
+                        </div>
+
+                        <div class="table-responsive px-4 mb-3">
+                            <table class="table table-bordered text-center align-middle">
+                                <thead class="table">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>الاسم</th>
+                                        <th>اللقب</th>
+                                        <th>رقم التسجيل</th>
+                                        <!-- Ajoute d'autres colonnes selon ton modèle -->
+                                    </tr>
+                                </thead>
+                                <tbody id="detail_members">
+                                    <!-- Les membres seront insérés ici par JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                    {{-- @endif --}}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
+                        <button type="submit" class="btn btn-primary">طباعة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ExtralargeModal3" tabindex="-1"
+        style="display: none; text-align: right;font-family: 'Tajwal';" aria-hidden="true" dir="rtl">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" dir="ltr">
+                    <h5 class="modal-title" id="confirm_title"> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('app.formation.confirm_session') }}" method="post">
+                    <div style=";max-height: 70vh;overflow-Y: scroll;">
+                        @csrf
+                        <input type="hidden" name="session_id" id="confirm_id">
+                        <input type="hidden" name="session_type" id="confirm_type">
+                        <div class="d-flex mt-5"
+                            style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
 
-                    <div class="table-responsive px-4 mb-3">
-                        <table class="table table-bordered text-center align-middle">
-                            <thead class="table">
-                                <tr>
-                                    <th>#</th>
-                                    <th>الاسم</th>
-                                    <th>اللقب</th>
-                                    <th>رقم التسجيل</th>
-                                    <!-- Ajoute d'autres colonnes selon ton modèle -->
-                                </tr>
-                            </thead>
-                            <tbody id="detail_members">
-                                <!-- Les membres seront insérés ici par JS -->
-                            </tbody>
-                        </table>
+                            {{-- @if ($list != null) --}}
+                            <h5 style="font-family: 'Tajwal';">رقم اللائحة:
+                                <span style="font-weight: bold;" id="confirm_name"></span>
+                            </h5>
+                            <h5 style="font-family: 'Tajwal';">عدد المترشحين:
+                                <span style="font-weight: bold;" id="confirm_participants"></span>
+                            </h5>
+                        </div>
+
+                        <div class="table-responsive px-4 mb-3">
+                            <table class="table table-bordered text-center align-middle">
+                                <thead class="table">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>الاسم واللقب</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="confirm_members">
+                                    <!-- Les membres seront insérés ici par JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     {{-- @endif --}}
                     <div class="modal-footer">
@@ -283,17 +344,63 @@
             };
             document.getElementById('validation_title').innerText = titleMap[type];
         }
+        const modulestypes = {
+            taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة','الجغرافية المحلية', 'السير وأمن المرور', 'مبادئ في الاسعافات الاولية'],
+            tper: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات', 'الوقاية والسلامة عبر الطرقات','الإسعاف','التنظيم المطبق على نقل الأشخاص عبر الطرقات', 'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'],
+            tmar: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات', 'الوقاية والسلامة عبر الطرقات','الإسعاف','التنظيم المطبق على نقل الأشخاص عبر الطرقات', 'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'],
+            tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات', 'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات', 'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات']
+        };
 
-        function handleconfirmclick(taxi) {
-            const modal_title = document.getElementById('confirm_title');
-            const confirm_name = document.getElementById('confirm_name');
-            const confirm_id = document.getElementById('confirm_id');
+        function handleconfirmclick(session, participants) {
+            document.getElementById('confirm_id').value = session.id;
+            document.getElementById('confirm_name').innerText = session.counter;
+            document.getElementById('confirm_type').value = session.type;
+            document.getElementById('confirm_participants').innerText = participants.length;
 
-            modal_title.innerHTML = '';
-            confirm_id.value = taxi.id;
-            modal_title.innerHTML = 'confirm list: ' + taxi.counter;
-            confirm_name.innerHTML = '';
-            confirm_name.innerHTML = ' ' + taxi.counter;
+            const tbody = document.getElementById("confirm_members");
+            const thead = document.querySelector("#confirm_members").closest("table").querySelector("thead tr");
+
+            tbody.innerHTML = "";
+            thead.innerHTML = "";
+
+            const modules = modulestypes[session.type] || [];
+
+            thead.innerHTML = `
+                <th>#</th>
+                <th>الاسم واللقب</th>
+                ${modules.map(module => `<th>${module}</th>`).join('')}
+            `;
+            participants.forEach((member, index) => {
+                const row = document.createElement("tr");
+
+            //     const noteInputs = modules.map((module, i) => {
+            //         return `
+            //     <td>
+            //         <input type="number" name="participants[${index}][note${i + 1}]" 
+            //             class="form-control" step="0.5" min="0" max="20" required
+            //             placeholder="${module}">
+            //     </td>
+            // `;
+            //     }).join('');
+                const noteInputs = modules.map((module, i) => {
+                    return `
+                <td>
+                    <input type="number" name="participants[${index}][${module}]" 
+                        class="form-control" step="0.5" min="0" max="20" required
+                        placeholder="${module}">
+                </td>
+            `;
+                }).join('');
+
+                row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${member.nom_ar + ' ' + (member.prenom_ar ?? '')}</td>
+            <input type="hidden" name="participants[${index}][id]" value="${member.id}">
+            ${noteInputs}
+        `;
+
+                tbody.appendChild(row);
+            });
         }
 
         function handledetailclick(taxi, number, members) {
@@ -303,13 +410,22 @@
             const detail_participants = document.getElementById('detail_participants');
             const detail_id = document.getElementById('detail_id');
 
+            const dddebut = document.getElementById('detail_ddebut');
+            const ddfin = document.getElementById('detail_ddfin');
+            dddebut.innerHTML = '';
+            dddebut.innerHTML = ' ' + taxi.date_debut;
+            ddfin.innerHTML = '';
+            ddfin.innerHTML = ' ' + taxi.date_fin;
+
             modal_title.innerHTML = '';
             detail_id.value = taxi.id;
-            modal_title.innerHTML = 'detail list: ' + taxi.counter;
+            modal_title.innerHTML = 'detail Session: ' + taxi.type + ' ' + taxi.counter;
             detail_name.innerHTML = '';
             detail_name.innerHTML = ' ' + taxi.counter;
             detail_confirmdate.innerHTML = '';
-            detail_confirmdate.innerHTML = ' ' + taxi.valid_date;
+            if (taxi.valid_date) {
+                detail_confirmdate.innerHTML = ' ' + taxi.valid_date;
+            }
             detail_participants.innerHTML = '';
             detail_participants.innerHTML = ' ' + number;
 
@@ -328,6 +444,7 @@
             `;
                 tbody.appendChild(row);
             });
+
         }
     </script>
 @endsection

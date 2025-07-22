@@ -43,6 +43,7 @@ class taxis extends Model
         'payment_number',
         'cheque_number',
         'date_paiement',
+        'notes',
         'ip_adress',
         'session_id',
     ];

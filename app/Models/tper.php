@@ -41,6 +41,7 @@ class tper extends Model
         'validation_number',
         'payment_number',
         'cheque_number',
+        'notes',
         'entreprise_id',
         'ip_adress',
         'date_paiement',

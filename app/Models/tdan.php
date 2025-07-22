@@ -42,6 +42,7 @@ class tdan extends Model
         'payment_number',
         'cheque_number',
         'entreprise_id',
+        'notes',
         'ip_adress',
         'date_paiement',
         'session_id',
