@@ -198,7 +198,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('app.formation.print_list_session') }}" method="post">
-                    <div style=";max-height: 70vh;overflow-Y: scroll;">
+                    <div style=";max-height: 80vh;overflow-Y: scroll;">
                         @csrf
                         <input type="hidden" name="session_id" id="detail_id">
                         <div class="d-flex mt-5"
@@ -255,7 +255,7 @@
     </div>
     <div class="modal fade" id="ExtralargeModal3" tabindex="-1"
         style="display: none; text-align: right;font-family: 'Tajwal';" aria-hidden="true" dir="rtl">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header" dir="ltr">
                     <h5 class="modal-title" id="confirm_title"> </h5>
@@ -295,7 +295,8 @@
                     {{-- @endif --}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
-                        <button type="submit" class="btn btn-primary">طباعة</button>
+                        <button type="button" class="btn btn-warning" onclick="saveDraftToServer()">حفظ</button>
+                        <button type="submit" class="btn btn-primary">تأكيد</button>
                     </div>
                 </form>
             </div>
@@ -345,12 +346,70 @@
             document.getElementById('validation_title').innerText = titleMap[type];
         }
         const modulestypes = {
-            taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة','الجغرافية المحلية', 'السير وأمن المرور', 'مبادئ في الاسعافات الاولية'],
-            tper: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات', 'الوقاية والسلامة عبر الطرقات','الإسعاف','التنظيم المطبق على نقل الأشخاص عبر الطرقات', 'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'],
-            tmar: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات', 'الوقاية والسلامة عبر الطرقات','الإسعاف','التنظيم المطبق على نقل الأشخاص عبر الطرقات', 'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'],
-            tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات', 'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات', 'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات']
+            taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة',
+                'الجغرافية المحلية', 'السير وأمن المرور', 'مبادئ في الاسعافات الاولية'
+            ],
+            tper: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
+                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
+                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
+            ],
+            tmar: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
+                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
+                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
+            ],
+            tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات',
+                'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات',
+                'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات'
+            ]
         };
 
+        // function handleconfirmclick(session, participants) {
+        //     document.getElementById('confirm_id').value = session.id;
+        //     document.getElementById('confirm_name').innerText = session.counter;
+        //     document.getElementById('confirm_type').value = session.type;
+        //     document.getElementById('confirm_participants').innerText = participants.length;
+
+        //     const tbody = document.getElementById("confirm_members");
+        //     const thead = document.querySelector("#confirm_members").closest("table").querySelector("thead tr");
+
+        //     tbody.innerHTML = "";
+        //     thead.innerHTML = "";
+
+        //     const modules = modulestypes[session.type] || [];
+
+        //     thead.innerHTML = `
+    //         <th>#</th>
+    //         <th>الاسم واللقب</th>
+    //         ${modules.map(module => `<th>${module}</th>`).join('')}
+    //     `;
+        //     participants.forEach((member, index) => {
+        //         const row = document.createElement("tr");
+
+        //         const noteInputs = modules.map((module, i) => {
+        //             return `
+    //        <td>
+    //         <input type="number" name="participants[${index}][${module}][مواضبة]" 
+    //             class="form-control" step="0.5" min="0" max="20" required
+    //             placeholder="المواضبة">
+
+    //         <input style="margin-top:20px;" type="number" name="participants[${index}][${module}][إمتحان]" 
+    //             class="form-control" step="0.5" min="0" max="20" required
+    //             placeholder="الإمتحان">
+    //         </td>
+
+    //     `;
+        //         }).join('');
+
+        //         row.innerHTML = `
+    //     <td>${index + 1}</td>
+    //     <td>${member.nom_ar + ' ' + (member.prenom_ar ?? '')}</td>
+    //     <input type="hidden" name="participants[${index}][id]" value="${member.id}">
+    //     ${noteInputs}
+    // `;
+
+        //         tbody.appendChild(row);
+        //     });
+        // }
         function handleconfirmclick(session, participants) {
             document.getElementById('confirm_id').value = session.id;
             document.getElementById('confirm_name').innerText = session.counter;
@@ -365,42 +424,105 @@
 
             const modules = modulestypes[session.type] || [];
 
+
             thead.innerHTML = `
-                <th>#</th>
-                <th>الاسم واللقب</th>
-                ${modules.map(module => `<th>${module}</th>`).join('')}
-            `;
+        <th>#</th>
+        <th>الاسم واللقب</th>
+        ${modules.map(module => `<th>${module}</th>`).join('')}
+    `;
+
+
             participants.forEach((member, index) => {
                 const row = document.createElement("tr");
+                const id = member.id;
 
-            //     const noteInputs = modules.map((module, i) => {
-            //         return `
-            //     <td>
-            //         <input type="number" name="participants[${index}][note${i + 1}]" 
-            //             class="form-control" step="0.5" min="0" max="20" required
-            //             placeholder="${module}">
-            //     </td>
-            // `;
-            //     }).join('');
-                const noteInputs = modules.map((module, i) => {
+                const notes = typeof member.notes === 'string' ? JSON.parse(member.notes) : (member.notes || {});
+
+                const noteInputs = modules.map((module) => {
+                    const modNotes = notes[module] || {};
+
+                    console.log(
+                        `ID: ${id}, Module: ${module}, إمتحان: ${modNotes['إمتحان']}, مواضبة: ${modNotes['مواضبة']}`
+                    );
+
                     return `
-                <td>
-                    <input type="number" name="participants[${index}][${module}]" 
-                        class="form-control" step="0.5" min="0" max="20" required
-                        placeholder="${module}">
-                </td>
-            `;
+            <td>
+                <input type="number" name="participants[${index}][${module}][مواضبة]" 
+                    class="form-control" step="0.5" min="0" max="20"
+                    value="${modNotes['مواضبة'] ?? ''}" placeholder="المواضبة" required>
+
+                <input style="margin-top:20px;" type="number" name="participants[${index}][${module}][إمتحان]" 
+                    class="form-control" step="0.5" min="0" max="20"
+                    value="${modNotes['إمتحان'] ?? ''}" placeholder="الإمتحان" required>
+            </td>
+        `;
                 }).join('');
 
                 row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${member.nom_ar + ' ' + (member.prenom_ar ?? '')}</td>
-            <input type="hidden" name="participants[${index}][id]" value="${member.id}">
-            ${noteInputs}
-        `;
+        <td>${index + 1}</td>
+        <td>${member.nom_ar + ' ' + (member.prenom_ar ?? '')}</td>
+        <input type="hidden" name="participants[${index}][id]" value="${member.id}">
+        ${noteInputs}
+    `;
 
                 tbody.appendChild(row);
             });
+        }
+
+        function saveDraftToServer() {
+            const sessionId = document.getElementById("confirm_id").value;
+            const sessionType = document.getElementById("confirm_type").value;
+
+            const table = document.getElementById("confirm_members");
+            const rows = table.querySelectorAll("tr");
+
+            const participants = [];
+
+            rows.forEach((row, i) => {
+                const idInput = row.querySelector(`input[name="participants[${i}][id]"]`);
+                if (!idInput) return;
+
+                const id = idInput.value;
+                const data = {
+                    id
+                };
+
+                const inputs = row.querySelectorAll("input[type='number']");
+                inputs.forEach(input => {
+                    const name = input.name;
+                    const match = name.match(/\[(.*?)\]\[(.*?)\]\[(.*?)\]/);
+                    if (match) {
+                        const module = match[2];
+                        const type = match[3];
+                        data[module] = data[module] || {};
+                        data[module][type] = input.value;
+                    }
+                });
+
+                participants.push(data);
+            });
+
+            fetch("{{ route('app.formation.save_draft') }}", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        session_type: sessionType,
+                        participants: participants
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert("✅ تم الحفظ مؤقتًا في قاعدة البيانات");
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("❌ فشل الحفظ المؤقت");
+                });
         }
 
         function handledetailclick(taxi, number, members) {

@@ -527,7 +527,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air', 'Huile 10w40', 'Huile 5w30'])->get();
+        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air', 'Huile 10w40', 'Huile 5w30','Filtre séparateur'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }

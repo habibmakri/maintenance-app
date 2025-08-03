@@ -179,6 +179,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('formation/create_foramtion_sessions', 'do_create_foramtion_sessions')->name('create_foramtion_sessions')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/print_list_session', 'print_list_session')->name('print_list_session')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/confirm_session', 'confirm_session')->name('confirm_session')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/save-draft',  'save_draft')->name('save_draft')->middleware('rolesMiddleware:foramtion_sessions');
+
     });
 });
 Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {

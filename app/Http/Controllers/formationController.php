@@ -372,9 +372,47 @@ class formationController extends Controller
         } else {
             return back()->with('error', 'Erreur confirmation.');
         }
-            return back()->with('success', 'Session '.$session->type.' '.$session->counter.' confirmé.');
-
+        return back()->with('success', 'Session ' . $session->type . ' ' . $session->counter . ' confirmé.');
     }
+
+    public function save_draft(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+            'session_type' => 'required',
+            'participants' => 'required|array',
+        ]);
+
+        $modelMap = [
+            'taxis' => \App\Models\taxis::class,
+            'tper'  => \App\Models\tper::class,
+            'tmar'  => \App\Models\tmar::class,
+            'tdan'  => \App\Models\tdan::class,
+        ];
+
+        $type = $request->session_type;
+
+        if (!isset($modelMap[$type])) {
+            return response()->json(['message' => 'Type inconnu'], 400);
+        }
+
+        $model = $modelMap[$type];
+
+        foreach ($request->participants as $participant) {
+            $notes = collect($participant)->except('id');
+            $record = $model::find($participant['id']);
+
+            if ($record) {
+                $record->update([
+                    'notes' => json_encode($notes, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Brouillon sauvegardé']);
+    }
+
+
     function getNextFormattedNumber($typePrefix, $date)
     {
         // $year = $date->year;
