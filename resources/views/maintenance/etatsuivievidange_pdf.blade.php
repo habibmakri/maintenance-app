@@ -113,7 +113,7 @@
             @if ($panne['name'] === 'Vidange boite vitesse')
                 @php $totals['BOITE']++; @endphp
             @endif
-            @if ($panne['name'] === 'Vidange pond')
+            @if ($panne['name'] === 'Vidange pont')
                 @php $totals['POND']++; @endphp
             @endif
         @endforeach
@@ -127,7 +127,7 @@
             <tr>
                 <th style="text-align: center;width:33%;">Moteur</th>
                 <th style="text-align: center;width:33%;">Boite Vitesse</th>
-                <th style="text-align: center;width:33%;">Pond</th>
+                <th style="text-align: center;width:33%;">Pont</th>
             </tr>
         </thead>
         <tbody>

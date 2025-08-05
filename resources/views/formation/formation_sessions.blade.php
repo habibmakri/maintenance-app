@@ -93,7 +93,9 @@
                                 <label for="date">تاريخ النهاية</label>
                             </div>
                         </div>
+                        <div class="row g-3" id="modules">
 
+                        </div>
                         <div class="col-md-12">
                             <div class="form-check form-switch" style="padding-left: 0em;">
                                 <label class="form-check-label" for="toggleparticipants">المشاركين:</label>
@@ -169,18 +171,30 @@
                     <td style="text-align: right;">{{ $list->counter }}</td>
                     <td style="text-align: right;">{{ $count }}</td>
                     <td style="text-align: right;">{{ $list->valid_date }}</td>
-                    <td style="text-align:right ;">
+                    <td style="text-align:left ;">
                         @if ($list->valid_date == null)
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#ExtralargeModal3"
                                 onclick='handleconfirmclick(@json($list),@json($members))'>تأكيد</button>
                         @else
-                            <button type="button" class="btn btn-secondary" disabled data-bs-toggle="modal"
-                                data-bs-target="" onclick=''>تأكيد</button>
+                            <div class="d-flex gap-2"style="justify-content: flex-end;">
+                                <form action="{{ route('app.formation.print_detail_session') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn btn-info" data-bs-toggle="modal">طباعة
+                                        التفاصيل</button>
+                                </form>
+                                <form action="{{ route('app.formation.print_delibiration') }}"method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn btn-success" data-bs-toggle="modal">طباعة محظر
+                                        المداولات</button>
+                                </form>
                         @endif
                         <button type="button" class="btn btn-primary" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#ExtralargeModal2"
                             onclick='handledetailclick(@json($list),{{ $count }},@json($members))'>التفاصيل</button>
+                        </div>
 
                     </td>
                 </tr>
@@ -230,16 +244,14 @@
                         <div class="table-responsive px-4 mb-3">
                             <table class="table table-bordered text-center align-middle">
                                 <thead class="table">
-                                    <tr>
+                                    <tr id="detail_table_header">
                                         <th>#</th>
                                         <th>الاسم</th>
                                         <th>اللقب</th>
                                         <th>رقم التسجيل</th>
-                                        <!-- Ajoute d'autres colonnes selon ton modèle -->
                                     </tr>
                                 </thead>
                                 <tbody id="detail_members">
-                                    <!-- Les membres seront insérés ici par JS -->
                                 </tbody>
                             </table>
                         </div>
@@ -247,7 +259,7 @@
                     {{-- @endif --}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
-                        <button type="submit" class="btn btn-primary">طباعة</button>
+                        <button type="submit" class="btn btn-primary">طباعة المنخرطين</button>
                     </div>
                 </form>
             </div>
@@ -312,9 +324,42 @@
             tmar: @json($tmar),
             tdan: @json($tdan)
         };
+        const modulestypes = {
+            taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة',
+                'الجغرافية المحلية', 'السير وأمن المرور', 'مبادئ في الاسعافات الاولية'
+            ],
+            tper: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
+                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
+                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
+            ],
+            tmar: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
+                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
+                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
+            ],
+            tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات',
+                'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات',
+                'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات'
+            ]
+        };
 
         function handlecreateclick(type) {
             document.getElementById('type_insc_input').value = type;
+            moduleFieldsDiv = document.getElementById('modules');
+            moduleFieldsDiv.innerHTML = '';
+
+            modulestypes[type].forEach((modulename, index) => {
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = 'col-md-4';
+
+                moduleDiv.innerHTML = `
+                <label class="form-label mb-0 flex-shrink-0" style="white-space: nowrap; width: 90%; overflow: hidden;">الأستاذ لمادة: ${modulename}</label>
+                <input type="text" name="profs[${modulename}]" class="form-control" placeholder="${modulename}" required>
+            `;
+
+                moduleFieldsDiv.appendChild(moduleDiv);
+            });
+
+
             if (tomSelectInstance) {
                 tomSelectInstance.destroy();
                 tomSelectInstance = null;
@@ -345,71 +390,8 @@
             };
             document.getElementById('validation_title').innerText = titleMap[type];
         }
-        const modulestypes = {
-            taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة',
-                'الجغرافية المحلية', 'السير وأمن المرور', 'مبادئ في الاسعافات الاولية'
-            ],
-            tper: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
-                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
-                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
-            ],
-            tmar: ['أبعاد النقل جانب التنظيمي بالنقل عبر الطرقات', 'المفاهيم التقنية لمركبات النقل عبر الطرقات',
-                'الوقاية والسلامة عبر الطرقات', 'الإسعاف', 'التنظيم المطبق على نقل الأشخاص عبر الطرقات',
-                'فن حسن التصرف', 'سلوك السائق في مركزالعمل', 'تقنيات سياقة مركبات نقل الأشخاص عبر الطرقات'
-            ],
-            tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات',
-                'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات',
-                'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات'
-            ]
-        };
 
-        // function handleconfirmclick(session, participants) {
-        //     document.getElementById('confirm_id').value = session.id;
-        //     document.getElementById('confirm_name').innerText = session.counter;
-        //     document.getElementById('confirm_type').value = session.type;
-        //     document.getElementById('confirm_participants').innerText = participants.length;
 
-        //     const tbody = document.getElementById("confirm_members");
-        //     const thead = document.querySelector("#confirm_members").closest("table").querySelector("thead tr");
-
-        //     tbody.innerHTML = "";
-        //     thead.innerHTML = "";
-
-        //     const modules = modulestypes[session.type] || [];
-
-        //     thead.innerHTML = `
-    //         <th>#</th>
-    //         <th>الاسم واللقب</th>
-    //         ${modules.map(module => `<th>${module}</th>`).join('')}
-    //     `;
-        //     participants.forEach((member, index) => {
-        //         const row = document.createElement("tr");
-
-        //         const noteInputs = modules.map((module, i) => {
-        //             return `
-    //        <td>
-    //         <input type="number" name="participants[${index}][${module}][مواضبة]" 
-    //             class="form-control" step="0.5" min="0" max="20" required
-    //             placeholder="المواضبة">
-
-    //         <input style="margin-top:20px;" type="number" name="participants[${index}][${module}][إمتحان]" 
-    //             class="form-control" step="0.5" min="0" max="20" required
-    //             placeholder="الإمتحان">
-    //         </td>
-
-    //     `;
-        //         }).join('');
-
-        //         row.innerHTML = `
-    //     <td>${index + 1}</td>
-    //     <td>${member.nom_ar + ' ' + (member.prenom_ar ?? '')}</td>
-    //     <input type="hidden" name="participants[${index}][id]" value="${member.id}">
-    //     ${noteInputs}
-    // `;
-
-        //         tbody.appendChild(row);
-        //     });
-        // }
         function handleconfirmclick(session, participants) {
             document.getElementById('confirm_id').value = session.id;
             document.getElementById('confirm_name').innerText = session.counter;
@@ -531,7 +513,7 @@
             const detail_confirmdate = document.getElementById('detail_confirmdate');
             const detail_participants = document.getElementById('detail_participants');
             const detail_id = document.getElementById('detail_id');
-
+            const detail_table_header = document.getElementById('detail_table_header');
             const dddebut = document.getElementById('detail_ddebut');
             const ddfin = document.getElementById('detail_ddfin');
             dddebut.innerHTML = '';
@@ -553,19 +535,59 @@
 
 
             const tbody = document.getElementById("detail_members");
-            tbody.innerHTML = ""; // Vider les anciennes lignes
+            tbody.innerHTML = "";
+            if (taxi.valid_date) {
+                members.forEach((member, index) => {
+                    detail_table_header.innerHTML = `
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>اللقب</th>
+                        <th>رقم التسجيل</th>
+                        <th>المعدل العام</th>
+                    `;
+                    const notes1 = member.notes || {};
+                    let total = 0;
+                    let count = 0;
+                    let notes = JSON.parse(notes1)
+                    for (const module in notes) {
+                        const mod = notes[module];
+                        const exam = parseFloat(mod["إمتحان"]) || 0;
+                        const presence = parseFloat(mod["مواضبة"]) || 0;
+                        if (exam > 0 || presence > 0) {
+                            total += (exam + presence) / 2;
+                            count++;
+                        }
+                    }
 
-            members.forEach((member, index) => {
-                const row = document.createElement("tr");
-
-                row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${member.nom_ar ?? ''}</td>
-                <td>${member.prenom_ar ?? ''}</td>
-                <td>${member.validation_number ?? ''}</td>
-            `;
-                tbody.appendChild(row);
-            });
+                    const moyenne = count > 0 ? (total / count).toFixed(2) : '';
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${member.nom_ar ?? ''}</td>
+                    <td>${member.prenom_ar ?? ''}</td>
+                    <td>${member.validation_number ?? ''}</td>
+                    <td>${ moyenne ?? ''}</td> 
+                `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                members.forEach((member, index) => {
+                    const row = document.createElement("tr");
+                    detail_table_header.innerHTML = `
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>اللقب</th>
+                        <th>رقم التسجيل</th>
+                    `;
+                    row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${member.nom_ar ?? ''}</td>
+                    <td>${member.prenom_ar ?? ''}</td>
+                    <td>${member.validation_number ?? ''}</td>
+                `;
+                    tbody.appendChild(row);
+                });
+            }
 
         }
     </script>
