@@ -68,19 +68,105 @@
     </div>
 
     <div style="margin-bottom: 2%;font-weight:bold;"class="header">
-        <p style="margin: 0px; font-size:18px;">محظر مداولات الدورة رقم {{ $list->counter }}
+        <p style="margin: 0px; font-size:18px;">نتائج مداولات الدورة رقم {{ $list->counter }}
             {{ $types[$list->type] }}</p>
     </div>
 
 
     @php
-        // Récupération des modules dynamiques à partir du premier inscrit
         $firstTaxi = $list->count_models($list->type)->first();
         $notes = json_decode($firstTaxi->notes ?? '{}', true);
         $modules = array_keys($notes ?? []);
     @endphp
+    @php
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups); // students per group
+        $groupNumber = 1;
+    @endphp
 
-    <table style="font-size:14px; direction: rtl; text-align: center;" border="1" cellspacing="0" cellpadding="5">
+    @for ($g = 0; $g < $list->groups; $g++)
+        <h1 style="margin-top:10px; font-size:22px; text-align:center;">
+            فوج {{ $groupNumber }}
+        </h1>
+
+        <table style="font-size:14px; direction: rtl; text-align: center;" border="1" cellspacing="0"
+            cellpadding="5">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width:5%;">#</th>
+                    <th rowspan="2" style="width:15%;">الاسم واللقب</th>
+
+                    @foreach ($modules as $mod)
+                        <th colspan="3">{{ $mod }}</th>
+                    @endforeach
+
+                    <th rowspan="2">المعدل العام</th>
+                    <th rowspan="2">الملاحظة</th>
+                </tr>
+                <tr>
+                    @foreach ($modules as $mod)
+                        {{-- <th>مواضبة</th> --}}
+                        <th>ن م</th>
+                        {{-- <th>إمتحان</th> --}}
+                        <th>ن إ</th>
+                        {{-- <th>معدل المادة</th> --}}
+                        <th>م م</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $start = $g * $groupSize;
+                    $end = min(($g + 1) * $groupSize, $totalStudents);
+                    $i = 1;
+                @endphp
+
+                @for ($s = $start; $s < $end; $s++)
+                    @php
+                        $taxi = $students[$s];
+                        $notes = json_decode($taxi->notes ?? '{}', true);
+                        $total = 0;
+                        $count = 0;
+                    @endphp
+                    <tr>
+                        <td>{{ $i }}</td>
+                        <td>{{ $taxi->nom_ar }} {{ $taxi->prenom_ar }}</td>
+
+                        @foreach ($modules as $mod)
+                            @php
+                                $note1 = isset($notes[$mod]['مواضبة']) ? floatval($notes[$mod]['مواضبة']) : '';
+                                $note2 = isset($notes[$mod]['إمتحان']) ? floatval($notes[$mod]['إمتحان']) : '';
+                                $moy = '';
+
+                                if ($note1 !== '' && $note2 !== '') {
+                                    $moy = ($note1 + $note2) / 2;
+                                    $total += $moy;
+                                    $count++;
+                                }
+                            @endphp
+                            <td>{{ $note1 }}</td>
+                            <td>{{ $note2 }}</td>
+                            <td>{{ $moy }}</td>
+                        @endforeach
+
+                        @php
+                            $moyenne = $count > 0 ? round($total / $count, 2) : 0;
+                            $decision = $moyenne >= 8 ? 'ناجح' : 'راسب';
+                        @endphp
+
+                        <td>{{ $moyenne }}</td>
+                        <td>{{ $decision }}</td>
+                    </tr>
+                    @php $i++; @endphp
+                @endfor
+            </tbody>
+        </table>
+
+        @php $groupNumber++; @endphp
+    @endfor
+
+    {{-- <table style="font-size:14px; direction: rtl; text-align: center;" border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5%;">#</th>
@@ -140,7 +226,7 @@
                 @php $i++; @endphp
             @endforeach
         </tbody>
-    </table>
+    </table> --}}
 
     @php
         $profs = json_decode($list->profs, true);

@@ -104,8 +104,73 @@
             </td>
         </tr>
     </table>
+    @php
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups); // students per group
+        $groupNumber = 1;
+    @endphp
 
-    <table style="font-size:14px;">
+    @for ($g = 0; $g < $list->groups; $g++)
+        <h1 style="margin-top:30px; font-size:22px; text-align:center;">
+            فوج {{ $groupNumber }}
+        </h1>
+
+        <table style="font-size:14px; width:100%; border-collapse: collapse;" border="1">
+            <thead>
+                <tr>
+                    <td style="font-weight: bold;width:5%">الرقم</td>
+                    <td style="font-weight: bold;width:15%">اللقب</td>
+                    <td style="font-weight: bold;width:15%">الاسم</td>
+                    <td style="font-weight: bold;width:20%">تاريخ ومكان الميلاد</td>
+                    <td style="font-weight: bold;width:25%">المعدل العام</td>
+                    <td style="font-weight: bold;width:20%">القرار</td>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $start = $g * $groupSize;
+                    $end = min(($g + 1) * $groupSize, $totalStudents);
+                    $i = 1;
+                @endphp
+
+                @for ($s = $start; $s < $end; $s++)
+                    @php
+                        $taxi = $students[$s];
+                        $notes = json_decode($taxi->notes, true) ?? [];
+                        $total = 0;
+                        $count = 0;
+
+                        foreach ($notes as $moduleNotes) {
+                            if (isset($moduleNotes['مواضبة'], $moduleNotes['إمتحان'])) {
+                                $note1 = floatval($moduleNotes['مواضبة']);
+                                $note2 = floatval($moduleNotes['إمتحان']);
+                                $moyModule = ($note1 + $note2) / 2;
+                                $total += $moyModule;
+                                $count++;
+                            }
+                        }
+
+                        $moyenneGenerale = $count > 0 ? round($total / $count, 2) : 0;
+                        $decision = $moyenneGenerale >= 8 ? 'ناجح' : 'راسب';
+                    @endphp
+                    <tr>
+                        <td>{{ $i }}</td>
+                        <td>{{ $taxi->nom_ar }}</td>
+                        <td>{{ $taxi->prenom_ar }}</td>
+                        <td>{{ $taxi->birthdate }}<br>{{ $taxi->birthplace }}</td>
+                        <td>{{ $moyenneGenerale }}</td>
+                        <td>{{ $decision }}</td>
+                    </tr>
+                    @php $i++; @endphp
+                @endfor
+            </tbody>
+        </table>
+
+        @php $groupNumber++; @endphp
+    @endfor
+
+    {{-- <table style="font-size:14px;">
         <thead>
             <tr>
                 <td style="font-weight: bold;width:5%">الرقم</td>
@@ -154,7 +219,7 @@
                 @endphp
             @endforeach
         </tbody>
-    </table>
+    </table> --}}
 
 </body>
 

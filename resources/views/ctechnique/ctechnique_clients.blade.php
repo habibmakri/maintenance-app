@@ -66,8 +66,9 @@
                 </thead>
                 <tbody>
                     @foreach ($clients as $client)
-                        @if (abs(
-                                \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->diffInDays(now())) < 10. && \Carbon\Carbon::parse($client->last_remind)->diffInDays(\Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)) > 10.)
+                        @if (abs(\Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->diffInDays(now())) < 10. &&
+                                \Carbon\Carbon::parse($client->last_remind)->diffInDays(
+                                    \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)) > 10.)
                             <tr>
                                 <td>{{ $client->id }}</td>
                                 <td>{{ $client->name }}</td>
@@ -78,20 +79,23 @@
                                 <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->format('Y-m-d') }}
                                 </td>
                                 <td style="display: flex">
-                                    <form action="{{route('app.ctechnique.sendmessage')}}" method="post">
+                                    <form action="{{ route('app.ctechnique.sendmessage') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="client_id" value="{{ $client->id }}">
                                         <button type="submit" style="border: none; background: none; cursor: pointer;">
                                             <i class="bi bi-chat-left-text" style="margin-right: 15%;"></i>
                                         </button>
                                     </form>
-                                    <form action="{{route('app.ctechnique.refreshcontrole')}}" method="post">
+                                    <i type="button" class="bi bi-calendar-date" style="margin-left: 15%;"
+                                        data-bs-toggle="modal" data-bs-target="#ExtralargeModal1"
+                                        onclick="handleresoudreclick({{ $client }})"></i>
+                                    {{-- <form action="{{route('app.ctechnique.refreshcontrole')}}" method="post">
                                         @csrf
                                         <input type="hidden" name="client_id" value="{{ $client->id }}">
                                         <button type="submit" style="border: none; background: none; cursor: pointer;">
                                             <i class="bi bi-calendar-date" style="margin-right: 15%;"></i>
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                         @endif
@@ -127,9 +131,13 @@
                             <td>{{ \Carbon\Carbon::parse($client->date_controle)->addMonths((int) $client->type->mois)->format('Y-m-d') }}
                             </td>
                             <td style="display: flex">
-                                <i class="bi bi-trash delete-icon"  style="cursor: pointer;"
+                                <i class="bi bi-trash delete-icon" style="cursor: pointer;"
                                     onclick="delete_client({{ $client->id }})"></i>
-                                    <i class="bi bi-pencil edit-icon"  style="margin-left:15%;cursor: pointer;" onclick="handleEditClick({{ $client->id }})"></i>
+                                <i class="bi bi-pencil edit-icon" style="margin-left:15%;cursor: pointer;"
+                                    onclick="handleEditClick({{ $client->id }})"></i>
+                                <i type="button" class="bi bi-calendar-date" style="margin-left: 15%;"
+                                    data-bs-toggle="modal" data-bs-target="#ExtralargeModal1"
+                                    onclick="handleresoudreclick({{ $client }})"></i>
                             </td>
                         </tr>
                     @endforeach
@@ -137,42 +145,67 @@
             </table>
         </div>
     </div>
-    <script>
-        function handleresoudreclick(panne) {
-            const modal_title = document.getElementById('modal_title');
-            modal_title.innerHTML = panne.pannename.name + ' du ' + panne.fichemaintenance.bus.name + ' signaler le ' +
-                panne.fichemaintenance.date_fiche + ' - ' + panne.fichemaintenance.brigade;
-            const panneIdInput = document.getElementById('fichepanne_id');
-            panneIdInput.value = panne.id;
-        }
+    <div class="modal fade" id="ExtralargeModal1" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" dir="ltr">
+                    <h5 class="modal-title" id="modal_title_rapport"> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
-        function delete_client(id) {
-            console.log(id);
-            if (confirm('Vous êtes sur?')) {
-                fetch(`ctechnique/deleteclient:${id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Opération réussie!');
-                            location.reload(); 
-                        } else {
-                            alert('Opération échouée!');
-                        }
-                    })
-                    .catch(error => console.error('Erreur:', error));
+                    <form class="row g-3" action="{{ route('app.ctechnique.refreshcontrole') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="client_id" id="client_id">
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" required id="date_update" name="date_update"
+                                    placeholder="date dernier controle" value="{{ old('date_update') }}" maxlength="3">
+                                <label for="date_update">date dernier controle</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
+                            <button type="submit" class="btn btn-primary">valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function handleresoudreclick(panne) {
+                const modal_title = document.getElementById('modal_title_rapport');
+                modal_title.innerHTML = ' Renouvlation ctechnique ' + panne.name;
+                const panneIdInput = document.getElementById('client_id');
+                panneIdInput.value = panne.id;
             }
-        }
 
-        function handleEditClick(id) {
-            console.log("Editing Client with ID:", id);
-            window.location.href = `/app/ctechnique_clients/edit_client:${id}`;
-        }
+            function delete_client(id) {
+                console.log(id);
+                if (confirm('Vous êtes sur?')) {
+                    fetch(`ctechnique/deleteclient:${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Opération réussie!');
+                                location.reload();
+                            } else {
+                                alert('Opération échouée!');
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                }
+            }
 
-    </script>
-@endsection
+            function handleEditClick(id) {
+                console.log("Editing Client with ID:", id);
+                window.location.href = `/app/ctechnique_clients/edit_client:${id}`;
+            }
+        </script>
+    @endsection

@@ -79,18 +79,26 @@
                     <form class="row g-3" action="{{ route('app.formation.create_foramtion_sessions') }}" method="post">
                         @csrf
                         <input type="hidden" name="type_insc" id="type_insc_input">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating">
                                 <input name="date_debut" id="dateInput" type="date" required class="form-control"
                                     style="text-align: end;">
                                 <label for="date">تاريخ البداية</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating">
                                 <input name="date_fin" id="dateInput" type="date" required class="form-control"
                                     style="text-align: end;">
                                 <label for="date">تاريخ النهاية</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input name="groups" id="groups" type="number" value="1" step="1"
+                                    min="1" required class="form-control"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                <label for="groups">عدد الأفواج</label>
                             </div>
                         </div>
                         <div class="row g-3" id="modules">
@@ -146,7 +154,7 @@
                 <th style="text-align: right;">التكوين</th>
                 <th style="text-align: right;">رقم الدورة</th>
                 <th style="text-align: right;">عدد المنخرطين</th>
-                <th style="text-align: right;">تاريخ التأكيد</th>
+                <th style="text-align: right;">تاريخ المداولات</th>
                 <th style="text-align: right;">العمليات</th>
             </tr>
         </thead>
@@ -173,9 +181,26 @@
                     <td style="text-align: right;">{{ $list->valid_date }}</td>
                     <td style="text-align:left ;">
                         @if ($list->valid_date == null)
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal3"
-                                onclick='handleconfirmclick(@json($list),@json($members))'>تأكيد</button>
+                            <div class="d-flex gap-2"style="justify-content: flex-end;">
+                                <form action="{{ route('app.formation.print_presence_paper') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn" style="background-color: rgb(38, 201, 174);color:white;" data-bs-toggle="modal">طباعة
+                                        لائحات الحضور</button>
+                                </form>
+                                <form action="{{ route('app.formation.print_notes_paper') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn" style="background-color: rgb(201, 38, 38);color:white;" data-bs-toggle="modal">طباعة
+                                        لائحات النقاط</button>
+                                </form>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#ExtralargeModal3" 
+                                    onclick='handleconfirmclick(@json($list),@json($members))'>تأكيد</button>
+                                <button type="button" class="btn btn-primary" class="btn btn-danger"
+                                    data-bs-toggle="modal" data-bs-target="#ExtralargeModal2"
+                                    onclick='handledetailclick(@json($list),{{ $count }},@json($members))'>التفاصيل</button>
+                            </div>
                         @else
                             <div class="d-flex gap-2"style="justify-content: flex-end;">
                                 <form action="{{ route('app.formation.print_detail_session') }}" method="post">
@@ -184,17 +209,31 @@
                                     <button type="submit" class="btn btn-info" data-bs-toggle="modal">طباعة
                                         التفاصيل</button>
                                 </form>
+                                <form action="{{ route('app.formation.print_diplomes') }}"method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn"  style="background-color: rgb(197, 211, 75);color:black;" data-bs-toggle="modal">طباعة 
+                                        الشهادات</button>
+                                </form>
                                 <form action="{{ route('app.formation.print_delibiration') }}"method="post">
                                     @csrf
                                     <input type="hidden" name="session_id" value="{{ $list->id }}">
-                                    <button type="submit" class="btn btn-success" data-bs-toggle="modal">طباعة محظر
+                                    <button type="submit" class="btn"  style="background-color: rgb(161, 94, 49);color:white;" data-bs-toggle="modal">طباعة نتائج
                                         المداولات</button>
                                 </form>
+                                <form action="{{ route('app.formation.print_delibiration_fiches') }}"method="post">
+                                    @csrf
+                                    <input type="hidden" name="session_id" value="{{ $list->id }}">
+                                    <button type="submit" class="btn"
+                                        style="background-color: rgb(123, 36, 126);color:white;"
+                                        data-bs-toggle="modal">طباعة إستمارات التقييم
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-primary" class="btn btn-danger"
+                                    data-bs-toggle="modal" data-bs-target="#ExtralargeModal2"
+                                    onclick='handledetailclick(@json($list),{{ $count }},@json($members))'>التفاصيل</button>
+                            </div>
                         @endif
-                        <button type="button" class="btn btn-primary" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#ExtralargeModal2"
-                            onclick='handledetailclick(@json($list),{{ $count }},@json($members))'>التفاصيل</button>
-                        </div>
 
                     </td>
                 </tr>
@@ -236,7 +275,10 @@
                             <h5 style="font-family: 'Tajwal';">عدد المترشحين:
                                 <span style="font-weight: bold;" id="detail_participants"></span>
                             </h5>
-                            <h5 style="font-family: 'Tajwal';">تاريخ التأكيد:
+                            <h5 style="font-family: 'Tajwal';">عدد الأفواج:
+                                <span style="font-weight: bold;" id="detail_groups"></span>
+                            </h5>
+                            <h5 style="font-family: 'Tajwal';">تاريخ المداولات:
                                 <span style="font-weight: bold;" id="detail_confirmdate"></span>
                             </h5>
                         </div>
@@ -288,6 +330,11 @@
                             <h5 style="font-family: 'Tajwal';">عدد المترشحين:
                                 <span style="font-weight: bold;" id="confirm_participants"></span>
                             </h5>
+                            <div class="form-floating">
+                                <input name="confirm_date" id="confirm_date" type="date" required
+                                    class="form-control" style="text-align: end;">
+                                <label for="confirm_date">تاريخ المداولات</label>
+                            </div>
                         </div>
 
                         <div class="table-responsive px-4 mb-3">
@@ -511,6 +558,7 @@
             const modal_title = document.getElementById('detail_title');
             const detail_name = document.getElementById('detail_name');
             const detail_confirmdate = document.getElementById('detail_confirmdate');
+            const detail_groups = document.getElementById('detail_groups');
             const detail_participants = document.getElementById('detail_participants');
             const detail_id = document.getElementById('detail_id');
             const detail_table_header = document.getElementById('detail_table_header');
@@ -532,6 +580,8 @@
             }
             detail_participants.innerHTML = '';
             detail_participants.innerHTML = ' ' + number;
+            detail_groups.innerHTML = '';
+            detail_groups.innerHTML = ' ' + taxi.groups;
 
 
             const tbody = document.getElementById("detail_members");

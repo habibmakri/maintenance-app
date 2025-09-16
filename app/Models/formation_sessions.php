@@ -23,6 +23,7 @@ class formation_sessions extends Model
         'date_fin',
         'counter',
         'profs',
+        'groups',
         'valid_date',
     ];
     protected $modeltypes = [

@@ -45,6 +45,7 @@ class tper extends Model
         'entreprise_id',
         'ip_adress',
         'date_paiement',
+        'montant_paiement',
         'session_id',
 
     ];

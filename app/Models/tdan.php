@@ -44,6 +44,7 @@ class tdan extends Model
         'entreprise_id',
         'notes',
         'ip_adress',
+        'montant_paiement',
         'date_paiement',
         'session_id',
 

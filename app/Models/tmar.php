@@ -44,6 +44,7 @@ class tmar extends Model
         'cheque_number',
         'entreprise_id',
         'ip_adress',
+        'montant_paiement',
         'date_paiement',
         'session_id',
 

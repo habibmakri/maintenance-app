@@ -47,23 +47,73 @@
             margin: 5px;
         }
     </style>
-    
+
 </head>
 
-<body dir="rtl" >
+<body dir="rtl">
     @php
         $types = [
-        'taxis' => "التكوين للحصول على دفتر النقل لسيارات الأجرة ",
-        'tper' => " التكوين للحصول على شهادة الكفاءة المهنية لنقل الأشخاص ",
-        'tmar' => "التكوين للحصول على شهادة الكفاءة المهنية لنقل البضائع ",
-        'tdan' => "التكوين للحصول على شهادة الكفاءة المهنية لنقل المواد الخطرة ",
-    ];
+            'taxis' => 'التكوين للحصول على دفتر النقل لسيارات الأجرة ',
+            'tper' => ' التكوين للحصول على شهادة الكفاءة المهنية لنقل الأشخاص ',
+            'tmar' => 'التكوين للحصول على شهادة الكفاءة المهنية لنقل البضائع ',
+            'tdan' => 'التكوين للحصول على شهادة الكفاءة المهنية لنقل المواد الخطرة ',
+        ];
     @endphp
     <div style="margin-bottom: 7%;"class="header">
-        <p style="margin: 0px; font-size:18px;">قائمة المترشحين المعنيين بالدورة رقم {{$list->counter}} {{$types[$list->type]}}</p>
+        <p style="margin: 0px; font-size:18px;">قائمة المترشحين المعنيين بالدورة رقم {{ $list->counter }}
+            {{ $types[$list->type] }}</p>
     </div>
+    @php
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups); // students per group
+        $groupNumber = 1;
+    @endphp
 
-    <table style="font-size:14px;">
+    @for ($g = 0; $g < $list->groups; $g++)
+        <h1 style="margin-top:30px; font-size:22px; text-align:center;">
+            فوج {{ $groupNumber }}
+        </h1>
+
+        <table style="font-size:14px; width:100%; border-collapse: collapse;" border="1">
+            <thead>
+                <tr>
+                    <td style="font-weight: bold;width:5%">الرقم</td>
+                    <td style="font-weight: bold;width:15%">اللقب</td>
+                    <td style="font-weight: bold;width:15%">الاسم</td>
+                    <td style="font-weight: bold;width:20%">تاريخ ومكان الميلاد</td>
+                    <td style="font-weight: bold;width:25%">العنوان</td>
+                    <td style="font-weight: bold;width:20%">رقم الهاتف</td>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $start = $g * $groupSize;
+                    $end = min(($g + 1) * $groupSize, $totalStudents);
+                    $i = 1;
+                @endphp
+
+                @for ($s = $start; $s < $end; $s++)
+                    @php
+                        $taxi = $students[$s];
+                    @endphp
+                    <tr>
+                        <td>{{ $i }}</td>
+                        <td>{{ $taxi->nom_ar }}</td>
+                        <td>{{ $taxi->prenom_ar }}</td>
+                        <td>{{ $taxi->birthdate }}<br>{{ $taxi->birthplace }}</td>
+                        <td>{{ $taxi->adresse }}</td>
+                        <td>{{ $taxi->phone }}</td>
+                    </tr>
+                    @php $i++; @endphp
+                @endfor
+            </tbody>
+        </table>
+
+        @php $groupNumber++; @endphp
+    @endfor
+
+    {{-- <table style="font-size:14px;">
         <thead>
             <tr>
                 <td style="font-weight: bold;width:5%">الرقم</td>
@@ -93,7 +143,7 @@
             @endforeach
         </tbody>
     </table>
-    
+     --}}
 </body>
 
 </html>

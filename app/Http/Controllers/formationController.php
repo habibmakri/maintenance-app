@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\counters_formation;
+use App\Models\entreprise;
 use App\Models\formation_sessions;
 use App\Models\taxis;
 use App\Models\taxis_list;
@@ -171,21 +172,77 @@ class formationController extends Controller
     // }
     public function transport_personne()
     {
-        $taxis = tper::all();
+        $taxis = tper::whereNull('entreprise_id')->get();
         $type_insc = "Tansport personne";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
     public function transport_marchandise()
     {
-        $taxis = tmar::all();
+        $taxis = tmar::whereNull('entreprise_id')->get();
         $type_insc = "Tansport Marchendise";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
     public function transport_danger()
     {
-        $taxis = tdan::all();
+        $taxis = tdan::whereNull('entreprise_id')->get();
         $type_insc = "Tansport Materieux Dangereux";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
+    }
+    public function transport_entreprises()
+    {
+        $taxis = entreprise::with(['count_tper_emps', 'count_tdan_emps', 'count_tmar_emps'])->get();
+        $type_insc = "Entreprises";
+        return view('formation.entreprises', compact(['type_insc', 'taxis']));
+    }
+    public function print_entrepise_details(Request $request)
+    {
+        $validated = $request->validate([
+            'id_entreprise' => 'required|exists:entreprise,id',
+        ]);
+        $item = entreprise::find($validated['id_entreprise']);
+        // dd($item);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        $html = view('formation.detail_entreprise_pdf', compact(['item']))->render();
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 24, 14, 35, 35, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        $nomfichier = 'مؤسسة '.$item->name.'.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
     }
     public function foramtion_sessions()
     {
@@ -218,6 +275,7 @@ class formationController extends Controller
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
+                'groups' => $request->groups,
                 'profs' => json_encode($request->profs, JSON_UNESCAPED_UNICODE),
                 'date_debut' => $request->date_debut,
                 'date_fin' => $request->date_fin,
@@ -236,6 +294,7 @@ class formationController extends Controller
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
+                'groups' => $request->groups,
                 'profs' => json_encode($request->profs, JSON_UNESCAPED_UNICODE),
                 'date_debut' => $request->date_debut,
                 'date_fin' => $request->date_fin,
@@ -254,6 +313,7 @@ class formationController extends Controller
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
+                'groups' => $request->groups,
                 'profs' => json_encode($request->profs, JSON_UNESCAPED_UNICODE),
                 'date_debut' => $request->date_debut,
                 'date_fin' => $request->date_fin,
@@ -272,6 +332,7 @@ class formationController extends Controller
             $formation = formation_sessions::create([
                 'type' => $request->type_insc,
                 'counter' => $formation_number,
+                'groups' => $request->groups,
                 'profs' => json_encode($request->profs, JSON_UNESCAPED_UNICODE),
                 'date_debut' => $request->date_debut,
                 'date_fin' => $request->date_fin,
@@ -293,14 +354,8 @@ class formationController extends Controller
         $validated = $request->validate([
             'session_id' => 'required',
         ]);
-        // dd($request->list_id);
-
-
-
         $list = formation_sessions::find($request->session_id);
-        // $mpdf = new Mpdf([
-        //     'format' => 'A4',
-        // ]);
+       
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
 
@@ -402,10 +457,10 @@ class formationController extends Controller
         $list = formation_sessions::find($request->session_id);
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
-        
+
         $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
         $fontData = $defaultFontConfig['fontdata'];
-        
+
         $mpdf = new Mpdf([
             'format' => 'A4-L',
             'fontDir' => array_merge($fontDirs, [
@@ -444,6 +499,280 @@ class formationController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
         ]);
     }
+
+    public function print_diplomes(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+        ]);
+        $list = formation_sessions::find($request->session_id);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'format' => 'A4-L',
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+                public_path('theme/fonts/Amiri'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+                'amiri' => [
+                    'R' => 'amiri.ttf',
+                ],
+            ],
+            'default_font' => 'amiri',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+        $items = $list->count_models($list->type)->get();
+        $bgImage = public_path('Diplome.png');
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        $nomfichier = $list->type . ' ' . $list->counter . 'لائحة تكوين رقم.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+
+
+        foreach ($items as $index => $item) {
+            $notes = json_decode($item->notes, true);
+            $total = 0;
+            $count = count($notes);
+            foreach ($notes as $matiere => $details) {
+                $exam = $details['إمتحان'] ?? 0;
+                $moazaba = $details['مواضبة'] ?? 0;
+                $prof = $profs[$matiere] ?? '';
+                $moyenne = ($exam + $moazaba) / 2;
+                $total += $moyenne;
+            }
+            $moyenneGenerale = $total / $count;
+            if ($moyenneGenerale < 8) {
+                continue;
+            }
+            $mpdf->AddPage();
+            $mpdf->Image(
+                $bgImage,
+                0,
+                0,
+                297,
+                210,
+                'jpg',
+                '',
+                true,
+                false
+            );
+            $mpdf->SetY(32);
+            $html = view('formation.diplome_pdf', compact('list', 'item'))->render();
+            $mpdf->WriteHTML($html);
+        }
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function print_delibiration_fiches(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+        ]);
+
+        $list = formation_sessions::find($request->session_id);
+
+        // mPDF config
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new \Mpdf\Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        // Loop through all persons instead of just one
+        $items = $list->count_models($list->type)->get();
+
+        $imagePath = public_path('/LOGO ETUS.png');
+
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;'>
+            صفحة {PAGENO} من {nbpg} <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+    ";
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups);
+        $group = 1;
+
+        foreach ($items as $index => $item) {
+
+            $mpdf->AddPage();
+            if ($index > 0 && $index % $groupSize === 0) {
+                $group++;
+            }
+            $mpdf->Image($imagePath, 230, 9, 30, 30, 'png');
+            $mpdf->SetY(10);
+
+            $html = view('formation.fiches_delibiration_pdf', compact('list', 'item', 'group'))->render();
+
+            $mpdf->WriteHTML($html);
+        }
+
+        $nomfichier = $list->type . ' ' . $list->counter . ' لائحة تكوين رقم.pdf';
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function print_notes_paper(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+        ]);
+
+        $list = formation_sessions::find($request->session_id);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        $imagePath = public_path('/LOGO ETUS.png');
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups);
+        $group = 1;
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        for ($g = 0; $g < $list->groups; $g++) {
+            $start = $g * $groupSize;
+            $end = min(($g + 1) * $groupSize, $totalStudents);
+            $ls = array_slice($students->all(), $start, $end - $start);
+            $mpdf->AddPage();
+
+            $mpdf->Image($imagePath, 230, 9, 30, 30, 'png');
+            $mpdf->SetY(10);
+
+            $html = view('formation.notes_paper_pdf', compact(['list', 'ls', 'group']))->render();
+            $mpdf->WriteHTML($html);
+            $mpdf->SetHTMLFooter($htmlFooter);
+            $group++;
+        }
+        $nomfichier = $list->type . ' ' . $list->counter . 'لائحة تكوين رقم.pdf';
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function print_presence_paper(Request $request)
+    {
+        $validated = $request->validate([
+            'session_id' => 'required',
+        ]);
+
+        $list = formation_sessions::find($request->session_id);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        $imagePath = public_path('/LOGO ETUS.png');
+        $students = $list->count_models($list->type)->get();
+        $totalStudents = $students->count();
+        $groupSize = ceil($totalStudents / $list->groups);
+        $group = 1;
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        for ($g = 0; $g < $list->groups; $g++) {
+            $start = $g * $groupSize;
+            $end = min(($g + 1) * $groupSize, $totalStudents);
+            $ls = array_slice($students->all(), $start, $end - $start);
+            $mpdf->AddPage();
+
+            $mpdf->Image($imagePath, 230, 9, 30, 30, 'png');
+            $mpdf->SetY(10);
+
+            $html = view('formation.presence_paper_pdf', compact(['list', 'ls', 'group']))->render();
+            $mpdf->WriteHTML($html);
+            $mpdf->SetHTMLFooter($htmlFooter);
+            $group++;
+        }
+        $nomfichier = $list->type . ' ' . $list->counter . 'لائحة تكوين رقم.pdf';
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
     public function confirm_session(Request $request)
     {
         $validated = $request->validate([
@@ -474,7 +803,8 @@ class formationController extends Controller
             }
             $session = formation_sessions::find($request->session_id);
             $session->update([
-                'valid_date' => Carbon::now()->toDateString(),
+                // 'valid_date' => Carbon::now()->toDateString(),
+                'valid_date' => $request->confirm_date,
             ]);
         } else {
             return back()->with('error', 'Erreur confirmation.');
@@ -541,6 +871,7 @@ class formationController extends Controller
             'date' => 'required',
             'id_participant' => 'required',
             'cheque_number' => 'required',
+            'somme_paiement' => 'required',
             'type_insc' => 'required',
         ]);
         // dd($request);
@@ -566,6 +897,7 @@ class formationController extends Controller
             'payment_number' => $payment_number,
             'validation_number' => $validation_number,
             'cheque_number' => $request->cheque_number,
+            'montant_paiement' => $request->somme_paiement,
             'date_paiement' => $request->date,
         ]);
         if ($request->type_insc == 'Tansport personne') {
@@ -577,5 +909,76 @@ class formationController extends Controller
         } else if ($request->type_insc == 'Carnet Taxi') {
             return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
         }
+    }
+
+    public function print_attestation(Request $request)
+    {
+        $validated = $request->validate([
+            'id_participant' => 'required',
+            'type_insc' => 'required',
+        ]);
+        $item = null;
+        // dd($request);
+        if ($request->type_insc == 'Tansport personne') {
+            $item = tper::find($request->id_participant);
+        } else if ($request->type_insc == 'Tansport Marchendise') {
+            $item = tmar::find($request->id_participant);
+        } else if ($request->type_insc == 'Tansport Materieux Dangereux') {
+            $item = tdan::find($request->id_participant);
+        } else if ($request->type_insc == 'Carnet Taxi') {
+            $item = taxis::find($request->id_participant);
+        }
+        // $mpdf = new Mpdf([
+        //     'format' => 'A4',
+        // ]);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+        $type_insc = $request->type_insc;
+        $html1 = view('formation.attestation_insc_pdf', compact(['item', 'type_insc']))->render();
+        $html2 = view('formation.recu_paiement_pdf', compact(['item', 'type_insc']))->render();
+        $imagePath = public_path('/LOGO ETUS.png');
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        $nomfichier =  'لائحة تكوين رقم.pdf';
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 230, 9, 30, 30, 'png');
+        $mpdf->SetY(10);
+        $mpdf->WriteHTML($html1);
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 230, 9, 30, 30, 'png');
+        $mpdf->SetY(10);
+        $mpdf->WriteHTML($html2);
+        // $mpdf->AddPage();
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
     }
 }

@@ -54,18 +54,14 @@
         <thead dir="rtl">
             <tr>
                 <th style="text-align: right;">الرقم</th>
-                @if ($type_insc == 'Carnet Taxi')
-                    <th style="text-align: right;">
-                        لائحة
-                    </th>
-                @endif
                 <th style="text-align: right;">
                     الأسم
                 </th>
-                <th style="text-align: right;">اللقب</th>
-                <th style="text-align: right;">تاريخ ومكان الميلاد</th>
+                <th style="text-align: right;">النشاط </th>
+                <th style="text-align: right;">المسير</th>
                 <th style="text-align: right;">العنوان</th>
                 <th style="text-align: right;">رقم الهاتف</th>
+                <th style="text-align: right;">الإيمايل</th>
                 <th style="text-align: right;">العمليات</th>
             </tr>
         </thead>
@@ -73,37 +69,39 @@
             @foreach ($taxis as $taxi)
                 <tr>
                     <td style="text-align: right;">{{ $taxi->id }}</td>
-                    @if ($type_insc == 'Carnet Taxi')
-                        <td style="text-align: right;">{{ $taxi->list_m->counter }}</td>
-                    @endif
-                    <td style="text-align: right;">{{ $taxi->nom_ar }}</td>
-                    <td style="text-align: right;">{{ $taxi->prenom_ar }}</td>
-                    <td style="text-align: right;">{{ $taxi->birthdate . '  ' . $taxi->birthplace }}</td>
+                    <td style="text-align: right;">{{ $taxi->name }}</td>
+                    <td style="text-align: right;">{{ $taxi->activity }}</td>
+                    <td style="text-align: right;">{{ $taxi->gerant }}</td>
                     <td style="text-align: right;">{{ $taxi->adresse }}</td>
                     <td style="text-align: right;">{{ $taxi->phone }}</td>
+                    <td style="text-align: right;">{{ $taxi->email }}</td>
                     <td style="text-align:left ;">
-
-                        @if ($taxi->payment_number == null)
+                        <div class="d-flex gap-2"style="justify-content: flex-end;">
+                            @if ($taxi->waiting_status == true)
+                                <form action="{{ route('app.formation.print_entrepise_details') }}"method="post">
+                                    @csrf
+                                    <input type="hidden" name="id_entreprise" value="{{ $taxi->id }}">
+                                    <button type="submit" class="btn btn-success">
+                                        إرفاق فاتورة شكلية
+                                    </button>
+                                </form>
+                            @endif
+                            @if ($taxi->waiting_status == true)
+                                <form action="{{ route('app.formation.print_entrepise_details') }}"method="post">
+                                    @csrf
+                                    <input type="hidden" name="id_entreprise" value="{{ $taxi->id }}">
+                                    <button type="submit" style="background-color: rgb(123, 36, 126);color:white;" class="btn">
+                                        طباعة معلومات
+                                    </button>
+                                </form>
+                            @endif
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#ExtralargeModal1"
                                 onclick='handleresoudreclick(@json($taxi), @json($type_insc))'>مستحقات</button>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#ExtralargeModal2"
                                 onclick='handledetailclick(@json($taxi), @json($type_insc))'>معلومات</button>
-                        @else
-                            <div class="d-flex gap-2"style="justify-content: flex-end;">
-                                <form action="{{ route('app.formation.print_attestation') }}"method="post">
-                                    @csrf
-                                    <input type="hidden" name="type_insc" value="{{ $type_insc }}">
-                                    <input type="hidden" name="id_participant" value="{{ $taxi->id }}">
-                                    <button type="submit" class="btn btn-success">طباعة
-                                        استمارة التسجيل / وصل الدفع</button>
-                                </form>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#ExtralargeModal2"
-                                    onclick='handledetailclick(@json($taxi), @json($type_insc))'>معلومات</button>
-                            </div>
-                        @endif
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -131,8 +129,8 @@
                             </div>
                             <h4 style="font-family: 'Tajwal';">المبلغ المدفوع</h4>
                             <div class="form-floating">
-                                <input name="somme_paiement" id="somme_paiement" type="numeric" step="10" required class="form-control"
-                                    style="text-align: start;">
+                                <input name="somme_paiement" id="somme_paiement" type="numeric" step="10" required
+                                    class="form-control" style="text-align: start;">
                                 <label for="somme_paiement">المبلغ المدفوع</label>
                             </div>
                             <h4 class="mt-4" style="font-family: 'Tajwal';">رقم وصل البنك / أمر بالدفع</h4>
@@ -165,18 +163,10 @@
                     <h5 style="font-family: 'Tajwal'">تاريخ التسجيل: <span style="font-weight: bold;"
                             id="detail_date_insc"></span></h5>
                     <div class="d-flex" style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
-                        <h5 style="font-family: 'Tajwal'">رقم التأكيد: <span style="font-weight: bold;"
-                                id="detail_vnumber"></span></h5>
-                        <h5 style="font-family: 'Tajwal'">رقم دفع المستحقات: <span style="font-weight: bold;"
-                                id="detail_pnumber"></span></h5>
-                        <h5 style="font-family: 'Tajwal'">تاريخ دفع المستحقات: <span style="font-weight: bold;"
-                                id="detail_pdate"></span></h5>
-                    </div>
-                    <div class="d-flex" style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
-                        <h5 style="font-family: 'Tajwal'">الإسم واللقب: <span style="font-weight: bold;"
+                        <h5 style="font-family: 'Tajwal'">إسم المؤسسة: <span style="font-weight: bold;"
                                 id="detail_name"></span></h5>
-                        <h5 style="font-family: 'Tajwal'">تاريخ ومكان الميلاد: <span style="font-weight: bold;"
-                                id="detail_birth"></span></h5>
+                        <h5 style="font-family: 'Tajwal'">إسم المسير: <span style="font-weight: bold;"
+                                id="detail_gerant"></span></h5>
                     </div>
 
                     <div class="d-flex" style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
@@ -188,23 +178,23 @@
                         <h5 style="font-family: 'Tajwal'">البريد الالكتروني: <span style="font-weight: bold;"
                                 id="detail_email"></span></h5>
                     </div>
+                    <h5 style="font-family: 'Tajwal';font-weight: bold;">العمال المسجلين:
+                    </h5>
+                    <div class="table-responsive px-4 mb-3">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table">
+                                <tr id="detail_table_header">
 
-                    <div class="d-flex" style="flex-direction: row;justify-content: space-around;margin-bottom:20px;">
-                        <h5 style="font-family: 'Tajwal'">صنف الرخصة: <span style="font-weight: bold;"
-                                id="detail_tpermis"></span>
-                        </h5>
-                        <h5 style="font-family: 'Tajwal'">رقم الرخصة: <span style="font-weight: bold;"
-                                id="detail_npermis"></span></h5>
-                        <h5 style="font-family: 'Tajwal'">تاريخ الحصول على الرخصة: <span style="font-weight: bold;"
-                                id="detail_dpermis"></span></h5>
-                        <h5 style="font-family: 'Tajwal'">مسلمة من طرف: <span style="font-weight: bold;"
-                                id="detail_lpermis"></span></h5>
+                                </tr>
+                            </thead>
+                            <tbody id="detail_table_content">
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">غلق</button>
-                    <button type="submit" class="btn btn-primary">تأكيد</button>
+                    {{-- <button type="submit" class="btn btn-primary">تأكيد</button> --}}
                 </div>
             </div>
         </div>
@@ -227,52 +217,67 @@
             const modal_title = document.getElementById('detail_title');
             const type_insc_input = document.getElementById('type_insc_input');
             const detail_name = document.getElementById('detail_name');
-            const detail_date_insc = document.getElementById('detail_date_insc');
-            const detail_vnumber = document.getElementById('detail_vnumber');
-            const detail_pnumber = document.getElementById('detail_pnumber');
+            const detail_gerant = document.getElementById('detail_gerant');
             const detail_email = document.getElementById('detail_email');
             const detail_phone = document.getElementById('detail_phone');
-            const detail_birth = document.getElementById('detail_birth');
             const detail_adresse = document.getElementById('detail_adresse');
-            const detail_tpermis = document.getElementById('detail_tpermis');
-            const detail_dpermis = document.getElementById('detail_dpermis');
-            const detail_lpermis = document.getElementById('detail_lpermis');
-            const detail_npermis = document.getElementById('detail_npermis');
+            const detail_table_header = document.getElementById('detail_table_header');
+            const detail_table_content = document.getElementById('detail_table_content');
             modal_title.innerHTML = '';
-            modal_title.innerHTML = 'Detail inscription ' + type_insc + ': ' + taxi.nom_fr + ' ' + taxi.prenom_fr;
+            modal_title.innerHTML = 'Detail inscription ' + type_insc + ': ' + taxi.name;
             type_insc_input.innerHTML = '';
             type_insc_input.value = type_insc;
-            detail_date_insc.innerHTML = '';
-            detail_date_insc.innerHTML = taxi.inscription_time;
-            detail_vnumber.innerHTML = '';
-            detail_pnumber.innerHTML = '';
-            if (taxi.validation_number) {
-                detail_vnumber.innerHTML = taxi.validation_number;
-                detail_pnumber.innerHTML = taxi.payment_number;
-                detail_pdate.innerHTML = taxi.date_paiement;
-            } else {
-                detail_vnumber.innerHTML = "لم يتم التأكيد بعد";
-                detail_pnumber.innerHTML = "لم يتم دفع المستحقات بعد";
-                detail_pdate.innerHTML = "لم يتم دفع المستحقات بعد";
-            }
             detail_name.innerHTML = '';
-            detail_name.innerHTML = taxi.nom_ar + ' ' + taxi.prenom_ar;
-            detail_birth.innerHTML = '';
-            detail_birth.innerHTML = taxi.birthdate + ' ' + taxi.birthplace;
+            detail_name.innerHTML = taxi.name;
+            detail_gerant.innerHTML = '';
+            detail_gerant.innerHTML = taxi.gerant;
             detail_adresse.innerHTML = '';
             detail_adresse.innerHTML = taxi.adresse;
             detail_phone.innerHTML = '';
             detail_phone.innerHTML = taxi.phone;
             detail_email.innerHTML = '';
             detail_email.innerHTML = taxi.email;
-            detail_lpermis.innerHTML = '';
-            detail_lpermis.innerHTML = taxi.lieu_permis;
-            detail_dpermis.innerHTML = '';
-            detail_dpermis.innerHTML = taxi.date_permis;
-            detail_npermis.innerHTML = '';
-            detail_npermis.innerHTML = taxi.n_permis;
-            detail_tpermis.innerHTML = '';
-            detail_tpermis.innerHTML = taxi.type_permis;
+            detail_table_header.innerHTML = '';
+            detail_table_content.innerHTML = '';
+            detail_table_header.innerHTML = `  <th>#</th>
+                                        <th>الاسم واللقب</th>
+                                        <th>تاريخ  ومكان الإزدياد</th>
+                                        <th>نوع التسجيل</th>`;
+            i = 0;
+            taxi.count_tper_emps.forEach((e) => {
+                i = i + 1;
+                detail_table_content.innerHTML += `
+                <tr>
+                    <td>${i}</td>    
+                    <td>${e.nom_ar} ${e.prenom_ar}</td>    
+                    <td>${e.birthdate} ${e.birthplace}</td>    
+                    <td>نقل الأشخاص</td>    
+                </tr>
+                `;
+            });
+            taxi.count_tmar_emps.forEach((e) => {
+                i = i + 1;
+                detail_table_content.innerHTML += `
+                <tr>
+                    <td>${i}</td>    
+                    <td>${e.nom_ar} ${e.prenom_ar}</td>    
+                    <td>${e.birthdate} ${e.birthplace}</td>    
+                    <td>نقل البضائع</td>    
+                </tr>
+                `;
+            });
+            taxi.count_tdan_emps.forEach((e) => {
+                i = i + 1;
+                detail_table_content.innerHTML += `
+                <tr>
+                    <td>${i}</td>    
+                    <td>${e.nom_ar} ${e.prenom_ar}</td>    
+                    <td>${e.birthdate} ${e.birthplace}</td>    
+                    <td>نقل المواد الخطرة</td>    
+                </tr>
+                `;
+            });
+
         }
     </script>
 @endsection

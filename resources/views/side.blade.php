@@ -162,8 +162,9 @@
         @if (in_array('confirmer_taxis_prov', $permissions) ||
                 in_array('confirmer_taxis', $permissions) ||
                 in_array('manage_list_taxis', $permissions) ||
-                in_array('manage_transpors', $permissions)||
-                in_array('foramtion_sessions', $permissions))
+                in_array('manage_transpors', $permissions) ||
+                in_array('foramtion_sessions', $permissions)||
+                in_array('formation_entreprises', $permissions))
             <li class="nav-item ">
                 <a class="nav-link collapsed" data-bs-target="#Centre-nav" data-bs-toggle="collapse" href="#">
                     <i class="ri-clipboard-line"></i><span>Centre de Formation</span><i
@@ -210,6 +211,13 @@
                         <li>
                             <a href="{{ route('app.formation.transport_danger') }}">
                                 <i class="bi bi-circle"></i><span>Transport materieux dangereux</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('formation_entreprises', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.transport_entreprises') }}">
+                                <i class="bi bi-circle"></i><span>Entreprises</span>
                             </a>
                         </li>
                     @endif

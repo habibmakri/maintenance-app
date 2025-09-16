@@ -133,8 +133,8 @@ class ctechniqueController extends Controller
         $record = ctechnique_clients::find($request->client_id);
         if ($record) {
             $record->update([
-                'last_remind' => Carbon::now()->toDateString(),
-                'date_controle' => Carbon::now()->toDateString(),
+                'last_remind' => $request->date_update,
+                'date_controle' => $request->date_update,
             ]);
             return redirect()->back()->with('success',  'client mis a jour');
         }

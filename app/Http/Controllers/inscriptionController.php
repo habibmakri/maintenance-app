@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\entreprise;
 use App\Models\taxis;
 use App\Models\taxis_prov;
 use App\Models\tdan;
@@ -9,6 +10,8 @@ use App\Models\tmar;
 use App\Models\tper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Mpdf\Mpdf;
 
 class inscriptionController extends Controller
@@ -33,6 +36,203 @@ class inscriptionController extends Controller
     public function insc_tdan()
     {
         return view('inscription_formation.insc_tdan');
+    }
+    public function insc_entreprise()
+    {
+        return view('inscription_formation.insc_entreprise');
+    }
+    public function add_entreprise(Request $request)
+    {
+        // dd($request);
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'activity' => 'required|string',
+            'gerant' => 'required|string',
+            'adresse' => 'required|string',
+            'phone' => 'required|regex:/^0[1-9][0-9]{7,10}$/',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        // dd($request);
+        $existingByPhone = entreprise::where('phone', $request->phone)->first();
+        if ($existingByPhone) {
+            return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
+        }
+
+        $existingByemail = entreprise::where('email', $request->email)->first();
+        if ($existingByemail) {
+            return back()->withErrors(['email' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+        }
+        $entreprise = Entreprise::create([
+            'name' => $validatedData['name'],
+            'activity' => $validatedData['activity'],
+            'gerant' => $validatedData['gerant'],
+            'adresse' => $validatedData['adresse'],
+            'phone' => $validatedData['phone'],
+            'email' => $validatedData['email'],
+            'nrc' => $request['nrc'],
+            'nif' => $request['nif'],
+            'nis' => $request['nis'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+        // dd($entreprise);
+        session([
+            'can_download_pdf' => $entreprise->id,
+            'pdf_download_expiration' => now()->addMinute()
+        ]);
+        return redirect()->route('inscription.success', ['type_insc' => 'entreprise', 'id' => $entreprise->id, 'password' => $validatedData['password']]);
+    }
+    public function main_entreprise()
+    {
+        return view('inscription_formation.main_entreprise');
+    }
+    public function add_entreprise_emp(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nin' => 'required|digits:18',
+            'phone' => 'required|regex:/^0[5-7][0-9]{8}$/',
+            'gender' => 'required',
+            'nom_ar' => 'required|string',
+            'prenom_ar' => 'required|string',
+            'nom_fr' => 'nullable|string',
+            'prenom_fr' => 'nullable|string',
+            'birthdate' => 'required|date',
+            'birthplace' => 'required|string',
+            'adresse' => 'required|string',
+            'email' => 'nullable|email',
+            'type_permis' => 'required|string',
+            'n_permis' => 'required|string',
+            'date_permis' => 'required|date',
+            'lieu_permis' => 'required|string',
+        ]);
+
+        $entreprise_id = Auth::guard('entreprise')->user()->id;
+        if ($request->type_insc == "tper") {
+            $existingByPhone = tper::where('phone', $request->phone)->first();
+            if ($existingByPhone) {
+                return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
+            }
+
+            $existingByNin = tper::where('nin', $request->nin)->first();
+            if ($existingByNin) {
+                return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+            }
+            $taxi =  tper::create([
+                'nin' => $request->nin,
+                'inscription_time' => Carbon::now('Africa/Algiers'),
+                'phone' => $request->phone,
+                'gender' => $request->gender,
+                'nom_ar' => $request->nom_ar,
+                'prenom_ar' => $request->prenom_ar,
+                'nom_fr' => $request->nom_fr,
+                'prenom_fr' => $request->prenom_fr,
+                'birthdate' => $request->birthdate,
+                'birthplace' => $request->birthplace,
+                'adresse' => $request->adresse,
+                'email' => $request->email,
+                'n_permis' => $request->n_permis,
+                'date_permis' => $request->date_permis,
+                'lieu_permis' => $request->lieu_permis,
+                'type_permis' => $request->type_permis,
+                'entreprise_id' => $entreprise_id,
+                'ip_adress' => $request->ip(),
+            ]);
+            return  back()->with('success', $taxi->nom_fr . ' Ajouté avec succés');
+        } elseif ($request->type_insc == "tmar") {
+            $existingByPhone = tmar::where('phone', $request->phone)->first();
+            if ($existingByPhone) {
+                return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
+            }
+
+            $existingByNin = tmar::where('nin', $request->nin)->first();
+            if ($existingByNin) {
+                return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+            }
+            $taxi =  tmar::create([
+                'nin' => $request->nin,
+                'inscription_time' => Carbon::now('Africa/Algiers'),
+                'phone' => $request->phone,
+                'gender' => $request->gender,
+                'nom_ar' => $request->nom_ar,
+                'prenom_ar' => $request->prenom_ar,
+                'nom_fr' => $request->nom_fr,
+                'prenom_fr' => $request->prenom_fr,
+                'birthdate' => $request->birthdate,
+                'birthplace' => $request->birthplace,
+                'adresse' => $request->adresse,
+                'email' => $request->email,
+                'n_permis' => $request->n_permis,
+                'date_permis' => $request->date_permis,
+                'lieu_permis' => $request->lieu_permis,
+                'type_permis' => $request->type_permis,
+                'entreprise_id' => $entreprise_id,
+                'ip_adress' => $request->ip(),
+            ]);
+            return  back()->with('success', $taxi->nom_fr . ' Ajouté avec succés');
+        } elseif ($request->type_insc == "tdan") {
+            $existingByPhone = tdan::where('phone', $request->phone)->first();
+            if ($existingByPhone) {
+                return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
+            }
+
+            $existingByNin = tdan::where('nin', $request->nin)->first();
+            if ($existingByNin) {
+                return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+            }
+            $taxi =  tdan::create([
+                'nin' => $request->nin,
+                'inscription_time' => Carbon::now('Africa/Algiers'),
+                'phone' => $request->phone,
+                'gender' => $request->gender,
+                'nom_ar' => $request->nom_ar,
+                'prenom_ar' => $request->prenom_ar,
+                'nom_fr' => $request->nom_fr,
+                'prenom_fr' => $request->prenom_fr,
+                'birthdate' => $request->birthdate,
+                'birthplace' => $request->birthplace,
+                'adresse' => $request->adresse,
+                'email' => $request->email,
+                'n_permis' => $request->n_permis,
+                'date_permis' => $request->date_permis,
+                'lieu_permis' => $request->lieu_permis,
+                'type_permis' => $request->type_permis,
+                'entreprise_id' => $entreprise_id,
+                'ip_adress' => $request->ip(),
+            ]);
+            return  back()->with('success', $taxi->nom_fr . ' Ajouté avec succés');
+        } else {
+            return  back()->with('error', 'Erreur');
+        }
+    }
+    public function demande_proformat()
+    {
+        $entreprise = Auth::guard('entreprise')->user();
+        $entreprise->update([
+            'waiting_status' => true,
+        ]);
+        return  back()->with('success', ' Proformat demandé');
+    }
+    public function login_entreprise()
+    {
+        if (Auth::guard('entreprise')->check()) {
+            Auth::guard('entreprise')->logout();
+            return redirect()->route('inscription.login_entreprise')->withErrors("session déconnecté");
+        }
+        return view('inscription_formation.login_entreprise');
+    }
+    public function do_login_entreprise(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'    => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+        if (Auth::guard('entreprise')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended(route('inscription.main_entreprise'));
+        }
+        return back()->withErrors([
+            'email' => 'Informations invalides',
+        ])->onlyInput('email');
     }
     public function add_taxi(Request $request)
     {
@@ -165,17 +365,17 @@ class inscriptionController extends Controller
             'date_permis' => 'required|date',
             'lieu_permis' => 'required|string',
         ]);
-    
+
         $existingByPhone = tmar::where('phone', $request->phone)->first();
         if ($existingByPhone) {
             return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
         }
-    
+
         $existingByNin = tmar::where('nin', $request->nin)->first();
         if ($existingByNin) {
             return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
         }
-    
+
         $taxi =  tmar::create([
             'nin' => $request->nin,
             'inscription_time' => Carbon::now('Africa/Algiers'),
@@ -220,17 +420,17 @@ class inscriptionController extends Controller
             'date_permis' => 'required|date',
             'lieu_permis' => 'required|string',
         ]);
-    
+
         $existingByPhone = tdan::where('phone', $request->phone)->first();
         if ($existingByPhone) {
             return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
         }
-    
+
         $existingByNin = tdan::where('nin', $request->nin)->first();
         if ($existingByNin) {
             return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
         }
-    
+
         $taxi =  tdan::create([
             'nin' => $request->nin,
             'inscription_time' => Carbon::now('Africa/Algiers'),
@@ -258,7 +458,7 @@ class inscriptionController extends Controller
     }
 
 
-    public function dynamic_success($type_insc, $id)
+    public function dynamic_success($type_insc, $id, Request $request)
     {
         if ($type_insc === 'taxi') {
             $taxi = taxis::findOrFail($id);
@@ -276,22 +476,26 @@ class inscriptionController extends Controller
             $taxi = tdan::findOrFail($id);
             return view('inscription_formation.dynamic_success', compact('type_insc', 'taxi'));
         }
+        if ($type_insc === 'entreprise') {
+            $password = $request->password;
+            $taxi = entreprise::findOrFail($id);
+            return view('inscription_formation.dynamic_success', compact('type_insc', 'taxi', 'password'));
+        }
     }
-    public function dynamic_downloadPdf($type_insc, $id)
+    public function dynamic_downloadPdf($type_insc, $id, Request $request)
     {
         $allowedId = session('can_download_pdf');
         $expiration = session('pdf_download_expiration');
+        // if (!$allowedId || $allowedId != $id || !$expiration) {
+        //     abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
+        // }
 
-        if (!$allowedId || $allowedId != $id || !$expiration) {
-            abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
-        }
+        // $expiration = Carbon::parse($expiration);
 
-        $expiration = Carbon::parse($expiration);
-
-        if (now()->greaterThan($expiration)) {
-            session()->forget(['can_download_pdf', 'pdf_download_expiration']);
-            abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
-        }
+        // if (now()->greaterThan($expiration)) {
+        //     session()->forget(['can_download_pdf', 'pdf_download_expiration']);
+        //     abort(403, 'انتهت صلاحية رابط التحميل أو الوصول غير مصرح به.');
+        // }
         if ($type_insc === 'taxi') {
             $item = taxis::findOrFail($id);
         }
@@ -304,10 +508,13 @@ class inscriptionController extends Controller
         if ($type_insc === 'tdan') {
             $item = tdan::findOrFail($id);
         }
-        return $this->dynamic_create_pdf($type_insc, $item);
+        if ($type_insc === 'entreprise') {
+            $item = entreprise::findOrFail($id);
+        }
+        return $this->dynamic_create_pdf($type_insc, $item, $request->password);
     }
 
-    function dynamic_create_pdf($type_insc, $taxi)
+    function dynamic_create_pdf($type_insc, $taxi, $password = null)
     {
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
@@ -329,15 +536,19 @@ class inscriptionController extends Controller
             'autoScriptToLang' => true,
             'autoLangToFont' => true,
         ]);
-        // $imagePath = public_path('/LOGO ETUS.png');
         if ($type_insc == 'taxi') {
             $html = view('inscription_formation.recu_taxi', compact(['taxi']))->render();
+        } elseif ($type_insc == 'tper' || $type_insc == 'tdan' || $type_insc == 'tmar') {
+            $html = view('inscription_formation.recu_dynamic', compact(['type_insc', 'taxi']))->render();
+        } else {
+            $imagePath = public_path('/LOGO ETUS.png');
+            $html = view('inscription_formation.recu_entreprise', compact(['type_insc', 'taxi', 'password']))->render();
+            $mpdf->AddPage();
+            $mpdf->Image($imagePath, 15, 20, 30, 30, 'png');
         }
-        else {
-            $html = view('inscription_formation.recu_dynamic', compact(['type_insc','taxi']))->render();
+        if ($type_insc == 'taxi' || $type_insc == 'tper' || $type_insc == 'tdan' || $type_insc == 'tmar') {
+            $mpdf->AddPage();
         }
-        $mpdf->AddPage();
-        // $mpdf->Image($imagePath, 20, 20, 20, 20, 'png');
         $mpdf->SetY(10);
         date_default_timezone_set('Africa/Algiers');
         $htmlFooter = "

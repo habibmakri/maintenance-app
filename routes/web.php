@@ -12,6 +12,7 @@ use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
 use App\Http\Controllers\personelleController;
 use App\Http\Controllers\securiteController;
+use App\Http\Middleware\CheckEntreprise;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -175,6 +176,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('formation/danger', 'transport_danger')->name('transport_danger')->middleware('rolesMiddleware:manage_transpors');
         Route::post('formation/valider', 'valider_transport')->name('valider_transport')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/formation_taxi', 'taxis')->name('formation_taxi')->middleware('rolesMiddleware:manage_transpors');
+        Route::post('formation/print_attestation', 'print_attestation')->name('print_attestation')->middleware('rolesMiddleware:manage_transpors');
         Route::get('formation/foramtion_sessions', 'foramtion_sessions')->name('foramtion_sessions')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/create_foramtion_sessions', 'do_create_foramtion_sessions')->name('create_foramtion_sessions')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/print_list_session', 'print_list_session')->name('print_list_session')->middleware('rolesMiddleware:foramtion_sessions');
@@ -182,11 +184,24 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('formation/save-draft',  'save_draft')->name('save_draft')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/print_detail_session', 'print_detail_session')->name('print_detail_session')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/print_delibiration', 'print_delibiration')->name('print_delibiration')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/print_delibiration_fiches', 'print_delibiration_fiches')->name('print_delibiration_fiches')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/print_notes_paper', 'print_notes_paper')->name('print_notes_paper')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/print_presence_paper', 'print_presence_paper')->name('print_presence_paper')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/print_diplomes', 'print_diplomes')->name('print_diplomes')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::get('formation/entreprises', 'transport_entreprises')->name('transport_entreprises')->middleware('rolesMiddleware:formation_entreprises');
+        Route::post('formation/entrepise_details', 'print_entrepise_details')->name('print_entrepise_details')->middleware('rolesMiddleware:foramtion_sessions');
 
     });
 });
 Route::prefix('/inscription')->controller(MaintenanceController::class)->name('inscription.')->group(function () {
     Route::get('/', [inscriptionController::class, 'inscription'])->name('inscription_formation');
+    Route::get('/insc_entreprise', [inscriptionController::class, 'insc_entreprise'])->name('inscription_entreprise');
+    Route::post('/insc_entreprise', [inscriptionController::class, 'add_entreprise']);
+    Route::get('/main_entreprise', [inscriptionController::class, 'main_entreprise'])->middleware(CheckEntreprise::class)->name('main_entreprise');
+    Route::post('/add_entreprise_emp', [inscriptionController::class, 'add_entreprise_emp'])->middleware(CheckEntreprise::class)->name('add_entreprise_emp');
+    Route::post('/demande_proformat', [inscriptionController::class, 'demande_proformat'])->middleware(CheckEntreprise::class)->name('demande_proformat');
+    Route::get('/login_entreprise', [inscriptionController::class, 'login_entreprise'])->name('login_entreprise');
+    Route::post('/login_entreprise', [inscriptionController::class, 'do_login_entreprise']);
     Route::get('/insc_taxi', [inscriptionController::class, 'insc_taxi'])->name('inscription_taxi');
     Route::post('/insc_taxi', [inscriptionController::class, 'add_taxi']);
     Route::get('/insc_tper', [inscriptionController::class, 'insc_tper'])->name('inscription_tper');

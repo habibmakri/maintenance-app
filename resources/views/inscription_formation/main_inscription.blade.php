@@ -214,7 +214,17 @@
                         <p>
                             يمكنك من خلال هذا القسم فتح حساب لتسجيل عمال مؤسستكم في مركز تكوين مؤسستنا.
                         </p>
-                        <a href="#">فتح حساب</a>
+                        <a href="{{ route('inscription.inscription_entreprise') }}">فتح حساب</a>
+                    </div>
+
+                </div>
+                <div class="container mt-4">
+                    <div class="tab-card">
+                        <h1>الدخول إلى  الحساب الخاص بالمؤسسة</h1>
+                        <p>
+                            يمكنك من خلال هذا القسم الدخول إلى  الحساب لتسجيل عمال مؤسستكم في مركز تكوين مؤسستنا.
+                        </p>
+                        <a href="{{ route('inscription.login_entreprise') }}">الدخول إلى  الحساب</a>
                     </div>
 
                 </div>

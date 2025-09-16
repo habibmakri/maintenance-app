@@ -40,7 +40,7 @@
                 transform: translateY(0);
             }
         </style>
-
+    @if ($type_insc != 'entreprise')
         <div style="text-align: center; margin-top: 50px;">
             <h2 style="color: green;">✔ ثم التسجيل بنجاح</h2>
             <p>يرجى الانتظار قليلاً، سيتم تحميل الوصل تلقائيًا.</p>
@@ -57,5 +57,28 @@
                 window.open("{{ route('inscription.download', [$type_insc,$taxi->id]) }}", "_blank");
             };
         </script>
+    @else
+        <div style="text-align: center; margin-top: 50px;">
+            <h2 style="color: green;">✔ ثم التسجيل بنجاح</h2>
+            <p>يرجى الانتظار قليلاً، سيتم تحميل الوصل تلقائيًا.</p>
+            <p>
+                <a href="{{ route('inscription.download', [$type_insc, $taxi->id]) }}?password={{ $password }}" target="_blank"
+                    style="color: red; font-weight: bold;">
+                    إضغط هنا إذا لم يتم تحميل الوصل تلقائيًا
+                </a>
+                <br>
+                <a href="{{ route('inscription.login_entreprise') }}" target="_blank"
+                    style="color: blue; font-weight: bold;">
+                    إضغط هنا للدخول للحساب
+                </a>
+            </p>
+        </div>
+
+        <script>
+            window.onload = function() {
+                window.open("{{ route('inscription.download', [$type_insc,$taxi->id]) }}?password={{ $password }}", "_blank");
+            };
+        </script>
+    @endif
     </main>
 @endsection
