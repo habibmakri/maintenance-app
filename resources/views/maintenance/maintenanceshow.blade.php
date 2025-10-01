@@ -386,7 +386,8 @@
                                 <option value="" disabled selected>selectionner le Bus</option>
                                 @foreach ($buses as $bus)
                                     <option value="{{ $bus->id }}">{{ $bus->name }}</option>
-                                @endforeach
+                                    @endforeach
+                                    <option value="0">Tous Les Bus</option>
                             </select>
                             <label for="launguepdf">Bus</label>
                         </div>

@@ -527,7 +527,7 @@ class maintenanceController extends Controller
         // dd($vidanges[0]);
         $buses = Bus::all();
         $agents = maintenance_agent::all();
-        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air', 'Huile 10w40', 'Huile 5w30','Filtre séparateur'])->get();
+        $pieces = pieces_maintanance::whereIn('name', ['Huile 15w40', 'Filtre Gasoile WK723', 'Filtre Gasoile GS150', 'Filtre à huile', 'Filtre à huile Hydrolique', 'Huile G3', 'Huile W10', 'Huile W90', 'Filtre à air', 'Huile 10w40', 'Huile 5w30', 'Filtre séparateur'])->get();
         $typevidanges = Panne::where('type', '=', 'vidange')->get();
         return view('maintenance.vidange', compact(['vidanges', 'buses', 'agents', 'pieces', 'typevidanges']));
     }
@@ -2662,7 +2662,7 @@ class maintenanceController extends Controller
         $vidange = [];
         $vidange_pond = [];
         $vidange_boite = [];
-        if ($typepanne == "tous" ||$typepanne == "mecanique") {
+        if ($typepanne == "tous" || $typepanne == "mecanique") {
 
             foreach ($buses as $bus) {
                 if (($bus->kmactuelle - $bus->derniervidangepond) > 100000) {
@@ -2835,111 +2835,320 @@ class maintenanceController extends Controller
     //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
     //     ]);
     // }
+    // public function generate_suivibus_pdf(Request $request)
+    // {
+    //     $request->validate([
+    //         'buspdf' => 'required|exists:buses,id',
+    //         'month' => 'required',
+    //         'year' => 'required',
+    //     ]);
+
+    //     $month = $request->month;
+    //     $year = $request->year;
+    //     $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+    //     $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+    //     $months_fr_array = [
+    //         1 => 'Janvier',
+    //         2 => 'Février',
+    //         3 => 'Mars',
+    //         4 => 'Avril',
+    //         5 => 'Mai',
+    //         6 => 'Juin',
+    //         7 => 'Juillet',
+    //         8 => 'Août',
+    //         9 => 'Septembre',
+    //         10 => 'Octobre',
+    //         11 => 'Novembre',
+    //         12 => 'Décembre'
+    //     ];
+    //     $monthName = $months_fr_array[$month] . $year;
+
+    //     $bus = Bus::with([
+    //         'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+    //             $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+    //         },
+    //         'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+    //             $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+    //         }
+    //     ])->find($request->buspdf);
+
+    //     if (!$bus) {
+    //         abort(404, 'Bus not found.');
+    //     }
+
+
+    //     $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+
+    //     $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
+
+    //     $pannes = $fiches->map(function ($panne) use ($bus) {
+    //         return [
+    //             'name' => $panne->pannename->name,
+    //             'bus' => $bus->name,
+    //             'date' => $panne->date_resoudre,
+    //             'description' => $panne->description,
+    //             'used_pieces' => $panne->used_pieces,
+    //             'type' => $panne->pannename->type,
+    //             'equipe' => $panne->equipe,
+    //             'brigade' => $panne->brigade,
+    //             'lieu' => $panne->lieu_resoudre,
+    //             'item' => 'Panne',
+    //         ];
+    //     });
+
+    //     $traveauxTransformed = $traveaux->map(function ($panne) use ($bus) {
+    //         return [
+    //             'name' => $panne->name,
+    //             'bus' => $bus->name,
+    //             'date' => $panne->date_resoudre,
+    //             'description' => $panne->description,
+    //             'used_pieces' => $panne->used_pieces,
+    //             'type' => $panne->nature,
+    //             'equipe' => $panne->equipe,
+    //             'brigade' => $panne->brigade,
+    //             'lieu' => $panne->lieu_resoudre,
+    //             'item' => 'T E',
+    //         ];
+    //     });
+
+    //     $pannes = $pannes->merge($traveauxTransformed)->sortBy('date');
+
+    //     // dd($total);
+
+    //     $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
+
+    //     $mpdf = new Mpdf([
+    //         'format' => 'A4',
+    //         // 'tempDir' => sys_get_temp_dir(),
+    //     ]);
+    //     $imagePath = public_path('/LOGO ETUS.png');
+    //     $mpdf->AddPage();
+    //     $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+    //     $mpdf->SetY(10);
+    //     date_default_timezone_set('Africa/Algiers');
+    //     $currentdate = date('H:i:s d-m-Y');
+    //     $htmlFooter = "
+    //     <div style='text-align: right; font-size: 12px;'>
+    //         Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+    //     </div>
+    //     ";
+    //     $nomfichier = 'Fiche suivi ' . $bus->name . ' - ' . $monthName  . '.pdf';
+
+    //     $mpdf->SetHTMLFooter($htmlFooter);
+    //     $mpdf->WriteHTML($html);
+    //     return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+    //         'Content-Type' => 'application/pdf',
+    //         'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+    //     ]);
+    // }
     public function generate_suivibus_pdf(Request $request)
     {
         $request->validate([
-            'buspdf' => 'required|exists:buses,id',
+            // 'buspdf' => 'required|exists:buses,id',
+            'buspdf' => 'required',
             'month' => 'required',
             'year' => 'required',
         ]);
 
-        $month = $request->month;
-        $year = $request->year;
-        $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
-        $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
-        $months_fr_array = [
-            1 => 'Janvier',
-            2 => 'Février',
-            3 => 'Mars',
-            4 => 'Avril',
-            5 => 'Mai',
-            6 => 'Juin',
-            7 => 'Juillet',
-            8 => 'Août',
-            9 => 'Septembre',
-            10 => 'Octobre',
-            11 => 'Novembre',
-            12 => 'Décembre'
-        ];
-        $monthName = $months_fr_array[$month] . $year;
-
-        $bus = Bus::with([
-            'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
-                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
-            },
-            'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
-                $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
-            }
-        ])->find($request->buspdf);
-
-        if (!$bus) {
-            abort(404, 'Bus not found.');
-        }
-
-
-        $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
-
-        $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
-
-        $pannes = $fiches->map(function ($panne) use ($bus) {
-            return [
-                'name' => $panne->pannename->name,
-                'bus' => $bus->name,
-                'date' => $panne->date_resoudre,
-                'description' => $panne->description,
-                'used_pieces' => $panne->used_pieces,
-                'type' => $panne->pannename->type,
-                'equipe' => $panne->equipe,
-                'brigade' => $panne->brigade,
-                'lieu' => $panne->lieu_resoudre,
-                'item' => 'Panne',
+        if ($request->buspdf == 0) {
+            $month = $request->month;
+            $year = $request->year;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            $months_fr_array = [
+                1 => 'Janvier',
+                2 => 'Février',
+                3 => 'Mars',
+                4 => 'Avril',
+                5 => 'Mai',
+                6 => 'Juin',
+                7 => 'Juillet',
+                8 => 'Août',
+                9 => 'Septembre',
+                10 => 'Octobre',
+                11 => 'Novembre',
+                12 => 'Décembre'
             ];
-        });
-
-        $traveauxTransformed = $traveaux->map(function ($panne) use ($bus) {
-            return [
-                'name' => $panne->name,
-                'bus' => $bus->name,
-                'date' => $panne->date_resoudre,
-                'description' => $panne->description,
-                'used_pieces' => $panne->used_pieces,
-                'type' => $panne->nature,
-                'equipe' => $panne->equipe,
-                'brigade' => $panne->brigade,
-                'lieu' => $panne->lieu_resoudre,
-                'item' => 'T E',
-            ];
-        });
-
-        $pannes = $pannes->merge($traveauxTransformed)->sortBy('date');
-
-        // dd($total);
-
-        $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
-
-        $mpdf = new Mpdf([
-            'format' => 'A4',
-            // 'tempDir' => sys_get_temp_dir(),
-        ]);
-        $imagePath = public_path('/LOGO ETUS.png');
-        $mpdf->AddPage();
-        $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
-        $mpdf->SetY(10);
-        date_default_timezone_set('Africa/Algiers');
-        $currentdate = date('H:i:s d-m-Y');
-        $htmlFooter = "
+            $monthName = $months_fr_array[$month] . $year;
+            $buses = Bus::all();
+            date_default_timezone_set('Africa/Algiers');
+            $currentdate = date('H:i:s d-m-Y');
+            $htmlFooter = "
         <div style='text-align: right; font-size: 12px;'>
             Généré le: $currentdate | Page {PAGENO} sur {nbpg}
         </div>
         ";
-        $nomfichier = 'Fiche suivi ' . $bus->name . ' - ' . $monthName  . '.pdf';
+            $nomfichier = 'Fiche suivi tous les bus ' . $monthName  . '.pdf';
+            $mpdf = new Mpdf([
+                    'format' => 'A4',
+                    // 'tempDir' => sys_get_temp_dir(),
+                ]);
+            foreach ($buses as $bus) {
+                $bus = Bus::with([
+                    'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+                        $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+                    },
+                    'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+                        $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+                    }
+                ])->find($bus->id);
 
-        $mpdf->SetHTMLFooter($htmlFooter);
-        $mpdf->WriteHTML($html);
-        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
-        ]);
+                if (!$bus) {
+                    abort(404, 'Bus not found.');
+                }
+
+
+                $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+
+                $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
+
+                $pannes = $fiches->map(function ($panne) use ($bus) {
+                    return [
+                        'name' => $panne->pannename->name,
+                        'bus' => $bus->name,
+                        'date' => $panne->date_resoudre,
+                        'description' => $panne->description,
+                        'used_pieces' => $panne->used_pieces,
+                        'type' => $panne->pannename->type,
+                        'equipe' => $panne->equipe,
+                        'brigade' => $panne->brigade,
+                        'lieu' => $panne->lieu_resoudre,
+                        'item' => 'Panne',
+                    ];
+                });
+
+                $traveauxTransformed = $traveaux->map(function ($panne) use ($bus) {
+                    return [
+                        'name' => $panne->name,
+                        'bus' => $bus->name,
+                        'date' => $panne->date_resoudre,
+                        'description' => $panne->description,
+                        'used_pieces' => $panne->used_pieces,
+                        'type' => $panne->nature,
+                        'equipe' => $panne->equipe,
+                        'brigade' => $panne->brigade,
+                        'lieu' => $panne->lieu_resoudre,
+                        'item' => 'T E',
+                    ];
+                });
+
+                $pannes = $pannes->merge($traveauxTransformed)->sortBy('date');
+
+                // dd($total);
+
+                $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
+
+                
+                $imagePath = public_path('/LOGO ETUS.png');
+                $mpdf->AddPage();
+                $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+                $mpdf->SetY(10);
+                $mpdf->SetHTMLFooter($htmlFooter);
+                $mpdf->WriteHTML($html);
+            }
+            return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+            ]);
+        } else {
+            $month = $request->month;
+            $year = $request->year;
+            $firstDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->startOfMonth()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y-m', "{$year}-{$month}")->endOfMonth()->format('Y-m-d');
+            $months_fr_array = [
+                1 => 'Janvier',
+                2 => 'Février',
+                3 => 'Mars',
+                4 => 'Avril',
+                5 => 'Mai',
+                6 => 'Juin',
+                7 => 'Juillet',
+                8 => 'Août',
+                9 => 'Septembre',
+                10 => 'Octobre',
+                11 => 'Novembre',
+                12 => 'Décembre'
+            ];
+            $monthName = $months_fr_array[$month] . $year;
+
+            $bus = Bus::with([
+                'maintenanceRecords.fichepanne' => function ($query) use ($firstDay, $lastDay) {
+                    $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+                },
+                'traveauxlibre' => function ($query) use ($firstDay, $lastDay) {
+                    $query->whereBetween('date_resoudre', [$firstDay, $lastDay]);
+                }
+            ])->find($request->buspdf);
+
+            if (!$bus) {
+                abort(404, 'Bus not found.');
+            }
+
+
+            $fiches = $bus->maintenanceRecords->pluck('fichepanne')->flatten()->sortBy('date_resoudre');
+
+            $traveaux = $bus->traveauxlibre->sortBy('date_resoudre');
+
+            $pannes = $fiches->map(function ($panne) use ($bus) {
+                return [
+                    'name' => $panne->pannename->name,
+                    'bus' => $bus->name,
+                    'date' => $panne->date_resoudre,
+                    'description' => $panne->description,
+                    'used_pieces' => $panne->used_pieces,
+                    'type' => $panne->pannename->type,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'lieu' => $panne->lieu_resoudre,
+                    'item' => 'Panne',
+                ];
+            });
+
+            $traveauxTransformed = $traveaux->map(function ($panne) use ($bus) {
+                return [
+                    'name' => $panne->name,
+                    'bus' => $bus->name,
+                    'date' => $panne->date_resoudre,
+                    'description' => $panne->description,
+                    'used_pieces' => $panne->used_pieces,
+                    'type' => $panne->nature,
+                    'equipe' => $panne->equipe,
+                    'brigade' => $panne->brigade,
+                    'lieu' => $panne->lieu_resoudre,
+                    'item' => 'T E',
+                ];
+            });
+
+            $pannes = $pannes->merge($traveauxTransformed)->sortBy('date');
+
+            // dd($total);
+
+            $html = view('maintenance.etatsuivibus_pdf', compact('pannes', 'bus', 'monthName'))->render();
+
+            $mpdf = new Mpdf([
+                'format' => 'A4',
+                // 'tempDir' => sys_get_temp_dir(),
+            ]);
+            $imagePath = public_path('/LOGO ETUS.png');
+            $mpdf->AddPage();
+            $mpdf->Image($imagePath, 20, 15, 22, 22, 'png');
+            $mpdf->SetY(10);
+            date_default_timezone_set('Africa/Algiers');
+            $currentdate = date('H:i:s d-m-Y');
+            $htmlFooter = "
+        <div style='text-align: right; font-size: 12px;'>
+            Généré le: $currentdate | Page {PAGENO} sur {nbpg}
+        </div>
+        ";
+            $nomfichier = 'Fiche suivi ' . $bus->name . ' - ' . $monthName  . '.pdf';
+
+            $mpdf->SetHTMLFooter($htmlFooter);
+            $mpdf->WriteHTML($html);
+            return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+            ]);
+        }
     }
     public function generate_Pannerapport_PDF(Request $request)
     {
