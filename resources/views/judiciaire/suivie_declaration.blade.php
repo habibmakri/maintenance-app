@@ -65,6 +65,7 @@
                         <th style="text-align: right;">التاريخ</th>
                         <th style="text-align: right;">السائق</th>
                         <th style="text-align: right;">الحافلة</th>
+                        <th style="text-align: right;">الخسائر</th>
                         <th style="text-align: right;">CAAT</th>
                         <th style="text-align: right;">تعويض</th>
                         {{-- <th>اللجنة</th> --}}
@@ -79,6 +80,7 @@
                             <td>{{ $declaration->time_day }}</td>
                             <td>{{ $declaration->chauffeur->name }}</td>
                             <td>{{ $declaration->bus->name }}</td>
+                            <td>{{ $declaration->pertes }}</td>
                             <td>
                                 @if ($declaration->caat == true)
                                     مصرح
@@ -210,6 +212,7 @@
                         <th style="text-align: right;">التاريخ</th>
                         <th style="text-align: right;">السائق</th>
                         <th style="text-align: right;">الحافلة</th>
+                        <th style="text-align: right;">الخسائر</th>
                         <th style="text-align: right;">CAAT</th>
                         <th style="text-align: right;">تعويض</th>
                         {{-- <th>اللجنة</th> --}}
@@ -224,6 +227,7 @@
                             <td>{{ $declaration->time_day }}</td>
                             <td>{{ $declaration->chauffeur->name }}</td>
                             <td>{{ $declaration->bus->name }} </td>
+                            <td>{{ $declaration->pertes }}</td>
                             <td>
                                 @if ($declaration->caat == true)
                                     مصرح
