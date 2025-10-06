@@ -60,10 +60,11 @@
         <p style="margin: 0px;font-size:12px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
         <p style="margin: 0px;font-size:12px;">ETUS- SIDI BEL ABBES</p>
         <p style="margin: 0px;font-size:12px;">SERVICE DE LA MAINTENANCE</p>
-        <h3>TRAVAUX <span style="text-transform: uppercase">{{ $typepanne }}</span> DÉCLARÉ NON REPARÉS</h3>
+        <h3>TRAVAUX DÉCLARÉ NON REPARÉS</h3>
     </div>
     {{-- <div style="margin-bottom: 13%;margin-left: 20%;"class="header">
     </div> --}}
+    <h3 style="text-transform: uppercase;font-size:24px;margin-left: 32%;"> TRAVAUX {{ $typepanne }} </h3>
     @php
         $totals = ['E' => 0, 'M' => 0, 'T' => 0];
     @endphp
