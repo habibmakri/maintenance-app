@@ -2697,7 +2697,7 @@ class maintenanceController extends Controller
             }
         }
         // dd($data);
-        $html = view('maintenance.pannecour_pdf', compact('data', 'vidange', 'vidange_pond', 'vidange_boite'))->render();
+        $html = view('maintenance.pannecour_pdf', compact('data', 'vidange', 'vidange_pond', 'vidange_boite','typepanne'))->render();
 
         $mpdf = new Mpdf([
             'format' => 'A4',

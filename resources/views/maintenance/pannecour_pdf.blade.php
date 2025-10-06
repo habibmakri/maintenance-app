@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
+        /* body {
             font-family: Arial, sans-serif;
+        } */
+        body {
+            font-family: Cambria, serif;
+            font-style: italic;
         }
 
         table {
@@ -50,9 +54,16 @@
 </head>
 
 <body>
-    <div style="margin-bottom: 13%;margin-left: 20%;"class="header">
-        <h3>TRAVAUX DÉCLARÉ NON REPARÉS</h3>
+    <div style="margin-bottom: 7%;margin-left: 20%;"class="header">
+        <p style="margin: 0px; font-size:12px;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
+        <p style="margin: 0px;font-size:12px;">MINISTERE DES TRANSPORTS</p>
+        <p style="margin: 0px;font-size:12px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
+        <p style="margin: 0px;font-size:12px;">ETUS- SIDI BEL ABBES</p>
+        <p style="margin: 0px;font-size:12px;">SERVICE DE LA MAINTENANCE</p>
+        <h3>TRAVAUX <span style="text-transform: uppercase">{{ $typepanne }}</span> DÉCLARÉ NON REPARÉS</h3>
     </div>
+    {{-- <div style="margin-bottom: 13%;margin-left: 20%;"class="header">
+    </div> --}}
     @php
         $totals = ['E' => 0, 'M' => 0, 'T' => 0];
     @endphp
