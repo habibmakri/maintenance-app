@@ -55,16 +55,16 @@
 
 <body>
     <div style="margin-bottom: 7%;margin-left: 20%;"class="header">
-        <p style="margin: 0px; font-size:12px;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
-        <p style="margin: 0px;font-size:12px;">MINISTERE DES TRANSPORTS</p>
-        <p style="margin: 0px;font-size:12px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
-        <p style="margin: 0px;font-size:12px;">ETUS- SIDI BEL ABBES</p>
-        <p style="margin: 0px;font-size:12px;">SERVICE DE LA MAINTENANCE</p>
+        <p style="margin: 0px; font-size:16px;">REPUBLIQUE ALGERIENNE DEMOCRATIQUE ET POPULAIRE</p>
+        <p style="margin: 0px;font-size:16px;">MINISTERE DES TRANSPORTS</p>
+        <p style="margin: 0px;font-size:16px;">ETABLISSEMENT PUBLIC DE TRANSPORT URBAIN ET SUBURBAIN</p>
+        <p style="margin: 0px;font-size:16px;">ETUS- SIDI BEL ABBES</p>
+        <p style="margin: 0px;font-size:16px;">SERVICE DE LA MAINTENANCE</p>
         <h3>TRAVAUX DÉCLARÉ NON REPARÉS</h3>
     </div>
     {{-- <div style="margin-bottom: 13%;margin-left: 20%;"class="header">
     </div> --}}
-    <h3 style="text-transform: uppercase;font-size:24px;margin-left: 32%;"> TRAVAUX {{ $typepanne }} </h3>
+    <h3 style="text-transform: uppercase;font-size:30px;text-align: center;"> TRAVAUX {{ $typepanne }} </h3>
     @php
         $totals = ['E' => 0, 'M' => 0, 'T' => 0];
     @endphp
@@ -108,6 +108,7 @@
     </table>
 
     {{-- <h5 style="margin: 5px;">{{ $monthName }}</h5> --}}
+    @if ($typepanne == 'tous')
     <table style="font-size:10px;">
         <thead>
             <tr>
@@ -127,9 +128,10 @@
             </tr>
         </tbody>
     </table>
+    @endif
 
     @if (count($vidange) > 0)
-        <h4>Vidange Moteur (> 8000 km)</h4>
+        <h3 style="text-transform: uppercase;font-size:28px;text-align: center;"> Vidange Moteur (> 8000 km)</h3>
         <table style="font-size:10px;">
             <thead>
                 <tr>
@@ -149,7 +151,7 @@
     @endif
 
     @if (count($vidange_pond) > 0)
-        <h4>Vidange Pont (> 100000 km)</h4>
+        <h3 style="text-transform: uppercase;font-size:28px;text-align: center;">Vidange Pont (> 100000 km)</h3>
         <table style="font-size:10px;">
             <thead>
                 <tr>
@@ -169,7 +171,7 @@
     @endif
 
     @if (count($vidange_boite) > 0)
-        <h4>Vidange Boîte (V8 > 50000 km, L5 > 30000 km)</h4>
+        <h3 style="text-transform: uppercase;font-size:25px;text-align: center;">Vidange Boîte (V8 > 50000 km, L5 > 30000 km)</h3>
         <table style="font-size:10px;">
             <thead>
                 <tr>
