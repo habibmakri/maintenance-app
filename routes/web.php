@@ -137,6 +137,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('judiciaire_extraire', 'judiciaire_extraire')->name('extraire')->middleware('rolesMiddleware:judiciaire_out');
         Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
         Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
+        Route::post('judiciaire/accident_nonpaye', 'etat_accident_nonpaye')->name('accident_nonpaye');
+        Route::post('judiciaire/chauffeur_pasaccident', 'etat_chauffeur_pasaccident')->name('chauffeur_pasaccident');
         Route::get('judiciaire_commission', 'judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
         Route::post('judiciaire_commission', 'add_judiciaire_commission')->middleware('rolesMiddleware:judiciaire_commission');
         Route::post('judiciaire/commission_word', 'generate_commission_word')->name('commission_word');
@@ -189,7 +191,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('formation/print_presence_paper', 'print_presence_paper')->name('print_presence_paper')->middleware('rolesMiddleware:foramtion_sessions');
         Route::post('formation/print_diplomes', 'print_diplomes')->name('print_diplomes')->middleware('rolesMiddleware:foramtion_sessions');
         Route::get('formation/entreprises', 'transport_entreprises')->name('transport_entreprises')->middleware('rolesMiddleware:formation_entreprises');
-        Route::post('formation/entrepise_details', 'print_entrepise_details')->name('print_entrepise_details')->middleware('rolesMiddleware:foramtion_sessions');
+        Route::post('formation/entrepise_details', 'print_entrepise_details')->name('print_entrepise_details')->middleware('rolesMiddleware:formation_entreprises');
+        Route::post('formation/entrepise_paiement', 'entrepise_paiement')->name('entrepise_paiement')->middleware('rolesMiddleware:formation_entreprises');
 
     });
 });

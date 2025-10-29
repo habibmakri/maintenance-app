@@ -76,17 +76,23 @@
                     @if ($type_insc == 'Carnet Taxi')
                         <td style="text-align: right;">{{ $taxi->list_m->counter }}</td>
                     @endif
-                    <td style="text-align: right;">{{ $taxi->nom_ar }}</td>
+                    <td style="text-align: right;">{{ $taxi->nom_ar }} - <span style="color:red;">
+                        @if ($taxi->entreprise_id != null)
+                            مؤسسة {{ App\Models\entreprise::find($taxi->entreprise_id)->name }}
+                        @endif
+                        </span>
+                    </td>
                     <td style="text-align: right;">{{ $taxi->prenom_ar }}</td>
                     <td style="text-align: right;">{{ $taxi->birthdate . '  ' . $taxi->birthplace }}</td>
                     <td style="text-align: right;">{{ $taxi->adresse }}</td>
                     <td style="text-align: right;">{{ $taxi->phone }}</td>
                     <td style="text-align:left ;">
-
                         @if ($taxi->payment_number == null)
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#ExtralargeModal1"
-                                onclick='handleresoudreclick(@json($taxi), @json($type_insc))'>مستحقات</button>
+                            @if ($taxi->entreprise_id == null)
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#ExtralargeModal1"
+                                    onclick='handleresoudreclick(@json($taxi), @json($type_insc))'>مستحقات</button>
+                            @endif
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#ExtralargeModal2"
                                 onclick='handledetailclick(@json($taxi), @json($type_insc))'>معلومات</button>
@@ -131,8 +137,8 @@
                             </div>
                             <h4 style="font-family: 'Tajwal';">المبلغ المدفوع</h4>
                             <div class="form-floating">
-                                <input name="somme_paiement" id="somme_paiement" type="numeric" step="10" required class="form-control"
-                                    style="text-align: start;">
+                                <input name="somme_paiement" id="somme_paiement" type="numeric" step="10" required
+                                    class="form-control" style="text-align: start;">
                                 <label for="somme_paiement">المبلغ المدفوع</label>
                             </div>
                             <h4 class="mt-4" style="font-family: 'Tajwal';">رقم وصل البنك / أمر بالدفع</h4>

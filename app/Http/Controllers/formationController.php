@@ -172,19 +172,19 @@ class formationController extends Controller
     // }
     public function transport_personne()
     {
-        $taxis = tper::whereNull('entreprise_id')->get();
+        $taxis = tper::all();
         $type_insc = "Tansport personne";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
     public function transport_marchandise()
     {
-        $taxis = tmar::whereNull('entreprise_id')->get();
+        $taxis = tmar::all();
         $type_insc = "Tansport Marchendise";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
     public function transport_danger()
     {
-        $taxis = tdan::whereNull('entreprise_id')->get();
+        $taxis = tdan::all();
         $type_insc = "Tansport Materieux Dangereux";
         return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
     }
@@ -192,7 +192,87 @@ class formationController extends Controller
     {
         $taxis = entreprise::with(['count_tper_emps', 'count_tdan_emps', 'count_tmar_emps'])->get();
         $type_insc = "Entreprises";
+        // dd($taxis[2]->getTotalEmps() ,$taxis[2]->getNonPaidEmps());
         return view('formation.entreprises', compact(['type_insc', 'taxis']));
+    }
+    public function entrepise_paiement(Request $request)
+    {
+        $request->validate([
+            'enteprise_id' => 'required',
+            'date' => 'required',
+            'cheque_number' => 'required',
+            'emp_id' => 'required',
+            'emp_type' => 'required',
+            'montant' => 'required',
+        ]);
+        $emp_ids = $request->emp_id;
+        $emp_types = $request->emp_type;
+        $montants = $request->montant;
+        $montants_total = 0;
+        $entreprise = entreprise::find($request->enteprise_id);
+        if(array_sum($montants) == 0){
+                return redirect()->back()->with('error', 'Montant 0');
+        };
+        if (!$entreprise) {
+            return redirect()->back()->with('error', 'Erreur invalide.');
+        }
+        $payment_number = $this->getNextFormattedNumber('Payment', $request->date);
+        $count = count($emp_ids);
+
+        for ($i = 0; $i < $count; $i++) {
+            $emp_id = $emp_ids[$i];
+            $emp_type = $emp_types[$i];
+            $montant = $montants[$i];
+            
+            if ($montant == 0){
+                continue;
+            }
+            if ($emp_type == 'tper') {
+                $emp = tper::findOrFail($emp_id);
+                $validation_number = $this->getNextFormattedNumber('Tansport_personne', $request->date);
+                $emp->update([
+                    'validation_number' => $validation_number,
+                    'payment_number' => $payment_number,
+                    'cheque_number' => $request->cheque_number,
+                    'montant_paiement' => $montant,
+                    'date_paiement' => $request->date,
+                ]);
+            } elseif ($emp_type == 'tmar') {
+                $emp = tmar::findOrFail($emp_id);
+                $validation_number = $this->getNextFormattedNumber('Tansport_Marchendise', $request->date);
+                $emp->update([
+                    'validation_number' => $validation_number,
+                    'payment_number' => $payment_number,
+                    'cheque_number' => $request->cheque_number,
+                    'montant_paiement' => $montant,
+                    'date_paiement' => $request->date,
+                ]);
+            } elseif ($emp_type == 'tdan') {
+                $emp = tdan::findOrFail($emp_id);
+                $validation_number = $this->getNextFormattedNumber('Tansport_Materieux_Dangereux', $request->date);
+                $emp->update([
+                    'validation_number' => $validation_number,
+                    'payment_number' => $payment_number,
+                    'cheque_number' => $request->cheque_number,
+                    'montant_paiement' => $montant,
+                    'date_paiement' => $request->date,
+                ]);
+            } else {
+                return redirect()->back()->with('error', 'Erreur invalide.');
+            }
+            $montants_total += $montant;
+        }
+        $payments = json_decode($entreprise->payments, true) ?? [];
+
+        $payments[] = [
+            'payment_number' => $payment_number,
+            'date' => $request->date,
+            'montant' => $montants_total,
+        ];
+        $entreprise->payments = json_encode($payments);
+        $entreprise->save();
+        
+        return redirect()->back()->with('success', 'Payement validé avec succés.');
     }
     public function print_entrepise_details(Request $request)
     {
@@ -234,7 +314,7 @@ class formationController extends Controller
         صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
         </div>
         ";
-        $nomfichier = 'مؤسسة '.$item->name.'.pdf';
+        $nomfichier = 'مؤسسة ' . $item->name . '.pdf';
 
         $mpdf->SetHTMLFooter($htmlFooter);
         $mpdf->WriteHTML($html);
@@ -355,7 +435,7 @@ class formationController extends Controller
             'session_id' => 'required',
         ]);
         $list = formation_sessions::find($request->session_id);
-       
+
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
 
