@@ -31,6 +31,7 @@ class formation_sessions extends Model
         'tper' => \App\Models\tper::class,
         'tmar' => \App\Models\tmar::class,
         'tdan' => \App\Models\tdan::class,
+        'mae' => \App\Models\autoecole::class,
     ];
     public function count_models($type): HasMany
     {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\autoecole;
+use App\Models\autoecole_list;
 use App\Models\counters_formation;
 use App\Models\entreprise;
 use App\Models\formation_sessions;
@@ -155,6 +157,134 @@ class formationController extends Controller
         ]);
     }
 
+
+    public function inscription_autoecole()
+    {
+        $taxis = autoecole::all();
+        $list = autoecole_list::whereNull('valid_date')->first();
+        return view('formation.autoecole', compact(['taxis', 'list']));
+    }
+    public function manage_list_autoecole()
+    {
+        $lists = autoecole_list::all();
+        $allConfirmed = autoecole_list::all()->every(function ($taxi) {
+            return !is_null($taxi->valid_date);
+        });
+        return view('formation.autoecole_list', compact(['lists', 'allConfirmed']));
+    }
+
+    public function create_list_autoecole()
+    {
+        $date = Carbon::now()->toDateString();
+        $allConfirmed = autoecole_list::all()->every(function ($taxi) {
+            return !is_null($taxi->valid_date);
+        });
+        if ($allConfirmed) {
+            $validation_number = $this->getNextFormattedNumber('List_Autoecole', $date);
+            autoecole_list::create([
+                'counter' => $validation_number
+            ]);
+            return redirect()->back()->with('success',  'Liste créé');
+        }
+        return redirect()->back()->with('error',  'erreur');
+    }
+
+    public function do_confirmer_autoecole(Request $request)
+    {
+        $request->validate([
+            'taxi_id' => 'required||exists:autoecole,id'
+        ]);
+
+        $list = autoecole_list::whereNull('valid_date')->first();
+        $taxi = autoecole::findOrFail($request->taxi_id);
+
+        if ($list) {
+            $taxi->update([
+                'list' => $list->id
+            ]);
+            return redirect()->back()->with('success',  $taxi->nom_fr . ' ' . $taxi->prenom_fr . 'confirmer avec succés: liste' . $list->counter);
+        } else {
+            return redirect()->back()->with('error', 'Erreur');
+        }
+    }
+
+    public function do_confirmer_list_autoecole(Request $request)
+    {
+        $request->validate([
+            'list_id' => 'required||exists:autoecole_list,id'
+        ]);
+
+        $list = autoecole_list::findOrFail($request->list_id);
+
+        if ($list) {
+            $list->update([
+                'valid_date' => Carbon::now()->toDateString(),
+            ]);
+            return redirect()->back()->with('success',  $list->counter . 'confirmer avec succés.');
+        } else {
+            return redirect()->back()->with('error', 'Erreur');
+        }
+    }
+
+    public function ajouter_autoecole(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nin' => 'required|digits:18',
+            'phone' => 'required|regex:/^0[5-7][0-9]{8}$/',
+            'gender' => 'required',
+            'nom_ar' => 'required|string',
+            'prenom_ar' => 'required|string',
+            'nom_fr' => 'nullable|string',
+            'prenom_fr' => 'nullable|string',
+            'birthdate' => 'required|date',
+            'birthplace' => 'required|string',
+            'adresse' => 'required|string',
+            'email' => 'nullable|email',
+            'type' => 'nullable',
+        ]);
+
+        $existingByPhone = autoecole::where('phone', $request->phone)->first();
+        if ($existingByPhone) {
+            return back()->withErrors(['phone' => 'رقم الهاتف مستخدم مسبقًا.'])->withInput();
+        }
+
+        $existingByNin = autoecole::where('nin', $request->nin)->first();
+        if ($existingByNin) {
+            return back()->withErrors(['nin' => 'هذا الرقم الوطني مسجل مسبقًا.'])->withInput();
+        }
+
+        $taxi =  autoecole::create([
+            'nin' => $request->nin,
+            'inscription_time' => Carbon::now('Africa/Algiers'),
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'nom_ar' => $request->nom_ar,
+            'prenom_ar' => $request->prenom_ar,
+            'nom_fr' => $request->nom_fr,
+            'prenom_fr' => $request->prenom_fr,
+            'birthdate' => $request->birthdate,
+            'birthplace' => $request->birthplace,
+            'adresse' => $request->adresse,
+            'email' => $request->email,
+            'type' => $request->type,
+            'list' => null,
+        ]);
+        return redirect()->back()->with('success', "Autoecole Ajouté");
+    }
+
+    public function autoecole()
+    {
+        $taxis = autoecole::query()->leftJoin('autoecole_list', 'autoecole.list', '=', 'autoecole_list.id')
+            ->whereNotNull('autoecole_list.valid_date')->select('autoecole.*')->get();
+        $type_insc = "Moniteur Auto Ecole";
+        // dd($taxis);
+        return view('formation.participants_dynamique', compact(['type_insc', 'taxis']));
+    }
+
+
+
+
+
     public function taxis()
     {
         $taxis = taxis::query()->leftJoin('taxis_list', 'taxis.list', '=', 'taxis_list.id')
@@ -210,8 +340,8 @@ class formationController extends Controller
         $montants = $request->montant;
         $montants_total = 0;
         $entreprise = entreprise::find($request->enteprise_id);
-        if(array_sum($montants) == 0){
-                return redirect()->back()->with('error', 'Montant 0');
+        if (array_sum($montants) == 0) {
+            return redirect()->back()->with('error', 'Montant 0');
         };
         if (!$entreprise) {
             return redirect()->back()->with('error', 'Erreur invalide.');
@@ -223,8 +353,8 @@ class formationController extends Controller
             $emp_id = $emp_ids[$i];
             $emp_type = $emp_types[$i];
             $montant = $montants[$i];
-            
-            if ($montant == 0){
+
+            if ($montant == 0) {
                 continue;
             }
             if ($emp_type == 'tper') {
@@ -271,7 +401,7 @@ class formationController extends Controller
         ];
         $entreprise->payments = json_encode($payments);
         $entreprise->save();
-        
+
         return redirect()->back()->with('success', 'Payement validé avec succés.');
     }
     public function print_entrepise_details(Request $request)
@@ -339,8 +469,11 @@ class formationController extends Controller
         $tdan = tdan::query()
             ->whereNotNull('payment_number')
             ->whereNull('session_id')->get();
+        $mae = autoecole::query()
+            ->whereNotNull('payment_number')
+            ->whereNull('session_id')->get();
         // dd($taxis, $tper, $tmar, $tdan);
-        return view('formation.formation_sessions', compact(['lists', 'taxis', 'tper', 'tmar', 'tdan']));
+        return view('formation.formation_sessions', compact(['lists', 'taxis', 'tper', 'tmar', 'tdan','mae']));
     }
     public function do_create_foramtion_sessions(Request $request)
     {
@@ -348,7 +481,7 @@ class formationController extends Controller
             'participants' => 'required|array|min:1',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after:date_debut',
-            'type_insc' => 'required|in:taxis,tper,tmar,tdan',
+            'type_insc' => 'required|in:taxis,tper,tmar,tdan,mae',
         ]);
         if ($request->type_insc == "taxis") {
             $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
@@ -419,6 +552,25 @@ class formationController extends Controller
             ]);
             foreach ($request->participants as $participant) {
                 $record = tdan::find($participant);
+                if ($record) {
+                    $record->update([
+                        'session_id' => $formation->id,
+                    ]);
+                }
+            }
+            return redirect()->back()->with('succes', 'Formation' . $request->type_insc . ' ' . $formation_number . 'Créé avec succes.');
+        }elseif ($request->type_insc == "mae") {
+            $formation_number = $this->getNextFormattedNumber('Formation_' . $request->type_insc, $request->date_debut);
+            $formation = formation_sessions::create([
+                'type' => $request->type_insc,
+                'counter' => $formation_number,
+                'groups' => $request->groups,
+                'profs' => json_encode($request->profs, JSON_UNESCAPED_UNICODE),
+                'date_debut' => $request->date_debut,
+                'date_fin' => $request->date_fin,
+            ]);
+            foreach ($request->participants as $participant) {
+                $record = autoecole::find($participant);
                 if ($record) {
                     $record->update([
                         'session_id' => $formation->id,
@@ -864,6 +1016,7 @@ class formationController extends Controller
             'tper'  => \App\Models\tper::class,
             'tmar'  => \App\Models\tmar::class,
             'tdan'  => \App\Models\tdan::class,
+            'mae'  => \App\Models\autoecole::class,
         ];
 
         $type = $request->session_type;
@@ -905,6 +1058,7 @@ class formationController extends Controller
             'tper'  => \App\Models\tper::class,
             'tmar'  => \App\Models\tmar::class,
             'tdan'  => \App\Models\tdan::class,
+            'mae'  => \App\Models\autoecole::class,
         ];
 
         $type = $request->session_type;
@@ -964,6 +1118,8 @@ class formationController extends Controller
             $participant = tdan::find($request->id_participant);
         } else if ($request->type_insc == 'Carnet Taxi') {
             $participant = taxis::find($request->id_participant);
+        } else if ($request->type_insc == 'Moniteur Auto Ecole') {
+            $participant = autoecole::find($request->id_participant);
         }
         // dd($participant);
         if (!$participant) {
@@ -988,6 +1144,8 @@ class formationController extends Controller
             return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
         } else if ($request->type_insc == 'Carnet Taxi') {
             return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
+        } else if ($request->type_insc == 'Moniteur Auto Ecole') {
+            return redirect()->back()->with('success', $participant->nom_fr . ' ' . $participant->prenom_fr . ' Validé avec succes!');
         }
     }
 
@@ -1007,6 +1165,8 @@ class formationController extends Controller
             $item = tdan::find($request->id_participant);
         } else if ($request->type_insc == 'Carnet Taxi') {
             $item = taxis::find($request->id_participant);
+        } else if ($request->type_insc == 'Moniteur Auto Ecole') {
+            $item = autoecole::find($request->id_participant);
         }
         // $mpdf = new Mpdf([
         //     'format' => 'A4',

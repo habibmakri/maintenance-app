@@ -171,13 +171,13 @@
                         class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="Centre-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    @if (in_array('confirmer_taxis_prov', $permissions))
+                    {{-- @if (in_array('confirmer_taxis_prov', $permissions))
                         <li>
                             <a href="{{ route('app.formation.confirmer_taxis_prov') }}">
                                 <i class="bi bi-circle"></i><span>Confirmer Taxis 2025</span>
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
                     @if (in_array('confirmer_taxis', $permissions))
                         <li>
                             <a href="{{ route('app.formation.confirmer_taxis') }}">
@@ -185,10 +185,24 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('inscription_autoecole', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.inscription_autoecole') }}">
+                                <i class="bi bi-circle"></i><span>AUTO ECOLE</span>
+                            </a>
+                        </li>
+                    @endif
                     @if (in_array('manage_list_taxis', $permissions))
                         <li>
                             <a href="{{ route('app.formation.manage_list_taxis') }}">
                                 <i class="bi bi-circle"></i><span>Liste Taxis</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('manage_list_autoecole', $permissions))
+                        <li>
+                            <a href="{{ route('app.formation.manage_list_autoecole') }}">
+                                <i class="bi bi-circle"></i><span>Liste AUTO ECOLE</span>
                             </a>
                         </li>
                     @endif
@@ -211,6 +225,11 @@
                         <li>
                             <a href="{{ route('app.formation.transport_danger') }}">
                                 <i class="bi bi-circle"></i><span>Transport materieux dangereux</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('app.formation.formation_autoecole') }}">
+                                <i class="bi bi-circle"></i><span>Auto ECOLE</span>
                             </a>
                         </li>
                     @endif

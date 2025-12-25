@@ -150,7 +150,7 @@
                                     <div class="d-flex pb-2 align-items-center"
                                         style="justify-content: space-around; border-bottom: solid black 1px">
                                         <p class="mb-0 w-15 text-truncate">
-                                            @if ($declaration->chauffeur->id == 80)
+                                            @if ($declaration->chauffeur->id == 80 || $declaration->chauffeur->id == 93)
                                                 {{ explode(':', $declaration->description)[0] . ' - ' }}
                                             @endif {{ $declaration->chauffeur->name }}
                                         </p>
@@ -336,7 +336,7 @@
                 let responsabilite = e.responsability ? "من سائق" : "ليس من سائق";
                 let chauffeurName = e.chauffeur.name;
                 let role = "السائق";
-                if (e.id_chauffeur == 80 && e.description) {
+                if ((e.id_chauffeur == 80 && e.description)||(e.id_chauffeur == 93 && e.description)) {
                     chauffeurName = e.description.split(':')[0] + ' - ' + chauffeurName;
                     responsabilite = e.responsability ? "من عامل" : "ليس من العامل";
                     role = "العامل";

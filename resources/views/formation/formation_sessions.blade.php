@@ -65,6 +65,10 @@
                 onclick='handlecreateclick("tdan")'>
                 إفتتاح دورة نقل مواد خطرة
             </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal1"
+                onclick='handlecreateclick("mae")'>
+                إفتتاح دورة ممرني السياقة
+            </button>
         </div>
     </div>
     <div class="modal fade" id="ExtralargeModal1" tabindex="-1"
@@ -175,6 +179,8 @@
                         <td style="text-align: right;">نقل البضائع</td>
                     @elseif($list->type == 'tdan')
                         <td style="text-align: right;">نقل المواد الخطرة</td>
+                    @elseif($list->type == 'mae')
+                        <td style="text-align: right;">ممرني السياقة</td>
                     @endif
                     <td style="text-align: right;">{{ $list->counter }}</td>
                     <td style="text-align: right;">{{ $count }}</td>
@@ -369,7 +375,8 @@
             taxis: @json($taxis),
             tper: @json($tper),
             tmar: @json($tmar),
-            tdan: @json($tdan)
+            tdan: @json($tdan),
+            mae: @json($mae)
         };
         const modulestypes = {
             taxis: ['التنظيم المتعلق بالإستغلال', 'مبادئ في ميكانيك السيارة', 'سلوك سائق سيارة الأجرة',
@@ -386,6 +393,8 @@
             tdan: ['التنظيم المتعلق بنقل المواد الخطرة عبر الطرقات',
                 'الشروط المرتبطة بمركبات نقل المواد الخطرة عبر الطرقات',
                 'الشروط المرتبطة بالأمن أثناء نقل نقل المواد الخطرة عبر الطرقات'
+            ],
+            mae: ['التقنية الأساسية للمركبة ذات المحرك','حركة المرور في الطرق','الوقاية والسلامة في الطرق','حسن سياقة السيارات','الإتصال وبيداغوجية السياقة','بعد النقل والجانب التنظيمي النتعلق بالنقل','التسيير والإعلام الآلي'
             ]
         };
 
@@ -433,7 +442,8 @@
                 taxis: "Ouverture session formation Taxis",
                 tper: "Ouverture session formation Transport personnes",
                 tmar: "Ouverture session formation Transport marchandise",
-                tdan: "Ouverture session formation Transport materieaux dangereux"
+                tdan: "Ouverture session formation Transport materieaux dangereux",
+                mae:"Ouverture session formation Moniteur Auto Ecole"
             };
             document.getElementById('validation_title').innerText = titleMap[type];
         }

@@ -193,6 +193,14 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('formation/entreprises', 'transport_entreprises')->name('transport_entreprises')->middleware('rolesMiddleware:formation_entreprises');
         Route::post('formation/entrepise_details', 'print_entrepise_details')->name('print_entrepise_details')->middleware('rolesMiddleware:formation_entreprises');
         Route::post('formation/entrepise_paiement', 'entrepise_paiement')->name('entrepise_paiement')->middleware('rolesMiddleware:formation_entreprises');
+        Route::get('formation/autoecole', 'inscription_autoecole')->name('inscription_autoecole')->middleware('rolesMiddleware:inscription_autoecole');
+        Route::get('formation/list_autoecole', 'manage_list_autoecole')->name('manage_list_autoecole')->middleware('rolesMiddleware:manage_list_autoecole');
+        Route::post('formation/ajouter_autoecole', 'ajouter_autoecole')->name('ajouter_autoecole')->middleware('rolesMiddleware:inscription_autoecole');
+        Route::get('formation/create_list_autoecole', 'create_list_autoecole')->name('create_list_autoecole')->middleware('rolesMiddleware:manage_list_autoecole');
+        Route::post('formation/confirmer_autoecole', 'do_confirmer_autoecole')->name('confirmer_autoecole')->middleware('rolesMiddleware:inscription_autoecole');
+        Route::post('formation/confirmer_list_autoecole', 'do_confirmer_list_autoecole')->name('do_confirmer_list_autoecole')->middleware('rolesMiddleware:manage_list_autoecole');
+        Route::get('formation/formation_autoecole', 'autoecole')->name('formation_autoecole')->middleware('rolesMiddleware:manage_transpors');
+        
 
     });
 });
