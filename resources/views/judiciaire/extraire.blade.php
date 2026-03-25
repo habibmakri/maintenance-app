@@ -247,6 +247,26 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">تحميل</button>
                 </form>
             </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;" dir="rtl">
+                <h5 class="mt-5" style = "font-family: 'Tajwal';font-weight: bold">إختر السنة لإستخراج الحوادث بالخسائر المصرح بها عند CAAT والتي لم تعوض بعد:</h5>
+                <form class="row g-3" action="{{ route('app.judiciaire.accident_nonpaye_nonpertes') }}" method="post" >
+                    @csrf
+                    <div class="col-md-10">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>إختر السنة</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                                <option value="0">الكل</option>
+                            </select>
+                            <label for="year">السنة</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">تحميل</button>
+                </form>
+            </div>
 
 
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;" dir="rtl">

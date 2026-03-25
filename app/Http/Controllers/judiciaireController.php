@@ -419,7 +419,7 @@ class judiciaireController extends Controller
         $templateProcessor->setValue('accidents number', self::numberToArabicWords(count($accidents)));
         $tableData = [];
         foreach ($accidents as $accident) {
-            if ($accident->id_chauffeur == 80 ||$accident->id_chauffeur == 93) {
+            if ($accident->id_chauffeur == 80 || $accident->id_chauffeur == 93) {
                 $resposablity = $accident->responsability ? 'من العامل' : 'ليس من العامل';
             } else {
                 $resposablity = $accident->responsability ? 'من اسائق' : 'ليس من السائق';
@@ -559,6 +559,71 @@ class judiciaireController extends Controller
             $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
             $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
             $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])->where('caat', true)->where('paye', false)->get();
+        }
+
+        // dd($declarations);
+        // $mpdf = new Mpdf([
+        //     'format' => 'A4',
+        // ]);
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new Mpdf([
+            'fontDir' => array_merge($fontDirs, [
+                public_path('theme/fonts/sakkal-majalla-2'),
+            ]),
+            'directionality' => 'rtl',
+            'fontdata' => $fontData + [
+                'sakkal' => [
+                    'R' => 'majalla.ttf',
+                ],
+            ],
+            'default_font' => 'sakkal',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+        ]);
+
+        $html = view('judiciaire.etat_accident_nonpaye', compact(['year', 'declarations']))->render();
+        $imagePath = public_path('/LOGO ETUS.png');
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 230, 12, 25, 25, 'png');
+        $mpdf->SetY(10);
+        date_default_timezone_set('Africa/Algiers');
+        $currentdate = date('H:i:s d-m-Y');
+        $htmlFooter = "
+        <div style='text-align: left; font-size: 12px;' >
+        صفحة {PAGENO} من {nbpg}  <span>  ثم إستخراج الملف في $currentdate </span>
+        </div>
+        ";
+        $nomfichier = 'لائحة الصيانة من_.pdf';
+
+        $mpdf->SetHTMLFooter($htmlFooter);
+        $mpdf->WriteHTML($html);
+
+        return response()->make($mpdf->Output($nomfichier, 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomfichier . '"',
+        ]);
+    }
+    public function etat_accident_nonpaye_nonpertes(Request $request)
+    {
+        $request->validate([
+            'year' => 'required',
+        ]);
+        $year = $request->input('year');
+        if ($year == 0) {
+            $declarations = declaration_judiciaire::where('caat', true)->where('paye', false)->get();
+        } else {
+            $firstDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->startOfYear()->format('Y-m-d');
+            $lastDay = \Carbon\Carbon::createFromFormat('Y', "{$year}")->endOfYear()->format('Y-m-d');
+            // $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])->where('caat', true)->where('paye', false)->get();
+            $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])
+                ->where('caat', true)
+                ->where('paye', false)
+                ->where('pertes', 'like', '%دون خسائر%')
+                ->get();
         }
 
         // dd($declarations);

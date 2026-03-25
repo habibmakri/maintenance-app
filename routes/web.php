@@ -138,6 +138,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('judiciaire/etat_accident', 'etat_accident')->name('etat_accident');
         Route::post('judiciaire/naccident_chauffeur', 'etat_naccident_chauffeur')->name('naccident_chauffeur');
         Route::post('judiciaire/accident_nonpaye', 'etat_accident_nonpaye')->name('accident_nonpaye');
+        Route::post('judiciaire/accident_nonpaye_nonpertes', 'etat_accident_nonpaye_nonpertes')->name('accident_nonpaye_nonpertes');
         Route::post('judiciaire/chauffeur_pasaccident', 'etat_chauffeur_pasaccident')->name('chauffeur_pasaccident');
         Route::get('judiciaire_commission', 'judiciaire_commission')->name('commission')->middleware('rolesMiddleware:judiciaire_commission');
         Route::post('judiciaire_commission', 'add_judiciaire_commission')->middleware('rolesMiddleware:judiciaire_commission');
