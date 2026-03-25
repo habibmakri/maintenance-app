@@ -622,7 +622,7 @@ class judiciaireController extends Controller
             $declarations = declaration_judiciaire::whereBetween('time_day', [$firstDay, $lastDay])
                 ->where('caat', true)
                 ->where('paye', false)
-                ->where('pertes', 'like', '%دون خسائر%')
+                ->where('pertes', 'not like', '%دون خسائر%')
                 ->get();
         }
 
