@@ -78,7 +78,7 @@
                     @foreach ($declarations as $declaration)
                         <tr
                             @if ($declaration->caat) style="border-color: green;" @else style="border-color: red;" @endif>
-                            <td>{{ date('Y', strtotime($declaration->date_fiche)) }}/{{ $declaration->number }}</td>
+                            <td>{{ date('Y', strtotime($declaration->time_day)) }}/{{ $declaration->number }}</td>
                             <td>{{ $declaration->time_day }}</td>
                             <td>{{ $declaration->chauffeur->name }}</td>
                             <td>{{ $declaration->bus->name }}</td>

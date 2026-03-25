@@ -76,7 +76,7 @@
         <tbody>
             @foreach ($declarations as $declaration)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($declaration->date_fiche)->format('Y') .'/'.$declaration->number }}</td>
+                    <td>{{ \Carbon\Carbon::parse($declaration->time_day)->format('Y') .'/'.$declaration->number }}</td>
                     <td>{{ \Carbon\Carbon::parse($declaration->time_day)->format('Y/m/d') }}</td>
                     <td>{{ $declaration->chauffeur->name }}</td>
                     <td>{{ $declaration->bus->name }}</td>
