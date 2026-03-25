@@ -66,10 +66,10 @@
         <thead>
             <tr>
                 <td style="font-weight: bold">الرقم</td>
-                <td style="font-weight: bold">التاريخ</td>
+                {{-- <td style="font-weight: bold">التاريخ</td> --}}
                 <td style="font-weight: bold">السائق</td>
                 <td style="font-weight: bold">الحافلة</td>
-                <td style="font-weight: bold">المكان</td>
+                <td style="font-weight: bold">الخسائر</td>
                 <td style="font-weight: bold">الوقت</td>
                 <td style="font-weight: bold">التصريح لدى التأمينات</td>
             </tr>
@@ -78,10 +78,10 @@
             @foreach ($declarations as $declaration)
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($declaration->time_day)->format('Y') .'/'.$declaration->number }}</td>
-                    <td>{{ \Carbon\Carbon::parse($declaration->time_day)->format('Y/m/d') }}</td>
+                    {{-- <td>{{ \Carbon\Carbon::parse($declaration->time_day)->format('Y/m/d') }}</td> --}}
                     <td>{{ $declaration->chauffeur->name }}</td>
                     <td>{{ $declaration->bus->name }}</td>
-                    <td>{{ $declaration->place }}</td>
+                    <td>{{ $declaration->pertes }}</td>
                     <td>{{ \Carbon\Carbon::parse($declaration->date_paye)->format('H:i') }}</td>
                     <td> @if($declaration->caat)صرح يوم {{$declaration->date_caat}} @else لم يتم التصريح @endif</td>
                 </tr>
