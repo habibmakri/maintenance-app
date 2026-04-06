@@ -563,6 +563,57 @@
                 </form>
             </div>
             <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
+                <h5 class="mt-5">Sélectionner Huile ou Eau pour l'extraction de l'état consomation sans vidange Par jour:</h5>
+                <form class="row g-3" action="{{ route('app.maintenance.etat_piece_sansvidange_jour_pdf') }}" method="post">
+                    @csrf
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select class="form-select" required name="piece" id="piece"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner la piece</option>
+                                <option value="2" >Huile 15w40</option>
+                                <option value="9" >GLACIOLE</option>
+                            </select>
+                            <label for="piece">Piece</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <select class="form-select" required name="month" id="month"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner le mois</option>
+                                <option value="1">Janvier</option>
+                                <option value="2">Février</option>
+                                <option value="3">Mars</option>
+                                <option value="4">Avril</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juin</option>
+                                <option value="7">Juillet</option>
+                                <option value="8">Août</option>
+                                <option value="9">Septembre</option>
+                                <option value="10">Octobre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Décembre</option>
+                            </select>
+                            <label for="month">Mois</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <select class="form-select" required name="year" id="year"
+                                aria-label="Floating label select example">
+                                <option value="" disabled selected>Sélectionner l'année</option>
+                                @for ($i = date('Y'); $i >= 2024; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                            <label for="year">Année</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
+                </form>
+            </div>
+            <div style="border-bottom: solid;border-block-width: 2px;padding-bottom: 10px;">
                 <h5 class="mt-5">Sélectionner Huile ou Eau pour l'extraction de l'état consomation sans vidange:</h5>
                 <form class="row g-3" action="{{ route('app.maintenance.etat_piece_sansvidange_pdf') }}" method="post">
                     @csrf
@@ -613,6 +664,7 @@
                     <button type="submit" class="btn btn-outline-primary col-md-2">Télécharger</button>
                 </form>
             </div>
+            
         </div>
         <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
             <h5 class="mt-2">Selectionner la date:</h5>

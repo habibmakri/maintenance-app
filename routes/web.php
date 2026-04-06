@@ -67,6 +67,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance/grandtraveaux_pdf', 'generate_grandtraveaux_pdf')->name('grandtraveaux_pdf');
         Route::post('maintenance/etat_piece_pdf', 'generate_etat_piece_pdf')->name('etat_piece_pdf');
         Route::post('maintenance/etat_piece_sansvidange_pdf', 'generate_etat_piece_sansvidange_pdf')->name('etat_piece_sansvidange_pdf');
+        Route::post('maintenance/etat_piece_sansvidange_jour_pdf', 'generate_etat_piece_sansvidange_jour_pdf')->name('etat_piece_sansvidange_jour_pdf');
         Route::post('maintenance/panneencour_pdf', 'generate_panneencour_pdf')->name('panneencours_pdf');
         Route::post('maintenance/etat_vidange_pdf', 'generate_etat_vidange_pdf')->name('etat_vidange_pdf');
         Route::post('maintenance/fiche_suivie_vidange_pdf', 'generate_fiche_suivie_vidange_pdf')->name('fiche_suivie_vidange_pdf');
