@@ -574,6 +574,8 @@
                                 <option value="2" >Huile 15w40</option>
                                 <option value="9" >GLACIOLE</option>
                                 <option value="8" >Huile G3</option>
+                                <option value="7" >Huile W90</option>
+                                <option value="6" >Huile W10</option>
                             </select>
                             <label for="piece">Piece</label>
                         </div>
