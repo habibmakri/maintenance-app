@@ -573,6 +573,7 @@
                                 <option value="" disabled selected>Sélectionner la piece</option>
                                 <option value="2" >Huile 15w40</option>
                                 <option value="9" >GLACIOLE</option>
+                                <option value="8" >Huile G3</option>
                             </select>
                             <label for="piece">Piece</label>
                         </div>
