@@ -69,6 +69,13 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('maintenance_cgasoile', $permissions))
+                        <li>
+                            <a href="{{ route('app.maintenance.cartes_gasoile') }}">
+                                <i class="bi bi-circle"></i><span>Carte Gasoile</span>
+                            </a>
+                        </li>
+                    @endif
                     @if (in_array('maintenance_out', $permissions))
                         <li>
                             <a href="{{ route('app.maintenance.maintenance_show') }}">
@@ -134,16 +141,23 @@
                         </li>
                     @endif
                     @if (in_array('manage_panne', $permissions))
-                        <li>
-                            <a href="{{ route('app.gestion.manage_panne') }}">
-                                <i class="bi bi-circle"></i><span>Gestion des pannes</span>
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ route('app.gestion.manage_panne') }}">
+                            <i class="bi bi-circle"></i><span>Gestion des pannes</span>
+                        </a>
+                    </li>
                     @endif
                     @if (in_array('manage_piece', $permissions))
+                    <li>
+                        <a href="{{ route('app.gestion.manage_piece') }}">
+                            <i class="bi bi-circle"></i><span>Gestion des pieces</span>
+                        </a>
+                    </li>
+                    @endif
+                    @if (in_array('manage_cartes_gasoile', $permissions))
                         <li>
-                            <a href="{{ route('app.gestion.manage_piece') }}">
-                                <i class="bi bi-circle"></i><span>Gestion des pieces</span>
+                            <a href="{{ route('app.gestion.manage_cartes_gasoile') }}">
+                                <i class="bi bi-circle"></i><span>Gestion des Cartes gasoile</span>
                             </a>
                         </li>
                     @endif

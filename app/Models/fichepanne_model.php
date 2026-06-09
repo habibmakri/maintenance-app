@@ -13,7 +13,7 @@ class fichepanne_model extends Model
     protected $table = 'fichepanne'; 
 
     // Add fillable fields
-    protected $fillable = ['fichemaintenance_id','pannnename_id','solved','date_resoudre','lieu_resoudre','brigade','equipe','delai','description'];
+    protected $fillable = ['fichemaintenance_id','pannnename_id','solved','gris','date_resoudre','lieu_resoudre','brigade','equipe','delai','description'];
     protected $hidden = ['created_at', 'updated_at'];
     public function fichemaintenance()
     {

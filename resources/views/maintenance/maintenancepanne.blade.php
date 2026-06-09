@@ -164,6 +164,13 @@
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal1"
                                     onclick="handleresoudreclick({{ $panne }})">Résoudre</button>
+                            @if ($panne->gris)
+                            <button type="button" class="btn btn-secondary" 
+                                onclick="handlegrisclick({{ $panne }})">Gris</button>
+                            @else
+                            <button type="button" class="btn btn-secondary" style="background: #6c757d52;border: none;" 
+                                onclick="handlegrisclick({{ $panne }})">Gris</button>
+                            @endif
                             </td>
                         </tr>
                     @endforeach
@@ -371,6 +378,26 @@
 
 
     <script>
+        function handlegrisclick(panne) {
+            const modal_title = document.getElementById('modal_title');
+                fetch(`maintenance/grisfichepanne:${panne.id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // alert('Opération réussie!');
+                            location.reload(); 
+                        } else {
+                            alert('Opération échouée!');
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+        }
         function handleresoudreclick(panne) {
             const modal_title = document.getElementById('modal_title');
             modal_title.innerHTML = panne.pannename.name + ' du ' + panne.fichemaintenance.bus.name + ' signaler le ' +

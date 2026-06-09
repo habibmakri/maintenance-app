@@ -80,7 +80,7 @@
         </thead>
         <tbody>
             @foreach ($data as $panne)
-                <tr>
+                <tr @if ($panne->gris) style="background-color:#808080;color: red;"  @endif>
                     <td>{{ \Carbon\Carbon::parse($panne->fichemaintenance->date_fiche)->format('d/m/Y') }}</td>
                     <td>{{ $panne->fichemaintenance->bus->name }}</td>
                     <td style="text-align: left; text-align:justify;padding:5px;"><span
@@ -189,7 +189,6 @@
             </tbody>
         </table>
     @endif
-
 </body>
 
 </html>

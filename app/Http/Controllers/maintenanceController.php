@@ -10,6 +10,8 @@ use App\Models\chauffeurs;
 use App\Models\extincteurs;
 use App\Models\fichemaintenance;
 use App\Models\fichepanne_model;
+use App\Models\gasoile_cartes;
+use App\Models\gasoile_transactions;
 use App\Models\jaugesmodel;
 use App\Models\Ligne;
 use App\Models\maintenance_agent;
@@ -368,6 +370,19 @@ class maintenanceController extends Controller
         }
         return response()->json(['success' => false]);
     }
+    public function grisfichepanne($id)
+    {
+        $record = fichepanne_model::find($id);
+        if ($record) {
+            if($record->gris == false){
+                $record->update(['gris' => true]);
+            }else{
+                $record->update(['gris' => false]);
+            }       
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
     public function deletetraveauxlibre($id)
     {
         $record = traveauxlibre_model::find($id);
@@ -603,6 +618,21 @@ class maintenanceController extends Controller
         }
         return redirect()->back()->with('success', 'Vidange ajouter avec succès.');
     }
+
+    public function maintenance_cartes_gasoile()
+    {
+        $cartes = gasoile_cartes::all();
+        $transactions = gasoile_transactions::all();
+        $agents = [];
+        $agents = maintenance_agent::all();
+
+        // dd($cartes,$transactions);
+        
+        return view('maintenance.cartes_gasoile', compact(['cartes','agents']));
+    }
+
+
+    
     public function extincteurs()
     {
         $extincteurs = extincteurs::where('bus', true)->get();

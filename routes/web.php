@@ -16,6 +16,60 @@ use App\Http\Middleware\CheckEntreprise;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\rolesMiddleware;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+
+// Route::post('/bus-positions', function (Request $request) {
+
+//     $username = $request->username;
+//     $password = $request->password;
+
+//     $response = Http::withBasicAuth($username, $password)
+//         ->acceptJson()
+//         ->get('https://busgps.malimspotter.dz/api/positions');
+
+//     return response()->json(
+//         $response->json(),
+//         $response->status()
+//     );
+// });
+
+// Route::post('/bus-devices', function (Request $request) {
+
+//     $username = $request->username;
+//     $password = $request->password;
+
+//     $response = Http::withBasicAuth($username, $password)
+//         ->acceptJson()
+//         ->get('https://busgps.malimspotter.dz/api/devices');
+
+//     return response()->json(
+//         $response->json(),
+//         $response->status()
+//     );
+// });
+// Route::get('/bus-positions', function () {
+
+//     $response = Http::withBasicAuth('app', 'app')
+//         ->acceptJson()
+//         ->get('https://busgps.malimspotter.dz/api/positions');
+
+//     return response()->json(
+//         $response->json(),
+//         $response->status()
+//     );
+// });
+
+// Route::get('/bus-devices', function () {
+
+//     $response = Http::withBasicAuth('app', 'app')
+//         ->acceptJson()
+//         ->get('https://busgps.malimspotter.dz/api/devices');
+
+//     return response()->json(
+//         $response->json(),
+//         $response->status()
+//     );
+// });
 
 
 Route::get('/email', function () {
@@ -61,6 +115,7 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::post('maintenance_panne', 'resoudre_maintenance_panne');
         Route::post('maintenance/ajouter_ndpanne', 'ajouter_ndpanne')->name('ajouter_ndpanne');
         Route::post('maintenance/deletefichepanne:{id}', 'deletefichepanne');
+        Route::post('maintenance/grisfichepanne:{id}', 'grisfichepanne');
         Route::post('maintenance/deletetraveauxlibre:{id}', 'deletetraveauxlibre');
         Route::post('maintenance/suivibus_pdf', 'generate_suivibus_pdf')->name('suivibus_pdf');
         Route::post('maintenance/suivijournaliere_pdf', 'generate_suivijournaliere_pdf')->name('suivijournaliere_pdf');
@@ -87,6 +142,8 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('statistiques_miantenance', 'statistiques_maintenance')->name('statistiques')->middleware('rolesMiddleware:statistiques_maintenance');
         Route::get('maintenance/statistiques_data',  'statistiques_data')->name('statistiques_data');
         Route::get('maintenance/extincteurs',  'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:extincteurs_maintenance');
+        Route::get('cartes_gasoile', 'maintenance_cartes_gasoile')->name('cartes_gasoile')->middleware('rolesMiddleware:maintenance_cgasoile');
+
     });
     Route::prefix('/')->controller(gestionController::class)->name('gestion.')->group(function () {
         Route::get('manage_user', 'manage_user')->name('manage_user')->middleware('rolesMiddleware:manage_user');
@@ -116,6 +173,9 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
         Route::get('manage_extincteurs', 'manage_extincteurs')->name('manage_extincteurs')->middleware('rolesMiddleware:manage_extincteurs');
         Route::get('manage_extincteurs/add_extincteur', 'add_extincteur')->name('add_extincteur')->middleware('rolesMiddleware:manage_extincteurs');
         Route::post('manage_extincteurs/add_extincteur', 'do_add_extincteur');
+        Route::get('manage_cartes_gasoile', 'manage_cartes_gasoile')->name('manage_cartes_gasoile')->middleware('rolesMiddleware:manage_cartes_gasoile');
+        Route::get('manage_cartes_gasoile/add_carte_gasoile', 'add_carte_gasoile')->name('add_carte_gasoile')->middleware('rolesMiddleware:manage_cartes_gasoile');
+        Route::post('manage_cartes_gasoile/add_carte_gasoile', 'do_add_carte_gasoile');
         Route::post('manage_extincteurs/recharge_extincteur', 'recharge_extincteur')->name('recharge_extincteur');
         // Route::post('user_in','insertUser');        
     });

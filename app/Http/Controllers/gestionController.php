@@ -12,6 +12,7 @@ use App\Http\Requests\edit_ligne_request;
 use App\Http\Requests\edit_user_request;
 use App\Models\Bus;
 use App\Models\extincteurs;
+use App\Models\gasoile_cartes;
 use App\Models\Ligne;
 use App\Models\Panne;
 use App\Models\pieces_maintanance;
@@ -232,6 +233,7 @@ class gestionController extends Controller
         ]);
         return to_route('app.gestion.manage_extincteurs')->with('success', 'Extincteur créé avec succès!');
     }
+    
     public function recharge_extincteur(Request $request)
     {
         $request->validate([
@@ -248,5 +250,25 @@ class gestionController extends Controller
             return to_route('app.gestion.manage_extincteurs')->with('error', 'Extincteur n\'existe pas!');
         }
         
+    }
+
+    public function manage_cartes_gasoile(){
+        $cartes = gasoile_cartes::all();
+        return view('gestion.cartes_gasoiles', compact(['cartes']));
+    }
+    public function add_carte_gasoile(){
+        return view('gestion.add_cartes_gasoile');
+    }
+    public function do_add_carte_gasoile(Request $request)
+    {
+        gasoile_cartes::create([
+            'number' => $request->reference,
+            'name' => $request->name,
+            'initial_balance' => $request->solde,
+            'actual_balance' => $request->solde,
+            'state' => $request->valid,
+            'date_expiration' => $request->date_expiration,
+        ]);
+        return to_route('app.gestion.manage_cartes_gasoile')->with('success', 'Cartes créé avec succès!');
     }
 }
