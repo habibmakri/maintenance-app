@@ -20,7 +20,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal_title3">Déclarer un nouveau vidange:</h5>
+                    <h5 class="modal-title" id="modal_title3">Déclarer un nouveau Operation Gasoile:</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -32,58 +32,52 @@
                                 <label for="date">Date</label>
                             </div>
                         </div>
-                        {{-- <div class="col-md-4">
-                            <div class="form-floating">
-                                <select class="form-select" name="bus" id="bus" required
-                                    aria-label="Floating label select example">
-                                    <option value="" disabled selected>selectionner Bus</option>
-                                    @foreach ($buses as $bus)
-                                        <option value="{{ $bus->id }}" data-kmactuelle="{{ $bus->kmactuelle }}">
-                                            {{ $bus->name }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="bus">BUS</label>
-                            </div>
-                        </div> --}}
                         <div class="col-md-4">
                             <div class="form-floating">
                                 <select class="form-select" required name="brigade" id="brigade"
                                     aria-label="Floating label select example">
-                                    <option value="" disabled >selectionner brigade</option>
-                                    <option value="nuit" selected>Nuit</option>
-                                    <option value="matin">Matin</option>
-                                    <option value="soir">Soir</option>
-                                </select>
-                                <label for="brigade">Brigade</label>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="number" required class="form-control" name="kilometrage" id="kilometrage">
-                                <label for="kilometrage">Kilométrage</label>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-floating">
-                                <select class="select" name="equipe[]" id="equipe" required multiple aria-label="equipe"
-                                    style="height: 120px;">
-                                    @foreach ($agents as $agent)
-                                        <option value="{{ $agent->firstname }} {{ $agent->lastname }}">
-                                            {{ $agent->firstname }}
-                                            {{ $agent->lastname }}</option>
+                                    <option value="" disabled selected>selectionner Carte</option>
+                                    @foreach ($cartes as $carte )
+                                        <option value="{{ $carte->id }}" >{{ $carte->name }}</option>
                                     @endforeach
                                 </select>
+                                <label for="brigade">Carte</label>
                             </div>
                         </div>
-                        <p class="mt-4">Pieces</p>
-                        <div id="pieces-section">
-                            
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select class="form-select" required name="brigade" id="brigade"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled selected>selectionner chauffeur</option>
+                                    @foreach ($agents as $agent )
+                                        <option value="{{$agent->firstname.' '.$agent->lastname  }}" >{{ $agent->firstname.' '.$agent->lastname }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="brigade">Chauffeur</label>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-secondary btn-sm" id="add-piece">
-                                Ajouter pieces
-                            </button>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="number" required step="any" class="form-control" name="gasoile" id="gasoile" value="0" min="0">
+                                <label for="gasoile">Montant</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select class="form-select" required name="brigade" id="brigade"
+                                    aria-label="Floating label select example">
+                                    <option value="" disabled >selectionner Mission</option>
+                                    <option value="oui">OUI</option>
+                                    <option value="non" selected>NON</option>
+                                </select>
+                                <label for="brigade">Mission</label>
+                            </div>
+                        </div>
+                       <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" name="name" placeholder="Nom-prénom">
+                                <label for="name">Lieu de recharge</label>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating">

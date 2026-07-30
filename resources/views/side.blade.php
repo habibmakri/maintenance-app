@@ -264,6 +264,24 @@
                 </ul>
             </li>
         @endif
+        {{-- Inventaire tabs --}}
+        @if (in_array('inventaire_manage', $permissions) ||
+                in_array('manage_lines', $permissions) )
+            <li class="nav-item ">
+                <a class="nav-link collapsed" data-bs-target="#inventaire-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi  bi-journal-check"></i><span>inventaire</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="inventaire-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    @if (in_array('inventaire_manage', $permissions))
+                        <li>
+                            <a href="{{ route('app.personelle.statistiques') }}">
+                                <i class="bi bi-circle"></i><span>Gestion des inventaires</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
         {{-- Personelle tabs --}}
         @if (in_array('personelle_stat', $permissions))
             <li class="nav-item ">

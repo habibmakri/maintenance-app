@@ -11,6 +11,7 @@ use App\Models\extincteurs;
 use App\Models\fichemaintenance;
 use App\Models\fichepanne_model;
 use App\Models\gasoile_cartes;
+use App\Models\admin_agents;
 use App\Models\gasoile_transactions;
 use App\Models\jaugesmodel;
 use App\Models\Ligne;
@@ -42,7 +43,7 @@ class maintenanceController extends Controller
         $lines = Ligne::all();
         $stations = Station::all();
         $pannes = Panne::all();
-        $chauffeurs = chauffeurs::orderBy('fr_name')->get();
+        $chauffeurs = chauffeurs::where('status',true)->orderBy('fr_name')->get();
         // dd($_COOKIE['date']);
         if (isset($_COOKIE['date'])) {
             $date = $_COOKIE['date'];
@@ -624,7 +625,7 @@ class maintenanceController extends Controller
         $cartes = gasoile_cartes::all();
         $transactions = gasoile_transactions::all();
         $agents = [];
-        $agents = maintenance_agent::all();
+        $agents = admin_agents::all();
 
         // dd($cartes,$transactions);
         
