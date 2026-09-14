@@ -117,7 +117,10 @@ class judiciaireController extends Controller
     }
     public function judiciaire_suivre()
     {
-        $declarations = declaration_judiciaire::all();
+        // $declarations = declaration_judiciaire::all();
+        $declarations = declaration_judiciaire::orderByRaw('YEAR(date_fiche)')
+            ->orderBy('number')
+            ->get();
         $declarationsmonth = declaration_judiciaire::whereMonth('time_day', date('m'))
             ->whereYear('time_day', date('Y'))
             ->get();

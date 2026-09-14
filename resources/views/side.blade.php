@@ -266,7 +266,7 @@
         @endif
         {{-- Inventaire tabs --}}
         @if (in_array('inventaire_manage', $permissions) ||
-                in_array('manage_lines', $permissions) )
+                in_array('inventaire_places', $permissions) )
             <li class="nav-item ">
                 <a class="nav-link collapsed" data-bs-target="#inventaire-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi  bi-journal-check"></i><span>inventaire</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -274,8 +274,15 @@
                 <ul id="inventaire-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     @if (in_array('inventaire_manage', $permissions))
                         <li>
-                            <a href="{{ route('app.personelle.statistiques') }}">
+                            <a href="{{ route('app.inventaire.gestion_inventaire') }}">
                                 <i class="bi bi-circle"></i><span>Gestion des inventaires</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('inventaire_places', $permissions))
+                        <li>
+                            <a href="{{ route('app.inventaire.emplacements_inventaire') }}">
+                                <i class="bi bi-circle"></i><span>Emplacements des inventaires</span>
                             </a>
                         </li>
                     @endif

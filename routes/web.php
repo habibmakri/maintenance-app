@@ -7,6 +7,7 @@ use App\Http\Controllers\exploatationController;
 use App\Http\Controllers\formationController;
 use App\Http\Controllers\gestionController;
 use App\Http\Controllers\inscriptionController;
+use App\Http\Controllers\inventaireController;
 use App\Http\Controllers\judiciaireController;
 use App\Http\Controllers\mainController;
 use App\Http\Controllers\maintenanceController;
@@ -225,6 +226,10 @@ Route::prefix('/app')->controller(mainController::class)->name('app.')->middlewa
     Route::prefix('/')->controller(securiteController::class)->name('securite.')->group(function () {
         Route::get('securite/extincteurs', 'extincteurs')->name('extincteurs')->middleware('rolesMiddleware:securite_extincteurs');
         Route::post('securite/recharger_extincteur', 'recharger_extincteur')->name('recharger_extincteur');
+    });
+    Route::prefix('/')->controller(inventaireController::class)->name('inventaire.')->group(function () {
+        Route::get('inventaire/', 'gestion_inventaire')->name('gestion_inventaire')->middleware('rolesMiddleware:inventaire_manage');
+        Route::get('emplacements_inventaire/', 'emplacements_inventaire')->name('emplacements_inventaire')->middleware('rolesMiddleware:inventaire_places');
     });
     Route::prefix('/')->controller(formationController::class)->name('formation.')->group(function () {
         Route::get('formation/taxis_prov', 'confirmer_taxis_prov')->name('confirmer_taxis_prov')->middleware('rolesMiddleware:confirmer_taxis_prov');
