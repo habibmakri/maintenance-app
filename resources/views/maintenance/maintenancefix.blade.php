@@ -89,7 +89,7 @@
                                     <td>${item.brigade}</td>
                                     <td>${item.ligne}</td>
                                     <td>${item.heur_depart}</td>
-                                    <td>${item.kmglobale}</td>
+                                    <td>${item.kmgobale}</td>
                                     <td>
                                      ${item.validated == false ? `<i class="bi bi-pencil edit-icon" data-id="${item.id}" style="margin-right:15%; cursor: pointer;"></i>` : ''}    
                                      <i class="bi bi-trash delete-icon" data-id="${item.id}" style="cursor: pointer;"></i>     
